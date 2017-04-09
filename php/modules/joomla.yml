@@ -1,0 +1,203 @@
+# Joomla Hardening Configuration
+
+Options:
+  ModulePrefix: joomla
+  # absolute path to the folder of the Joomla installation (with trailing / or \)
+  RootPath:
+    description: Joomla_RootPath
+    type: directory
+    value:
+
+  # relative path to the Joomla configuration file
+  ConfigurationFile:
+    description: Joomla_ConfigFile
+    value: configuration.php
+
+
+
+RunSections: [
+  JConfiguration, JSSLConfiguration, JManualHardening, PHPGeneralConfiguration, JPHPJoomlaConfiguration
+]
+
+JConfiguration:
+    Options: {
+        transaction: "utils:initTransaction"
+    }
+
+    RunUtils:
+      - configfile.JoomlaConfigFileEntry:
+            name: Joomla_Debug_name
+            key: debug
+            description: Joomla_Debug
+            value: '0'
+      - configfile.JoomlaConfigFileEntry:
+            name: Joomla_ErrorReporting_name
+            key: error_reporting
+            description: Joomla_ErrorReporting
+            value: none
+      - configfile.JoomlaConfigFileEntry:
+            name: Joomla_MassMailOff_name
+            key: massmailoff
+            description: Joomla_MassMailOff
+            value: '1'
+
+JSSLConfiguration:
+
+    Options: {
+        transaction: "utils:initTransaction"
+        run-if:
+          ssl: # see config.yml RunIf-Section.
+            operation: eq
+            value: true
+    }
+
+    RunUtils:
+      - configfile.JoomlaConfigFileEntry:
+            name: Joomla_ForceSSL_name
+            key: force_ssl
+            description: Joomla_ForceSSL
+            value: '1'
+            run-if:
+              value: '0'    # save values would be 1 (Administrator only) or 2 (entire Site)
+
+JManualHardening:
+    Options: {
+        transaction:
+    }
+    RunUtils:
+          - meta.Description:
+              name: Joomla_RemoveUnneededFiles_name
+              description: Joomla_RemoveUnneededFiles
+          - meta.Description:
+              name: Joomla_PasswordPolicy_name
+              description: Joomla_PasswordPolicy
+          - meta.Description:
+              name: Joomla_SelfRegistration_name
+              description: Joomla_SelfRegistration
+          - meta.Description:
+              name: Joomla_PasswordInMail_name
+              description: Joomla_PasswordInMail
+          - meta.Description:
+              name: Joomla_RedirectCollectURLs_name
+              description: Joomla_RedirectCollectURLs
+          - meta.Description:
+              name: Joomla_activeApache2Modules_name
+              description: Joomla_activeApache2Modules
+          - meta.Description:
+              name: Joomla_userPermissions_name
+              description: Joomla_userPermissions
+          - meta.Description:
+              name: Joomla_adminTwoFactorAuth_name
+              description: Joomla_adminTwoFactorAuth
+          - meta.Description:
+              name: Joomla_renameAdminAccount_name
+              description: Joomla_renameAdminAccount
+          - meta.Description:
+              name: Joomla_setPathToTempFolder_name
+              description: Joomla_setPathToTempFolder
+          - meta.Description:
+              name: Joomla_setPathToLogFolder_name
+              description: Joomla_setPathToLogFolder
+
+PHPGeneralConfiguration:  # general PHP hardening - Identical to Joomla, Typo3, WordPress
+    Options: {
+        transaction: "utils:initTransaction"
+        run-if:
+          logicalOperator: OR # at least one of both conditions is needed to run this section
+          phpHtAccess: # see config.yml RunIf-Section.
+            operation: eq
+            value: true
+          phpUserIni: # see config.yml RunIf-Section.
+            operation: eq
+            value: true
+    }
+    RunUtils:
+      - configfile.LocalPHPConfigFileEntry:
+            name: PHP_assert_active_name
+            key: assert.active
+            description: PHP_assert_active
+            value: 'off'
+      - configfile.LocalPHPConfigFileEntry:
+            name: PHP_display_errors_name
+            key: display_errors
+            description: PHP_display_errors
+            value: 0
+      - configfile.LocalPHPConfigFileEntry:
+            name: PHP_log_errors_name
+            key: log_errors
+            description: PHP_log_errors
+            value: 'on'
+      - configfile.LocalPHPConfigFileEntry:
+            name: PHP_register_globals_name
+            key: register_globals
+            description: PHP_register_globals
+            value: 'off'
+      - configfile.LocalPHPConfigFileEntry:
+            name: PHP_session_cookie_httponly_name
+            key: session.cookie_httponly
+            description: PHP_session_cookie_httponly
+            value: 'on'
+      - configfile.LocalPHPConfigFileEntry:
+            name: PHP_session_entropy_length_name
+            key: session.entropy_length
+            description: PHP_session_entropy_length
+            value: 64
+      - configfile.LocalPHPConfigFileEntry:
+            name: PHP_session_hash_bits_per_character_name
+            key: session.hash_bits_per_character
+            description: PHP_session_hash_bits_per_character
+            value: 6
+      - configfile.LocalPHPConfigFileEntry:
+            name: PHP_session_hash_function_name
+            key: session.hash_function
+            description: PHP_session_hash_function
+            value: 'sha512'
+      - configfile.LocalPHPConfigFileEntry:
+            name: PHP_allow_url_include_name
+            key: allow_url_include
+            description: PHP_allow_url_include
+            value: 'off'
+      - configfile.LocalPHPConfigFileEntry:
+            name: PHP_post_max_size_name
+            key: post_max_size
+            description: PHP_post_max_size
+            value: "12M"
+      - configfile.LocalPHPConfigFileEntry:
+            name: PHP_upload_max_filesize_name
+            key: upload_max_filesize
+            description: PHP_upload_max_filesize
+            value: "10M"
+
+JPHPJoomlaConfiguration:  # The following Utils are CMS specific
+    Options: {
+        transaction: "utils:initTransaction"
+        run-if:
+          logicalOperator: OR # at least one of both conditions is needed to run this section
+          phpHtAccess: # see config.yml RunIf-Section.
+            operation: eq
+            value: true
+          phpUserIni: # see config.yml RunIf-Section.
+            operation: eq
+            value: true
+    }
+    RunUtils:
+      - configfile.LocalPHPConfigFileEntry:
+            name: PHP_allow_url_fopen_name
+            key: allow_url_fopen
+            description: PHP_allow_url_fopen
+            value: 'off'
+      - configfile.LocalPHPConfigFileEntry:
+            name: PHP_max_execution_time_name
+            key: max_execution_time
+            description: PHP_max_execution_time
+            value: 30
+      - configfile.LocalPHPConfigFileEntry:
+            name: PHP_max_input_vars_name
+            key: max_input_vars
+            description: PHP_max_input_vars
+            value: 1000
+      - configfile.LocalPHPConfigFileEntry:
+            name: PHP_always_populate_raw_post_data_name
+            key: always_populate_raw_post_data
+            description: PHP_always_populate_raw_post_data
+            value: 0

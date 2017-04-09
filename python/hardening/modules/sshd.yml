@@ -1,0 +1,288 @@
+RunSections: [
+  SSHFirewall,
+  SSHDConfiguration,
+  SSHRuntimeUser,
+  SSHDefaultConfiguration,
+  SSHService
+]
+
+#meta information about the ssh module in english and german
+#the description of the utils and their parameters can be found in the hardening-scripts/python/README.md
+meta: [
+    {language: "en", caption: "This section contains SSH specific hardening steps and checks"},
+    {language: "de", caption: "Dieser Abschnitt enthält SSH-spezifische Härtungsschritte"},
+    {language: "en", description: "The following hardening steps were verified for OpenSSH version 6.7p1. The results of the hardening steps for other versions may differ."},
+    {language: "de", description: "Die nachfolgenden Härtungsmaßnahmen wurden für die OpenSSH Version 6.7p1 getestet und hinsichtlich ihrer Funktionalität geprüft. Für abweichende Versionen kann keine Aussage zur Funktionalität getroffen werden."}
+]
+
+SSHFirewall:
+    RunUtils: [
+        net.Firewall: {
+            transaction: "info:resolve_key:iptables_v4",
+            protocol: tcp,
+            src: "0.0.0.0/0",
+            dst: "info:net:management_address",
+            dstport: 22,
+            meta: [
+                {language: "en", caption: "Opening TCP-Port 22 in iptables" },
+                {language: "de", caption: "Öffne TCP-Port 22 in iptables" },
+                {language: "en", description: "To explicitly enable access of the SSH service the proper port is opened in the firewall." },
+                {language: "de", description: "Um explizit den Zugang zum SSH Dienst zu ermöglichen wird der entsprechende Port in der Firewall geöffnet." }
+            ]
+        }
+    ]
+
+SSHRuntimeUser:
+    Options: {
+        run-if: "info:condition:has_sshd_config"
+    }
+
+    RunUtils: [
+
+        # create runtime user
+        os.UserItem: {
+            #name: "info:get_property:HardeningSettings.ssh-runtime-user",
+            transaction: "passwd:{info:property:get:HardeningSettings.ssh-runtime-user}",
+            home: "/var/empty",
+            shell: "/bin/false",
+            meta: [
+                {language: "en", caption: "Creating a runtime user for the SSH daemon" },
+                {language: "de", caption: "Erstellung eines Laufzeitbenutzers für den SSH Service" },
+                {language: "en", description: "To enable running the SSH daemon with a dedicated user, this user first has to be created in the system." },
+                {language: "de", description: "Damit ein dedizierter Benutzer für die Ausführung des SSH Service genutzt werden kann, muss dieser im System zunächst erstellt werden." }
+            ]
+        },
+
+        # restrict access to files
+        filesystem.ChangeOwner: {
+          transaction:  "info:resolve_key:sshd_config",
+          user:  *ssh-runtime-user,
+          group: *ssh-runtime-group,
+          meta: [
+              {language: "en", caption: "Change the file owner of the sshd_config file" },
+              {language: "de", caption: "Ändern des Dateibesitzers für die sshd_config Datei" },
+              {language: "en", description: "The owner of the sshd_config file will be changed to the runtime user of the SSH daemon." },
+              {language: "de", description: "Der Besitzer der Datei sshd_config wird auf den Laufzeitbenutzer des SSH Service geändert." }
+          ]
+        },
+
+        filesystem.ChangePermissions: {
+          transaction:  "info:resolve_key:sshd_config",
+          mode:  "600",
+          meta: [
+              {language: "en", caption: "Change the file permissions of the sshd_config file" },
+              {language: "de", caption: "Ändern des Dateiberechtigungen für die sshd_config Datei" },
+              {language: "en", description: "The file permission of sshd_config file will be changed to be only write- and readable by the owner of the file" },
+              {language: "de", description: "Die Dateiberechtigungen der sshd_config Datei werden so geändert, dass nur der Besitzer der Datei lesenden und schreibenden Zugriff besitzt." }
+          ]
+        }
+    ]
+
+SSHDefaultConfiguration:
+    Options: {
+        transaction: "file:/etc/default/ssh",
+        separator: "=",
+    }
+
+    RunUtils: [
+        configfile.ConfigFileEntry: {key: "SSHD_OPTS", value: "", meta: [
+            {language: "en", caption: "Removing options passed to sshd" },
+            {language: "de", caption: "Entfernen von Optionen welche an SSHd übergeben werden" },
+            {language: "en", description: "It must be ensured the ssh service is running as a stand-alone daemon." },
+            {language: "de", description: "Es muss sichergestellt sein, dass der SSH-Dienst als Stand-alone Daemon ausgeführt wird." }
+        ]}
+    ]
+
+SSHService:
+    RunUtils: [
+        os.ConfigureService: { transaction: "service:telnet", action: "disable", meta: [
+            {language: "en", caption: "Disabling telnet service" },
+            {language: "de", caption: "Deaktivierung des Telnet-Dienstes" },
+            {language: "en", description: "As ssh as administrative interface will be established other console-based interfaces will be disabled." },
+            {language: "de", description: "Da SSH als administrative Schnittstelle eingerichtet wird, werden andere Consolen-Schnittstellen deaktiviert." }
+        ]},
+        os.ConfigureService: { transaction: "service:rsh", action: "disable", meta: [
+            {language: "en", caption: "Disabling rsh service" },
+            {language: "de", caption: "Deaktivierung des rsh-Dienstes" },
+            {language: "en", description: "As ssh as administrative interface will be established other console-based interfaces will be disabled." },
+            {language: "de", description: "Da SSH als administrative Schnittstelle eingerichtet wird, werden andere Consolen-Schnittstellen deaktiviert." }
+        ]},
+        os.ConfigureService: { transaction: "service:xinetd", action: "disable", meta: [
+            {language: "en", caption: "Disabling xinetd service" },
+            {language: "de", caption: "Deaktivierung des xinetd-Dienstes" },
+            {language: "en", description: "As ssh as administrative interface will be established other console-based interfaces will be disabled." },
+            {language: "de", description: "Da SSH als administrative Schnittstelle eingerichtet wird, werden andere Consolen-Schnittstellen deaktiviert." }
+        ]},
+    ]
+
+SSHDConfiguration:
+    Options: {
+        transaction: "info:resolve_key:sshd_config",
+        separator:   " ",
+        run-if: "info:condition:has_sshd_config"
+    }
+      
+    RunUtils: [
+        configfile.ConfigFileEntry: { key: "Port",                    value: *ssh-listening-port, meta: [
+            {language: "en", caption: "Configuring ssh port" },
+            {language: "de", caption: "Einstellen des SSH Ports" },
+            {language: "en", description: "SSH will be configured to listen on a dedicated port." },
+            {language: "de", description: "SSH wird so konfiguriert, dass der Dienst auf einem dedizierten Port erreichbar ist." }
+        ]},
+        configfile.ConfigFileEntry: { 
+            key: "ListenAddress",           
+            value: "info:net:management_address", 
+            multiple: "false",
+            meta: [
+                 {language: "en", caption: "Configuring ssh listen interface" },
+                 {language: "de", caption: "Einstellen des Listen Schnittstelle" },
+                 {language: "en", description: "SSH will be configured to listen only on the management interface, to ensure that it is not accessible from the customer interface." },
+                 {language: "de", description: "SSH wird so konfiguriert, dass es ausschließlich auf dem Management Interface hört. Dies verhindert, dass es im Kundenetz erreichbar ist." }
+             ]
+        },
+        configfile.ConfigFileEntry: { key: "GatewayPorts",            value: "no", meta: [
+            {language: "en", caption: "Disabling GatewayPorts" },
+            {language: "de", caption: "Deaktivierung von GatewayPorts" },
+            {language: "en", description: "If GatewayPorts is disabled (default) remote port forwardings are bind to the loopback interface and thus are not accessible from remote." },
+            {language: "de", description: "Wenn die Option GatewayPorts deaktiviert ist (Standard) werden entfernte Port-Forwardings an das Loopback-Interface gebunden, so dass sie nicht nach außen hin bereitgestellt werden." }
+        ]},
+        configfile.ConfigFileEntry: { key: "Protocol",                value: "2", meta: [
+            {language: "en", caption: "Enabling only SSH Protocol 2" },
+            {language: "de", caption: "Aktivierung von ausschließlich SSH Protokoll 2" },
+            {language: "en", description: "As the SSH protocol version 1 is no longer considered secure only the protocol version 2 must be active." },
+            {language: "de", description: "Da das SSH Protokoll-Version 1 als nicht mehr sicher gilt, darf nur noch die Protokoll-Version 2 aktiviert sein." }
+        ]},
+        configfile.ConfigFileEntry: { key: "Ciphers",                 value: [
+            "aes256-gcm@openssh.com",
+            "aes128-gcm@openssh.com",
+            "chacha20-poly1305@openssh.com",
+            "aes256-ctr","aes192-ctr","aes128-ctr"],
+            listseparator: ",",
+            meta: [
+                {language: "en", caption: "Deactivation of insecure Ciphers" },
+                {language: "de", caption: "Deaktivierung unsicherer Verschlüsslungsalgorithmen" },
+                {language: "en", description: "SSH supports several ciphers while some of these have to be considered as insecure. Thus a set of chosen still secure ciphers will be configured. It might be the case some ssh clients don't support these ciphers so that it is necessary to update such clients." },
+                {language: "de", description: "SSH unterstützt eine Vielzahl an Verschlüsselungsalgorithmen (Ciphers), von denen aktuell nicht mehr alle als sicher angesehen werden. Deshalb wird hiermit eine Auswahl der aktuell als sicherer geltenden Ciphers konfiguriert. Es kann möglich sein, dass einzelne SSH-Clients die eingestellten Ciphers nicht unterstützen. In diesem Fall ist ein Update des Clients notwendig." }
+            ]
+        },
+        configfile.ConfigFileEntry: { key: "MACs",                    value: [
+            "hmac-sha2-512","hmac-sha2-256", "hmac-ripemd160"],
+            listseparator: ",",
+            meta: [
+                {language: "en", caption: "Deactivation of insecure hash functions" },
+                {language: "de", caption: "Deaktivierung unsicherer Hashfunktionen" },
+                {language: "en", description: "SSH supports several hash function while some of these have to be considered as insecure. Thus a set of chosen still secure hash functions will be configured. It might be the case some ssh clients don't support these hash functions so that it is necessary to update such clients." },
+                {language: "de", description: "SSH unterstützt eine Vielzahl an Hash-Algorithmen, von denen aktuell als nicht mehr alle als sicher angesehen werden. Deshalb wird hiermit eine Auswahl der aktuell als sicherer geltenden Hashfunktionen konfiguriert. Es kann möglich sein, dass einzelne SSH-Clients die eingestellten Hashfunktionen nicht unterstützen. In diesem Fall ist ein Update des Clients notwendig." }
+            ]
+        },
+        configfile.ConfigFileEntry: { key: "KexAlgorithms",           value: [
+            "curve25519-sha256@libssh.org",
+            "ecdh-sha2-nistp521",
+            "ecdh-sha2-nistp384",
+            "ecdh-sha2-nistp256",
+            "diffie-hellman-group-exchange-sha256"],
+            listseparator: ",",
+            meta: [
+                {language: "en", caption: "Deactivation of insecure Key Exchange algorithms" },
+                {language: "de", caption: "Deaktivierung unsicherer Schlüsselaustausch-Algorithmen" },
+                {language: "en", description: "SSH supports several key exchange algorithms while some of these have to be considered as insecure. Thus a set of chosen still secure key exchange algorithms will be configured. It might be the case some ssh clients don't support these algothms so that it is necessary to update such clients." },
+                {language: "de", description: "SSH unterstützt eine Vielzahl an Schlüsselaustausch-Algorithmen, von denen nicht alle aktuell als sicher angesehen werden. Deshalb wird hiermit eine Auswahl noch sicherer Schlüsselaustausch-Algorithmen konfiguriert. Es kann möglich sein, dass einzelne SSH-Clients die eingestellten Algorithmen nicht unterstützt. In diesem Falle ist ein Update des Clients notwendig." }
+            ]
+        },
+        configfile.ConfigFileEntry: { key: "X11Forwarding",           value: "no", meta: [
+            {language: "en", caption: "Disabling X11 Forwarding" },
+            {language: "de", caption: "Deaktivierung der X11-Weiterleitung" },
+            {language: "en", description: "SSH supports X11 to be forwarded to the connected clients. This enables run applications with a GUI in the connected client. As this interface might be abused to compromise the client pc, X11 forwarding should be disabled if not needed. If it is needed the setting X11UseLocalhost should be set to yes, to bind the X11 service to the Loopback interface." },
+            {language: "de", description: "SSH unterstützt eine Weiterleitung von X11 zu den verbundenen Clients. Dadurch können Programme mit einer GUI im Client ausgeführt werden. Da diese Schnittstelle dafür missbraucht werden kann um den Client anzugreifen, sollte X11Forwarding deaktiviert werden. Sollte X11 jedoch benötigt werden, sollte stattdessen durch 'X11UseLocalhost yes' der X11 Dienst auf das Loopback Interface gebunden werden." }
+        ]},
+        configfile.ConfigFileEntry: { key: "AllowAgentForwarding",    value: "no", meta: [
+            {language: "en", caption: "Disabling Agent Forwarding" },
+            {language: "de", caption: "Deaktivierung der Agent-Weiterleitung" },
+            {language: "en", description: "Disabling SSH Agent forwarding prevents from creating agent forwarding sockets on serverside. Nevertheless it might be possible users are creating their own forwarders. Hence it is necessary to restrict agent forwarding on client-side as well," },
+            {language: "de", description: "Durch die serverseitige Deaktivierung von Agent-Weiterleitungen wird verhindert, dass Agent Forwarding-Sockets angelegt werden. Dennoch ist es Nutzern möglich eigene Forwarder zu erstellen. Deshalb ist es zusätzlich notwendig, dass auch auf Clientseite Agent-Forwarding unterbunden wird." }
+        ]},
+        configfile.ConfigFileEntry: { key: "PermitTunnel",            value: "no", meta: [
+            {language: "en", caption: "Disabling tunnel devices forwarding" },
+            {language: "de", caption: "Deaktivierung von Tunnel Device Forwarding" },
+            {language: "en", description: "As the tunnel device function (=VPN function) is usually not needed it should be deactivated to not circumvent firewall restrictions." },
+            {language: "de", description: "Da die Tunnel Device Funktion (=VPN-Funktion) normalerweise nicht benötigt wird, sollte sie deaktiviert werden, so dass Firewall-Einschränkungen nicht umgangen werden können." }
+        ]},
+        configfile.ConfigFileEntry: { key: "PermitRootLogin",         value: "no", meta: [
+            {language: "en", caption: "Disabling direct root access via SSH" },
+            {language: "de", caption: "Deaktivierung der Anmeldung von root über SSH" },
+            {language: "en", description: "As the root user is a public known username with the highest privileges in the system, the user should not be able to login with the root user directly via SSH." },
+            {language: "de", description: "Da der root-Benutzer ein bekannter Benutzername ist und das Konto die höchsten Privilegien im System besitzt, sollte es root nicht gestattet sein, sich direkt per SSH anzumelden." }
+        ]},
+        configfile.ConfigFileEntry: { key: "SyslogFacility",          value: "AUTH", meta: [
+            {language: "en", caption: "Ensure SyslogFacility is AUTH" },
+            {language: "de", caption: "Sicherstellung dass SyslogFacility AUTH entspricht" },
+            {language: "en", description: "Log entries generated by ssh should have the facility AUTH." },
+            {language: "de", description: "Logeinträge, welche durch SSH generiert werden, sollten die facility AUTH haben." }
+        ]},
+        configfile.ConfigFileEntry: { key: "LogLevel",                value: "VERBOSE", meta: [
+            {language: "en", caption: "Ensure LogLevel is VERBOSE" },
+            {language: "de", caption: "Sicherstellung dass LogLevel VERBOSE entspricht" },
+            {language: "en", description: "Log entries generated by ssh should have the log level VERBOSE." },
+            {language: "de", description: "Logeinträge, welche durch SSH generiert werden, sollten das Log Level 'VERBOSE' haben." }
+        ]},
+        configfile.ConfigFileEntry: { key: "IgnoreRhosts",            value: "yes", meta: [
+            {language: "en", caption: "Disabling RhostsRSA and hostbased authentication" },
+            {language: "de", caption: "Deaktivierung von Rhosts- und Host-basierten Authentifierungsmechanismen" },
+            {language: "en", description: "The files .rhosts and .shosts are not used to authenticate users using RhostsRSA and hostbased authentication mechanisms." },
+            {language: "de", description: "Die Dateien .rhosts und .shosts werden von SSH nicht mehr für Authentifizierungsversuche durch Rhosts- und Host-basierten Authentifizierungsmechanismen herangezogen." }
+        ]},
+        configfile.ConfigFileEntry: { key: "RhostsRSAAuthentication", value: "no", meta: [
+            {language: "en", caption: "Disabling RhostsRSA and hostbased authentication" },
+            {language: "de", caption: "Deaktivierung von Rhosts- und Host-basierten Authentifierungsmechanismen" },
+            {language: "en", description: "The files .rhosts and .shosts are not used to authenticate users using RhostsRSA and hostbased authentication mechanisms." },
+            {language: "de", description: "Die Dateien .rhosts und .shosts werden von SSH nicht mehr für Authentifizierungsversuche durch Rhosts- und Host-basierten Authentifizierungsmechanismen herangezogen." }
+        ]},
+        configfile.ConfigFileEntry: { key: "HostbasedAuthentication", value: "no", meta: [
+            {language: "en", caption: "Disabling RhostsRSA and hostbased authentication" },
+            {language: "de", caption: "Deaktivierung von Rhosts- und Host-basierten Authentifierungsmechanismen" },
+            {language: "en", description: "The files .rhosts and .shosts are not used to authenticate users using RhostsRSA and hostbased authentication mechanisms." },
+            {language: "de", description: "Die Dateien .rhosts und .shosts werden von SSH nicht mehr für Authentifizierungsversuche durch Rhosts- und Host-basierten Authentifizierungsmechanismen herangezogen." }
+        ]},
+        configfile.ConfigFileEntry: { key: "IgnoreUserKnownHosts",    value: "yes", meta: [
+            {language: "en", caption: "Ignoring known_hosts during RhostsRSA and hostbased authentications" },
+            {language: "de", caption: "ignorierung der known_hosts bei Rhosts- und Host-basierten Authentifierungsmechanismen" },
+            {language: "en", description: "This setting is part of disabling RhostsRSA and hostbased authentication mechanisms." },
+            {language: "de", description: "Diese Einstellung ist Bestandteil der Deaktivierung von Rhosts- und Host-basierten Authentifizierungsmechanismen ." }
+        ]},
+        configfile.ConfigFileEntry: { key: "AddressFamily",           value: *ssh-address-family, before-key: "ListenAddress", meta: [
+            {language: "en", caption: "Setting the Address Family to IPv4 or IPv6" },
+            {language: "de", caption: "Konfiguration der Adress Familie auf IPv4 oder IPv6" },
+            {language: "en", description: "If only IPv4 or IPv6 is used at the server, this should be configured in AddressFamily." },
+            {language: "de", description: "Wenn nur IPv4 oder IPv6 genutzt wird, sollte auch nur dieses in der Konfiguration für AddressFamily eingestellt sein." }
+        ]},
+        configfile.ConfigFileEntry: { key: "UsePAM",                  value: *ssh-usepam, meta: [
+            {language: "en", caption: "Setting whether PAM should be used" },
+            {language: "de", caption: "Einstellung ob PAM genutzt werden soll" },
+            {language: "en", description: "PAM should only be used if absolutely necessary as otherwise ssh will not be able to run as non-root user. " },
+            {language: "de", description: "PAM sollte nur genutzt werden, falls unbedingt erforderlich, da ansonsten SSH nicht mit einem von root abweichenden Benutzer gestartet werden kann." }
+        ]},
+        configfile.ConfigFileEntry: { key: "PrintLastLog",            value: "yes", meta: [
+            {language: "en", caption: "Enable Last Login information" },
+            {language: "de", caption: "Aktivierung der Informationsanzeige zum letzten Login" },
+            {language: "en", description: "SSH can be configured to print information about the time and host from which the last login was taken place. This assists for transparency and abuse detection." },
+            {language: "de", description: "Es kann in SSH konfiguriert werden wann und von wo der letzte Login erfolgte. Dies sollte zur Transparenz und Missbrauchserkennung aktiviert werden." }
+        ]},
+        configfile.ConfigFileEntry: { key: "PermitEmptyPasswords",    value: "no", meta: [
+            {language: "en", caption: "Disallow login with accounts having no password" },
+            {language: "de", caption: "Logins mit Accounts ohne Passwort verbieten" },
+            {language: "en", description: "Login with accounts haven no password set has to be forbidden." },
+            {language: "de", description: "Es muss verboten werden, dass sich Accounts über SSH anmelden dürfen, für welche kein Passwort vergeben wurde." }
+        ]},
+        configfile.ConfigFileEntry: { key: "AllowUsers",              value: *ssh-allow-users, listseparator: " ", meta: [
+            {language: "en", caption: "Configuring a whitelist of SSH users" },
+            {language: "de", caption: "Einstellung einer Whitelist für SSH Benutzer" },
+            {language: "en", description: "A list of users can be configured to allow a login via SSH. All other users cannot log in." },
+            {language: "de", description: "Es wird eine Liste von Benutzern angelegt, welche sich über SSH anmelden dürfen. Alle anderen Benutzer dürfen sich nicht anmelden." }
+        ]},
+        configfile.ConfigFileEntry: { key: "AllowGroups",              value: *ssh-allow-groups, listseparator: " ", meta: [
+            {language: "en", caption: "Configuring a whitelist of SSH groups" },
+            {language: "de", caption: "Einstellung einer Whitelist für SSH Gruppen" },
+            {language: "en", description: "A list of groups can be configured to allow a login via SSH. Members of groups cannot log in. This value is empty by default because the usage of AllowUsers to restrict the SSH login is sufficient." },
+            {language: "de", description: "Ebenso kann eine Liste mit Gruppen, deren Mitglieder sich über SSH anmelden dürfen, angelegt werden. Mitglieder anderer Gruppen dürfen sich nicht anmelden. Dieser Wert ist standardmäßig leer, da die Benutzung von AllowUsers ausreichend restriktiv ist." }
+        ]}
+    ]

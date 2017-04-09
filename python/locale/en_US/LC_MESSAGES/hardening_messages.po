@@ -1,0 +1,771 @@
+# English translations for PACKAGE package.
+# Copyright (C) 2016 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# Automatically generated, 2016.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-08-10 17:10+0200\n"
+"PO-Revision-Date: 2016-06-23 16:33+0200\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: en_US\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: hardening.py:44
+msgid "This tool MUST be run with root privileges, obtained using sudo!"
+msgstr "This tool MUST be run with root privileges, obtained using sudo!"
+
+#: hardening.py:49
+msgid ""
+"You should not run this tool using the root account\n"
+"Instead, you should use sudo!"
+msgstr ""
+"You should not run this tool using the root account\n"
+"Instead, you should use sudo!"
+
+#: hardening.py:53
+msgid ""
+" ___ ___ ___   ___ __  __ ___   ___\n"
+"| _ ) __|_ _| / __|  \\/  / __| |_  )\n"
+"| _ \\__ \\| | | (__| |\\/| \\__ \\_ / /\n"
+"|___/___/___(_)___|_|  |_|___(_)___|\n"
+msgstr ""
+" ___ ___ ___   ___ __  __ ___   ___\n"
+"| _ ) __|_ _| / __|  \\/  / __| |_  )\n"
+"| _ \\__ \\| | | (__| |\\/| \\__ \\_ / /\n"
+"|___/___/___(_)___|_|  |_|___(_)___|\n"
+
+#: hardening.py:58
+msgid ""
+"This script aims to harden some Content Management Systems (CMS) to increase "
+"the security. Among others the configuration file(s) of the CMS is altered "
+"to make use of a more secure configuration. The script can be applied to an "
+"initial installed and configured CMS as well as to a long-lived "
+"installation.\n"
+" For every automatic altered file there will be a backup of the original "
+"state in the corresponding backup directory."
+msgstr ""
+"This script aims to harden some Content Management Systems (CMS) to increase "
+"the security. Among others the configuration file(s) of the CMS is altered "
+"to make use of a more secure configuration. The script can be applied to an "
+"initial installed and configured CMS as well as to a long-lived "
+"installation.\n"
+" For every automatic altered file there will be a backup of the original "
+"state in the corresponding backup directory."
+
+#: hardening.py:65
+msgid "Introduction"
+msgstr "Introduction"
+
+#: hardening.py:69
+msgid ""
+"The following adjustments will alter your system.\n"
+"There is no guarantee the altered components are still working as expected.\n"
+"Please use this script carefully and read up about the implication of the "
+"changes. Although these hardening steps increase the security of your "
+"system, there still might exist vulnerabilities due to implementation error "
+"of certain components. \n"
+"The configuration suggested by this script is aimed for the test environment "
+"described in 'Sicherheitsstudie Content Management Systeme 2.0'. Other "
+"environments may require a different configuration."
+msgstr ""
+"The following adjustments will alter your system.\n"
+"There is no guarantee the altered components are still working as expected.\n"
+"Please use this script carefully and read up about the implication of the "
+"changes. Although these hardening steps increase the security of your "
+"system, there still might exist vulnerabilities due to implementation error "
+"of certain components. \n"
+"The configuration suggested by this script is aimed for the test environment "
+"described in 'Sicherheitsstudie Content Management Systeme 2.0'. Other "
+"environments may require a different configuration."
+
+#: hardening.py:80
+msgid "Attention!"
+msgstr "Attention!"
+
+#: hardening.py:84 hardening/io/ConsoleWriter.py:82
+#: hardening/io/ConsoleWriter.py:100 hardening/io/ConsoleWriter.py:114
+#: hardening/io/ConsoleWriter.py:132
+msgid "no"
+msgstr "no"
+
+#: hardening.py:85
+msgid "WARNING --- WARNING --- WARNING"
+msgstr "WARNING --- WARNING --- WARNING"
+
+#: hardening.py:86
+#, python-brace-format
+msgid ""
+"Be aware that this tool may impair your system if you are concurrently using "
+"a system management suite, such as PLESK or CONFIXX !!!§{n}§{n}You should "
+"only continue if you are are sure that no such tools are running!§{n}§{n}Do "
+"you really want to continue?"
+msgstr ""
+"Be aware that this tool may impair your system if you are concurrently using "
+"a system management suite, such as PLESK or CONFIXX !!!§{n}§{n}You should "
+"only continue if you are are sure that no such tools are running!§{n}§{n}Do "
+"you really want to continue?"
+
+#: hardening.py:99
+msgid "Hardening aborted!!!!"
+msgstr "Hardening aborted!!!!"
+
+#: hardening.py:100
+msgid ""
+"The hardening was stopped due to user request or unexpected behaviour. No "
+"hardening effects were applied."
+msgstr ""
+"The hardening was stopped due to user request or unexpected behaviour. No "
+"hardening effects were applied."
+
+#: hardening.py:116 hardening.py:123
+msgid "Log location"
+msgstr "Log location"
+
+#: hardening.py:117
+#, python-format
+msgid "Your hardening log was written to '%(location)s'"
+msgstr "Your hardening log was written to '%(location)s'"
+
+#: hardening.py:124
+msgid "No hardening log was created because no changes are necessary."
+msgstr "No hardening log was created because no changes are necessary."
+
+#: hardening.py:128
+msgid "Hardening finished!!!!"
+msgstr "Hardening finished!!!!"
+
+#: hardening.py:129
+#, python-brace-format
+msgid ""
+"If you're also planning to harden one of WORDPRESS, JOOMLA or TYPO3, you "
+"should run the PHP-part of this tool:§{n}§{n}  cd ../php && php index.php§{n}"
+"§{n}Please check that all your services (apache, sshd, etc.) are running as "
+"expected. If they do, you should restart your computer to make sure the "
+"hardening effects are applied.§{n}§{n}Otherwise, you should restore the old "
+"configuration from the backup files.§{n}"
+msgstr ""
+"If you're also planning to harden one of WORDPRESS, JOOMLA or TYPO3, you "
+"should run the PHP-part of this tool:§{n}§{n}  cd ../php && php index.php§{n}"
+"§{n}Please check that all your services (apache, sshd, etc.) are running as "
+"expected. If they do, you should restart your computer to make sure the "
+"hardening effects are applied.§{n}§{n}Otherwise, you should restore the old "
+"configuration from the backup files.§{n}"
+
+#: hardening/info/LiferayInfo.py:39
+msgid "Please type the path of your liferay home directory"
+msgstr "Please type the path of your liferay home directory"
+
+#: hardening/info/PhpInfo.py:47
+#, fuzzy
+msgid ""
+"Please specify the full path to your PHP 'php.ini' file. This is by default "
+"located at '/etc/php5/php.ini' or '/etc/php5/fpm/php.ini' but was not found "
+"there."
+msgstr ""
+"Please specify the full path to your PHP 'php.ini' file. This is by default "
+"located in '/etc/php5/php.ini' or '/etc/php5/fpm/php.ini'."
+
+#: hardening/info/PloneInfo.py:41
+#, fuzzy
+msgid ""
+"Please specify the full path to your plone buildout directory. This "
+"directory is by default located in /opt/plone/ and contains the plone "
+"buildout.cfg. E.g.: /opt/plone/buildout/"
+msgstr ""
+"Please specify the full path to your plone buildout directory. This "
+"directory is by default located in /opt/plone/ and contains the plone "
+"buildout.cfg. E.g.: /opt/plone/buildout/"
+
+#: hardening/info/PloneInfo.py:50
+msgid ""
+"The specified directory does not exists or is not the plone buildout "
+"directory. Do you want to specify the path to your plone buildout direcctory "
+"again? If your press \"no\" the script will abort."
+msgstr ""
+"The specified directory does not exists or is not the plone buildout "
+"directory. Do you want to specify the path to your plone buildout direcctory "
+"again? If your press \"no\" the script will abort."
+
+#: hardening/info/ResolveKey.py:53
+#, python-format
+msgid "invalid info key in configuration: '%(keyname)s'"
+msgstr "invalid info key in configuration: '%(keyname)s'"
+
+#: hardening/info/ResolveKey.py:60
+#, python-format
+msgid "found no value for info key '%(keyname)s'"
+msgstr "found no value for info key '%(keyname)s'"
+
+#: hardening/info/__init__.py:54
+#, python-format
+msgid "found no value for info key '%(key)s'"
+msgstr "found no value for info key '%(key)s'"
+
+#: hardening/info/__init__.py:69
+#, python-format
+msgid "using default interpolate method for value '%(key)s'"
+msgstr "using default interpolate method for value '%(key)s'"
+
+#: hardening/info/__init__.py:75
+#, python-format
+msgid "missing handler for '%(key)s'"
+msgstr "missing handler for '%(key)s'"
+
+#: hardening/info/__init__.py:332
+#, python-format
+msgid "invalid file encoding in file '%(filename)s'"
+msgstr "invalid file encoding in file '%(filename)s'"
+
+#: hardening/info/__init__.py:358
+#, python-format
+msgid "error while parsing '%(filename)s'"
+msgstr "error while parsing '%(filename)s'"
+
+#: hardening/info/lib/NetworkConfiguration.py:58
+msgid "This system has no IP addresses configured"
+msgstr "This system has no IP addresses configured"
+
+#: hardening/info/lib/NetworkConfiguration.py:64
+msgid "Please choose an IP address to be used for MANAGEMENT access"
+msgstr "Please choose an IP address to be used for MANAGEMENT access"
+
+#: hardening/info/lib/NetworkConfiguration.py:68
+msgid "Please choose an IP address to be used for PUBLIC access"
+msgstr "Please choose an IP address to be used for PUBLIC access"
+
+#: hardening/info/lib/NetworkConfiguration.py:103
+msgid "Please type the IP address of your DNS nameserver"
+msgstr "Please type the IP address of your DNS nameserver"
+
+#: hardening/io/ConsoleWriter.py:74 hardening/io/ConsoleWriter.py:80
+#: hardening/io/ConsoleWriter.py:98 hardening/io/ConsoleWriter.py:106
+#: hardening/io/ConsoleWriter.py:112 hardening/io/ConsoleWriter.py:130
+msgid "yes"
+msgstr "yes"
+
+#: hardening/io/ConsoleWriter.py:81
+msgid "(Y)ES/(n)o"
+msgstr "(Y)ES/(n)o"
+
+#: hardening/io/ConsoleWriter.py:83
+msgid "(yes)/(N)O"
+msgstr "(yes)/(N)O"
+
+#: hardening/io/ConsoleWriter.py:85
+msgid "invalid default value"
+msgstr "invalid default value"
+
+#: hardening/io/ConsoleWriter.py:108
+msgid "(Y)es/(N)o/(C)ancel"
+msgstr "(Y)es/(N)o/(C)ancel"
+
+#: hardening/io/ConsoleWriter.py:113
+msgid "(Y)ES/(n)o/(c)ancel"
+msgstr "(Y)ES/(n)o/(c)ancel"
+
+#: hardening/io/ConsoleWriter.py:115
+msgid "(yes)/(N)O/(c)ancel"
+msgstr "(yes)/(N)O/(c)ancel"
+
+#: hardening/io/ConsoleWriter.py:116 hardening/io/ConsoleWriter.py:134
+msgid "cancel"
+msgstr "cancel"
+
+#: hardening/io/ConsoleWriter.py:117
+msgid "(y)es/(n)o/(C)CANCEL"
+msgstr "(y)es/(n)o/(C)CANCEL"
+
+#: hardening/io/ConsoleWriter.py:148
+msgid "Your input isn't valid"
+msgstr "Your input isn't valid"
+
+#: hardening/io/ConsoleWriter.py:166
+msgid "Your value: "
+msgstr "Your value: "
+
+#: hardening/io/ConsoleWriter.py:187
+#, python-format
+msgid "Please insert value for property '%(property)s'"
+msgstr "Please insert value for property '%(property)s'"
+
+#: hardening/scheduler/__init__.py:82 hardening/scheduler/__init__.py:103
+#: hardening/scheduler/__init__.py:207
+msgid "aborting execution upon user request"
+msgstr "aborting execution upon user request"
+
+#: hardening/scheduler/__init__.py:129
+msgid "Backup location"
+msgstr "Backup location"
+
+#: hardening/scheduler/__init__.py:130
+#, python-format
+msgid "backups have been written to '%(backupdir)s'"
+msgstr "backups have been written to '%(backupdir)s'"
+
+#: hardening/scheduler/__init__.py:138
+msgid "encountered an error, rolling back"
+msgstr "encountered an error, rolling back"
+
+#: hardening/scheduler/__init__.py:217
+msgid "Please select the CMS you wish to harden"
+msgstr "Please select the CMS you wish to harden"
+
+#: hardening/scheduler/__init__.py:218
+msgid "none of them"
+msgstr "none of them"
+
+#: hardening/scheduler/__init__.py:265
+msgid "Select modules to be run"
+msgstr "Select modules to be run"
+
+#: hardening/scheduler/__init__.py:266
+msgid "number to toggle or Return to continue; C to cancel"
+msgstr "number to toggle or Return to continue; C to cancel"
+
+#: hardening/scheduler/__init__.py:287
+#, python-format
+msgid "missing %(runutils)s entry in module %(module)s and section %(section)s"
+msgstr ""
+"missing %(runutils)s entry in module %(module)s and section %(section)s"
+
+#: hardening/scheduler/__init__.py:297
+#, python-format
+msgid "util '%(util)s' is already scheduled"
+msgstr "util '%(util)s' is already scheduled"
+
+#: hardening/scheduler/__init__.py:300
+#, python-format
+msgid "util '%(util)s' is not enabled"
+msgstr "util '%(util)s' is not enabled"
+
+#: hardening/scheduler/__init__.py:364
+#, python-format
+msgid "imported %(module)s.%(class)s"
+msgstr "imported %(module)s.%(class)s"
+
+#: hardening/scheduler/__init__.py:370
+msgid " is not a subclass of HardeningUtil"
+msgstr " is not a subclass of HardeningUtil"
+
+#: hardening/storage/DirectoryTransaction.py:55
+#, python-format
+msgid "Directory %(dirname)s does not exist and will therefore not be altered."
+msgstr ""
+"Directory %(dirname)s does not exist and will therefore not be altered."
+
+#: hardening/storage/DirectoryTransaction.py:84
+#, python-format
+msgid "Writing backup for '%(dirname)s' to '%(backuppath)s'."
+msgstr "Writing backup for '%(dirname)s' to '%(backuppath)s'."
+
+#: hardening/storage/DirectoryTransaction.py:134
+#, python-format
+msgid "Do you want to delete '%(dirname)s'?"
+msgstr "Do you want to delete '%(dirname)s'?"
+
+#: hardening/storage/DirectoryTransaction.py:176
+#, python-format
+msgid "unable to delete '%(dirname)s' because it has been modified"
+msgstr "unable to delete '%(dirname)s' because it has been modified"
+
+#: hardening/storage/FileAndDirectoryTransaction.py:82
+msgid "Ownership already set as expected."
+msgstr "Ownership already set as expected."
+
+#: hardening/storage/FileAndDirectoryTransaction.py:103
+msgid "chown: no changes"
+msgstr "chown: no changes"
+
+#: hardening/storage/FileAndDirectoryTransaction.py:145
+msgid "Permissions already set as expected."
+msgstr "Permissions already set as expected."
+
+#: hardening/storage/FileAndDirectoryTransaction.py:175
+#, python-format
+msgid "invalid mode specified: '%(mode)s'"
+msgstr "invalid mode specified: '%(mode)s'"
+
+#: hardening/storage/FileAndDirectoryTransaction.py:213
+msgid "(recursive)"
+msgstr "(recursive)"
+
+#: hardening/storage/FileAndDirectoryTransaction.py:217
+#, python-format
+msgid ""
+"Do you want to give user %(user)s the ownership of '%(file)s' and its "
+"contents? %(info)s"
+msgstr ""
+"Do you want to give user %(user)s the ownership of '%(file)s' and its "
+"contents? %(info)s"
+
+#: hardening/storage/FileAndDirectoryTransaction.py:226
+#, python-format
+msgid ""
+"Do you want to give group %(group)s the ownership of '%(file)s'and its "
+"contents? %(info)s"
+msgstr ""
+"Do you want to give group %(group)s the ownership of '%(file)s'and its "
+"contents? %(info)s"
+
+#: hardening/storage/FileAndDirectoryTransaction.py:240
+#, python-format
+msgid "Do you want to set permissions of '%(file)s' to '%(mode)s'? %(info)s"
+msgstr "Do you want to set permissions of '%(file)s' to '%(mode)s'? %(info)s"
+
+#: hardening/storage/FileTransaction.py:124
+#, python-format
+msgid "Do you want to delete '%(filename)s'?"
+msgstr "Do you want to delete '%(filename)s'?"
+
+#: hardening/storage/FileTransaction.py:134
+#, python-format
+msgid "The file %(filename)s does not exists and will therefore not be deleted"
+msgstr ""
+"The file %(filename)s does not exists and will therefore not be deleted"
+
+#: hardening/storage/FileTransaction.py:150
+#, python-format
+msgid "unable to modify '%(filename)s' because it has been deleted"
+msgstr "unable to modify '%(filename)s' because it has been deleted"
+
+#: hardening/storage/FileTransaction.py:173
+#, python-format
+msgid "storing to: %(tempname)s"
+msgstr "storing to: %(tempname)s"
+
+#: hardening/storage/FileTransaction.py:181
+#, python-format
+msgid "invoking: %(command)s"
+msgstr "invoking: %(command)s"
+
+#: hardening/storage/FileTransaction.py:218
+#, python-format
+msgid "deleting file '%(filename)s'"
+msgstr "deleting file '%(filename)s'"
+
+#: hardening/storage/FileTransaction.py:231
+#, python-format
+msgid "Writing backup for '%(filename)s' to '%(backuppath)s'."
+msgstr "Writing backup for '%(filename)s' to '%(backuppath)s'."
+
+#: hardening/storage/FileTransaction.py:236
+#, fuzzy, python-format
+msgid "Omitting backup for '%(filename)s' because nothing had to be changed"
+msgstr "Writing backup for '%(filename)s' to '%(backuppath)s'."
+
+#: hardening/storage/FileTransaction.py:263
+#, python-format
+msgid "unable to delete '%(filename)s' because it has been modified"
+msgstr "unable to delete '%(filename)s' because it has been modified"
+
+#: hardening/storage/NetworkInterfacesTransaction.py:110
+#, python-format
+msgid ""
+"Do you want to set '%(key)s' to '%(value)s' for interface %(interface)s?"
+msgstr ""
+"Do you want to set '%(key)s' to '%(value)s' for interface %(interface)s?"
+
+#: hardening/storage/NoTransaction.py:37
+msgid "this transaction will not create any backups!!!"
+msgstr "this transaction will not create any backups!!!"
+
+#: hardening/storage/PasswdTransaction.py:49
+#, python-format
+msgid "User %(username)s has running processes, you cannot modify that user."
+msgstr "User %(username)s has running processes, you cannot modify that user."
+
+#: hardening/storage/PasswdTransaction.py:109
+#, fuzzy, python-format
+msgid "directory %(dirname)s is not a directory and will not be moved"
+msgstr ""
+"Directory %(dirname)s does not exist and will therefore not be altered."
+
+#: hardening/storage/PasswdTransaction.py:114
+#, fuzzy, python-format
+msgid "directory %(dirname)s is not a directory"
+msgstr ""
+"Directory %(dirname)s does not exist and will therefore not be altered."
+
+#: hardening/storage/ServiceTransaction.py:59
+#: hardening/storage/ServiceTransaction.py:65
+msgid "conflicting service states"
+msgstr "conflicting service states"
+
+#: hardening/storage/TextFileTransaction.py:87
+#: hardening/storage/XmlTransaction.py:58
+#: hardening/storage/XmlTransaction.py:76
+#, python-format
+msgid "Do you want to apply the following changes to '%(filename)s'"
+msgstr "Do you want to apply the following changes to '%(filename)s'"
+
+#: hardening/storage/TextFileTransaction.py:104
+#, fuzzy, python-format
+msgid ""
+"Do you want to append the following line to '%(filename)s'?\n"
+"\n"
+"%(indent)s%(line)s\n"
+msgstr ""
+"Do you want to append the following line to '%(filename)s'?\n"
+"\n"
+"&(indent)s%(line)s\n"
+
+#: hardening/storage/TextFileTransaction.py:145
+#, fuzzy, python-format
+msgid ""
+"Do you want to delete the following line from '%(filename)s'?\n"
+"\n"
+"%(indent)s%(line)s\n"
+msgstr ""
+"Do you want to delete the following line from '%(filename)s'?\n"
+"\n"
+"%(indent)s%(line)s\n"
+
+#: hardening/storage/TextFileTransaction.py:159
+#, fuzzy, python-format
+msgid ""
+"Do you want to insert the following line to '%(filename)s'?\n"
+"\n"
+"%(indent)s%(line)s\n"
+msgstr ""
+"Do you want to insert the following line to '%(filename)s'?\n"
+"\n"
+"%(indent)s%(line)s\n"
+
+#: hardening/storage/TextFileTransaction.py:173
+#, fuzzy, python-format
+msgid ""
+"Do you want to replace the following line\n"
+"\n"
+"%(indent)s%(oldline)s\n"
+"\n"
+"by\n"
+"\n"
+"%(indent)s%(newline)s\n"
+"in '%(filename)s'?"
+msgstr ""
+"Do you want to replace the following line\n"
+"\n"
+"%(indent)s%(oldline)s\n"
+"\n"
+"by\n"
+"\n"
+"%(indent)s%(newline)s\n"
+"in '%(filename)s'?"
+
+#: hardening/storage/TextFileTransaction.py:193
+#, python-format
+msgid "Do you want to append the following lines to '%(filename)s'?\n"
+msgstr "Do you want to append the following lines to '%(filename)s'?\n"
+
+#: hardening/storage/Transaction.py:129
+#, fuzzy
+msgid "Do you want to run the following command(s)?"
+msgstr "Do you want to run the following command"
+
+#: hardening/storage/Transaction.py:154
+#, python-format
+msgid "invalid transaction state change: %(status)s --(%(function)s)-> ??"
+msgstr "invalid transaction state change: %(status)s --(%(function)s)-> ??"
+
+#: hardening/storage/__init__.py:89 hardening/storage/__init__.py:117
+#, python-format
+msgid "invalid schema for transaction: %(schema)s"
+msgstr "invalid schema for transaction: %(schema)s"
+
+#: hardening/storage/__init__.py:110
+#, python-format
+msgid "invalid url syntax: %(url)s"
+msgstr "invalid url syntax: %(url)s"
+
+#: hardening/utils/CommandUtil.py:35
+msgid "Do you want to run the following command"
+msgstr "Do you want to run the following command"
+
+#: hardening/utils/DisabledSection.py:37
+#, python-format
+msgid "The section  %(section)s is disabled due to the precondition%(cause)s."
+msgstr "The section  %(section)s is disabled due to the precondition%(cause)s."
+
+#: hardening/utils/DisabledUtil.py:38
+#, python-format
+msgid "The util %(util)s is disabled due to the precondition%(cause)s."
+msgstr "The util %(util)s is disabled due to the precondition%(cause)s."
+
+#: hardening/utils/HardeningUtil.py:53
+#, python-format
+msgid "missing argument '%(option)s' for module %(class)s"
+msgstr "missing argument '%(option)s' for module %(class)s"
+
+#: hardening/utils/HardeningUtil.py:61
+#, python-format
+msgid "this module requires a transaction of type %(transaction)s"
+msgstr "this module requires a transaction of type %(transaction)s"
+
+#: hardening/utils/HardeningUtil.py:71
+#, python-format
+msgid "the following package is required, but not installed: '%(package)s'"
+msgstr "the following package is required, but not installed: '%(package)s'"
+
+#: hardening/utils/HardeningUtil.py:75
+#, python-format
+msgid "the following packages are required, but not installed: %(package)s"
+msgstr "the following packages are required, but not installed: %(package)s"
+
+#: hardening/utils/HardeningUtil.py:112
+#, python-format
+msgid "invalid datatype for key '%(key)s'"
+msgstr "invalid datatype for key '%(key)s'"
+
+#: hardening/utils/HardeningUtil.py:168
+#, python-format
+msgid "running %(transaction)s.begin()"
+msgstr "running %(transaction)s.begin()"
+
+#: hardening/utils/HardeningUtil.py:177
+#, python-format
+msgid "running %(transaction)s.finish()"
+msgstr "running %(transaction)s.finish()"
+
+#: hardening/utils/HardeningUtil.py:190
+#, python-format
+msgid "running %(transaction)s.run()"
+msgstr "running %(transaction)s.run()"
+
+#: hardening/utils/__init__.py:65
+msgid "contains information about that specific hardening step"
+msgstr "contains information about that specific hardening step"
+
+#: hardening/utils/__init__.py:67
+msgid "contains runtime information about this hardening step"
+msgstr "contains runtime information about this hardening step"
+
+#: hardening/utils/__init__.py:69
+msgid "specifies under which condition this util will be run"
+msgstr "specifies under which condition this util will be run"
+
+#: hardening/utils/configfile/ApacheConfigEntry.py:141
+#, python-format
+msgid "requested section '%(name)s %(param)s' not found. Creating section."
+msgstr "requested section '%(name)s %(param)s' not found. Creating section."
+
+#: hardening/utils/configfile/ConfigFileEntry.py:71
+#, python-format
+msgid "invalid value for 'multiple': '%s'"
+msgstr "invalid value for 'multiple': '%s'"
+
+#: hardening/utils/configfile/ConfigFileEntry.py:174
+#, python-format
+msgid "value of '%(key)s' in '%(filename)s' is already up to date"
+msgstr "value of '%(key)s' in '%(filename)s' is already up to date"
+
+#: hardening/utils/configfile/ConfigFileEntry.py:200
+#, python-format
+msgid ""
+"configuration setting has occured multiple times: '%(key)s' in %(filename)s"
+msgstr ""
+"configuration setting has occured multiple times: '%(key)s' in %(filename)s"
+
+#: hardening/utils/configfile/ConfigFileEntry.py:212
+#, python-format
+msgid "%(key)s in %(filename)s: calling insert_line()"
+msgstr "%(key)s in %(filename)s: calling insert_line()"
+
+#: hardening/utils/configfile/ConfigFileEntry.py:221
+#, python-format
+msgid "%(key)s in %(filename)s: calling set_line()"
+msgstr "%(key)s in %(filename)s: calling set_line()"
+
+#: hardening/utils/configfile/ConfigFileEntry.py:228
+#, python-format
+msgid "values of '%(key)s' in '%(filename)s' are already up to date"
+msgstr "values of '%(key)s' in '%(filename)s' are already up to date"
+
+#: hardening/utils/configfile/ConfigFileEntry.py:232
+#, python-format
+msgid ""
+"value '%(key)s%(separator)s%(value)s' in '%(filename)s' is already up to date"
+msgstr ""
+"value '%(key)s%(separator)s%(value)s' in '%(filename)s' is already up to date"
+
+#: hardening/utils/configfile/ConfigLine.py:177
+msgid "missing list separator"
+msgstr "missing list separator"
+
+#: hardening/utils/filesystem/ChangeOwner.py:53
+#, python-format
+msgid "invalid user name: '%(user)s'"
+msgstr "invalid user name: '%(user)s'"
+
+#: hardening/utils/filesystem/ChangeOwner.py:59
+#, python-format
+msgid "invalid group name: '%(group)s'"
+msgstr "invalid group name: '%(group)s'"
+
+#: hardening/utils/module/EnterModule.py:34
+#, python-format
+msgid "Collecting information required for module %(module)s"
+msgstr "Collecting information required for module %(module)s"
+
+#: hardening/utils/module/EnterModule.py:42
+#, python-format
+msgid "Running module %(module)s"
+msgstr "Running module %(module)s"
+
+#: hardening/utils/module/LeaveModule.py:28
+#, python-format
+msgid "Leaving module %(module)s"
+msgstr "Leaving module %(module)s"
+
+#: hardening/utils/net/Firewall.py:87
+msgid "invalid ip address in firewall rule"
+msgstr "invalid ip address in firewall rule"
+
+#: hardening/utils/net/Firewall.py:106
+#, python-format
+msgid "invalid protocol specified: '%(protocol)s'"
+msgstr "invalid protocol specified: '%(protocol)s'"
+
+#: hardening/utils/os/CheckVersion.py:57
+#, python-format
+msgid "invalid key for version check: '%(key)s'"
+msgstr "invalid key for version check: '%(key)s'"
+
+#: hardening/utils/os/CheckVersion.py:69
+#, python-format
+msgid ""
+"It does seems like %(key)s is not installed on your system. This isn't a "
+"problem if you don't need it but you should consider removingthe hardening "
+"module for %(key)s in the global config.yml."
+msgstr ""
+"It seems like %(key)s is not installed on your system. This isn't a "
+"problem if you don't need it but you should consider removingthe hardening "
+"module for %(key)s in the global config.yml."
+
+#: hardening/utils/os/CheckVersion.py:77
+#, python-format
+msgid ""
+"Your %(key)s version is older then '%(version)s'.You should consider "
+"updating it."
+msgstr ""
+"Your %(key)s version is older than '%(version)s'.You should consider "
+"updating it."
+
+#: hardening/utils/os/CheckVersion.py:84
+#, python-format
+msgid "Your %(key)s version is up to date."
+msgstr "Your %(key)s version is up to date."
+
+#: hardening/utils/os/ConfigureService.py:50
+#, python-format
+msgid "invalid service action: '%(action)s'"
+msgstr "invalid service action: '%(action)s'"
+
+#~ msgid "invalid version comparison operator: '%(operation)s'"
+#~ msgstr "invalid version comparison operator: '%(operation)s'"

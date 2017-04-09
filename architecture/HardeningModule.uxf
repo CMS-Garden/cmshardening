@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="14.1.1">
+  <zoom_level>10</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>450</x>
+      <y>220</y>
+      <w>320</w>
+      <h>220</h>
+    </coordinates>
+    <panel_attributes>/HardeningModule/
+{interface}
+--
+-items: List&lt;id:int, Array[check,hardening]
+--
++setUp(): List&lt;Transaction&gt;
++run(): Boolean
++provides():Set&lt;String&gt;
++requires():Set&lt;String&gt;
++preCommitCallback(t:Transaction): void
++postCommitCallback(t:Transaction): void
+bg=orange
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>290</x>
+      <y>530</y>
+      <w>310</w>
+      <h>130</h>
+    </coordinates>
+    <panel_attributes>HardeningSet
+{abstract}
+--
+--
++setUp(): List&lt;Transaction&gt;
++run(); Boolean
++preCommitCallback(t:Transaction): void
++postCommitCallback(t:Transaction): void
+bg=orange</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>650</x>
+      <y>530</y>
+      <w>340</w>
+      <h>130</h>
+    </coordinates>
+    <panel_attributes>HardeningItem
+{Abstract}
+--
+--
++setUp(): List&lt;Transaction&gt;
+
++preCommitCallback(t:Transaction): void
++postCommitCallback(t:Transaction): void
+bg=orange</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>440</x>
+      <y>430</y>
+      <w>170</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>150.0;10.0;10.0;100.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>670</x>
+      <y>430</y>
+      <w>180</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>10.0;10.0;160.0;100.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>360</x>
+      <y>300</y>
+      <w>110</w>
+      <h>250</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-&gt;</panel_attributes>
+    <additional_attributes>10.0;230.0;10.0;10.0;90.0;10.0</additional_attributes>
+  </element>
+</diagram>

@@ -1,0 +1,761 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-06-23 16:14+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: hardening.py:42
+msgid "This tool MUST be run with root privileges, obtained using sudo!"
+msgstr ""
+"Dieses Tool MUSS mit ROOT-Rechten ausgeführt werden, bitte nutzen Sie sudo!"
+
+#: hardening.py:47
+#
+msgid ""
+"You should not run this tool using the root account\n"
+"Instead, you should use sudo!"
+msgstr ""
+"Sie nutzen nicht den ROOT-Account\n"
+"Nutzen sie sudo!"
+
+#: hardening.py:53
+msgid ""
+" ___ ___ ___   ___ __  __ ___   ___\n"
+"| _ ) __|_ _| / __|  \\/  / __| |_  )\n"
+"| _ \\__ \\| | | (__| |\\/| \\__ \\_ / /\n"
+"|___/___/___(_)___|_|  |_|___(_)___|\n"
+msgstr ""
+" ___ ___ ___   ___ __  __ ___   ___\n"
+"| _ ) __|_ _| / __|  \\/  / __| |_  )\n"
+"| _ \\__ \\| | | (__| |\\/| \\__ \\_ / /\n"
+"|___/___/___(_)___|_|  |_|___(_)___|\n"
+
+#: hardening.py:58
+msgid ""
+"This script aims to harden some Content Management Systems (CMS) to increase "
+"the security. Among others the configuration file(s) of the CMS is altered "
+"to make use of a more secure configuration. The script can be applied to an "
+"initial installed and configured CMS as well as to a long-lived "
+"installation.\n"
+" For every automatic altered file there will be a backup of the original "
+"state in the corresponding backup directory."
+msgstr ""
+"Die Skriptlösung zur Härtung diverser Content Management Systeme (CMS) besteht aus zwei Teilen:\nDieser Teil dient "
+"der Härtung des Betriebssystems sowie der dem CMS zugrunde liegenden Basiskomponenten (Webserver, Datenbank, Auslieferungssystem). "
+"Installationen von Plone und Liferay werden ebenfalls von diesem Skript abgesichert. "
+"Zur Härtung der PHP-basierten CMSe Joomla!, Wordpress und Typo3 muss im Anschluss an "
+"dieses Skript der zweite Teil der Skriptlösung in Form eines eigenen Skriptes aufgerufen werden. Die Anweisungen dazu werden Ihnen nach Abschluss dieses Skriptes angezeigt."
+"\nDieses Skript kann sowohl auf neu eingerichtete als auch bereits laufende CMS-Installationen angewendet werden."
+"\nFür jede vom Skript angepasste Datei wird eine Sicherungskopie des ursprünglichen Zustands in einem Backup-Verzeichnis angelegt."
+
+#: hardening.py:65
+msgid "Introduction"
+msgstr "Einführung"
+
+#: hardening.py:69
+msgid ""
+"The following adjustments will alter your system.\n"
+"There is no guarantee the altered components are still working as expected.\n"
+"Please use this script carefully and read up about the implication of the "
+"changes. Although these hardening steps increase the security of your "
+"system, there still might exist vulnerabilities due to implementation error "
+"of certain components. \n"
+"The configuration suggested by this script is aimed for the test environment "
+"described in 'Sicherheitsstudie Content Management Systeme 2.0'. Other "
+"environments may require a different configuration."
+msgstr ""
+"Die nachfolgend durchgeführten Anpassungen verändern die Konfiguration Ihres Systems. "
+"Es kann keine Garantie gegeben werden, dass nach Anwendung der Härtungsmaßnahmen "
+"weiterhin alle Komponenten fehlerfrei funktionieren. "
+"Bitte nutzen Sie dieses Skript mit Umsicht und informieren Sie sich über die Auswirkungen der Änderungen. "
+"Die durchgeführten Härtungsmaßnahmen erhöhen die Sicherheit des Systems deutlich, können jedoch keine absolute Sicherheit bieten. "
+"Beispielsweise können Schwachstellen in der Implementierung einer Komponente (z.B. dem CMS) dazu führen, dass weiterhin Sicherheitslücken bestehen. "
+"\nDie von diesem Skript vorgeschlagene Konfiguration ist auf die in der "
+"'Sicherheitsstudie Content Management Systeme 2.0' beschriebene Systemumgebung abgestimmt."
+"Andere Umgebungen erfordern möglicherweise andere Einstellungen."
+
+#: hardening.py:80
+msgid "Attention!"
+msgstr "Achtung!"
+
+#: hardening.py:62 hardening/io/ConsoleWriter.py:64
+#: hardening/io/ConsoleWriter.py:82 hardening/io/ConsoleWriter.py:95
+#: hardening/io/ConsoleWriter.py:113
+msgid "no"
+msgstr "nein"
+
+#: hardening.py:63
+msgid "WARNING --- WARNING --- WARNING"
+msgstr "WARNUNG --- WARNUNG --- WARNUNG"
+
+#: hardening.py:64
+#, python-brace-format
+msgid ""
+"Be aware that this tool may impair your system if you are concurrently using "
+"a system management suite, such as PLESK or CONFIXX !!!§{n}§{n}You should "
+"only continue if you are are sure that no such tools are running!§{n}§{n}Do "
+"you really want to continue?"
+msgstr ""
+"Grundsätzlich ist zu beachten, dass die Anpassungen zur Härtung nicht "
+"durchgeführt werden sollten, sofern Servermanagement-Tools wie Plesk, "
+"Confixx, LiveConfig, sysCP o.Ä. installiert sind. Sind Sie sicher, dass Sie "
+"fortfahren möchten?"
+
+#: hardening.py:77
+msgid "Hardening aborted!!!!"
+msgstr "Härtung abgebrochen!!!!"
+
+#: hardening.py:78
+msgid ""
+"The hardening was stopped due to user request or unexpected behaviour. No "
+"hardening effects were applied."
+msgstr ""
+"Die Härtung wurde auf Wunsch des Benutzers abgebrochen oder unerwartet "
+"gestoppt. Es wurde keine Härtungsmaßnahmen angewendet."
+
+#: hardening.py:90
+msgid "Log location"
+msgstr "Log Ort"
+
+#: hardening.py:91
+#, python-format
+msgid "Your hardening log was written to '%(location)s'"
+msgstr "Das Härtungs-Log wurde nach '%(location)s' geschrieben."
+
+#: hardening.py:100
+msgid "No hardening log was created because no changes are necessary."
+msgstr "Es wurde kein Härtungs-Log angelegt, da keine notwendigen Änderungen festgestellt wurden."
+
+#: hardening.py:96
+msgid "Hardening finished!!!!"
+msgstr "Härtung abgeschlossen!!!!"
+
+#: hardening.py:97
+#, python-brace-format
+msgid ""
+"If you're also planning to harden one of WORDPRESS, JOOMLA or TYPO3, you "
+"should run the PHP-part of this tool:§{n}§{n}  cd ../php && php index.php§{n}"
+"§{n}Please check that all your services (apache, sshd, etc.) are running as "
+"expected. If they do, you should restart your computer to make sure the "
+"hardening effects are applied.§{n}§{n}Otherwise, you should restore the old "
+"configuration from the backup files.§{n}"
+msgstr ""
+"Es wurden keine Dienste automatisch neu gestartet. Bitte überprüfen Sie "
+"manuell, ob alle gehärteten Dienste (apache, sshd, etc.) erfolgreich neu "
+"gestartet werden können und weiterhin wie erwartet funktionieren. Bitte "
+"starten Sie nach einem erfolgreichen Test das System neu, um sämtliche "
+"Härtungseffekte anzuwenden.§{n}§{n}Sollten nicht alle Dienste wie erwartet "
+"funktionieren, stellen Sie bitte die originalen Konfigurationsdateien aus "
+"dem Backup-Verzeichnis wieder her.§{n}Um die PHP-basierten Content-"
+"Management-Systeme WORDPRESS, JOOMLA oder TYPO3 zu härten, führen Sie bitte "
+"folgendes Härtungsskript aus:§{n}§{n}  cd ../php && php index.php§{n}"
+
+#: hardening/info/PhpInfo.py:43
+#, fuzzy
+msgid ""
+"Please specify the full path to your PHP 'php.ini' file. This is by default "
+"located at '/etc/php5/php.ini' or '/etc/php5/fpm/php.ini' but was not found there."
+msgstr ""
+"Bitte geben Sie den kompletten Pfad zu Ihrer PHP 'php.ini' Datei an."
+"Diese Datei ist standardmäßig unter '/etc/php5/php.ini' oder '/etc/php5/fpm/php.ini' zu finden, konnte dort jedoch nicht gefunden werden."
+
+#: hardening/info/PloneInfo.py:27
+msgid ""
+"Please specify the full path to your plone buildout directory. This "
+"directory is by default located in /opt/plone/ and contains the plone "
+"buildout.cfg. E.g.: /opt/plone/buildout/"
+msgstr ""
+"Bitte geben Sie den kompletten Pfad zu Ihrem Plone Buildout Verzeichnis "
+"an. Dieses Verzeichnis ist standardmäßig im Verzeichnis /opt/plone/ zu "
+"finden und enthält die Plone buildout.cfg. Beispiel: /opt/plone/buildout/"
+
+#: hardening/info/PloneInfo.py:44
+msgid ""
+"The specified directory does not exists or is not the plone buildout "
+"directory. Do you want to specify the path to your plone buildout direcctory "
+"again? If your press \"no\" the script will abort."
+msgstr ""
+"Das angegebene Verzeichnis entspricht nicht dem Plone Buildout Verzeichnis oder existiert "
+"nicht. Möchten Sie den Pfad zum Plone Buildout Verzeichnis erneut angeben"
+"? Wenn Sie \"nein\" angeben wird das Skript beendet."
+
+#: hardening/info/LiferayInfo.py:35
+msgid "Please type the path of your liferay home directory"
+msgstr "Bitte geben Sie den Pfad Ihres Liferay Basisverzeichnisses ein"
+
+#: hardening/info/ResolveKey.py:45
+#, python-format
+msgid "invalid info key in configuration: '%(keyname)s'"
+msgstr "Ungültiger info Wert in der Konfiguration: '%(keyname)s'"
+
+#: hardening/info/ResolveKey.py:52
+#, python-format
+msgid "found no value for info key '%(keyname)s'"
+msgstr "Keinen gültigen Wert gefunden'%(keyname)s'"
+
+#: hardening/info/__init__.py:48
+#, python-format
+msgid "found no value for info key '%(key)s'"
+msgstr "Keinen gültigen Wert gefunden'%(key)s'"
+
+#: hardening/info/__init__.py:63
+#, python-format
+msgid "using default interpolate method for value '%(key)s'"
+msgstr "Nutzen der Standard interpolate Methode '%(key)s'"
+
+#: hardening/info/__init__.py:67
+#, python-format
+msgid "missing handler for '%(key)s'"
+msgstr "Fehlender Handler für '%(key)s'"
+
+#: hardening/info/__init__.py:307
+#, python-format
+msgid "invalid file encoding in file '%(filename)s'"
+msgstr "Ungültige Kodierung in der Datei '%(filename)s'"
+
+#: hardening/info/__init__.py:333
+#, python-format
+msgid "error while parsing '%(filename)s'"
+msgstr "Fehler beim Parsen '%(filename)s'"
+
+#: hardening/info/lib/NetworkConfiguration.py:58
+msgid "This system has no IP addresses configured"
+msgstr "Es wurden keine IP-Adressen konfiguriert"
+
+#: hardening/info/lib/NetworkConfiguration.py:64
+msgid "Please choose an IP address to be used for MANAGEMENT access"
+msgstr ""
+"Bitte wählen Sie eine IP-Adresse die für den MANAGEMENT Zugriff verwendet "
+"wird"
+
+#: hardening/info/lib/NetworkConfiguration.py:68
+msgid "Please choose an IP address to be used for PUBLIC access"
+msgstr ""
+"Bitte wählen Sie eine IP-Adresse die für den PUBLIC Zugriff verwendet wird"
+
+#: hardening/info/lib/NetworkConfiguration.py:103
+msgid "Please type the IP address of your DNS nameserver"
+msgstr "Bitte geben Sie die IP-Adresse Ihres DNS Nameservers ein"
+
+#: hardening/io/ConsoleWriter.py:57 hardening/io/ConsoleWriter.py:62
+#: hardening/io/ConsoleWriter.py:80 hardening/io/ConsoleWriter.py:87
+#: hardening/io/ConsoleWriter.py:93 hardening/io/ConsoleWriter.py:111
+msgid "yes"
+msgstr "ja"
+
+#: hardening/io/ConsoleWriter.py:63
+msgid "(Y)ES/(n)o"
+msgstr "(J)A/(n)ein"
+
+#: hardening/io/ConsoleWriter.py:65
+msgid "(yes)/(N)O"
+msgstr "(j)a/(N)EIN"
+
+#: hardening/io/ConsoleWriter.py:67
+msgid "invalid default value"
+msgstr "Ungültiger Standard-Wert"
+
+#: hardening/io/ConsoleWriter.py:89
+msgid "(Y)es/(N)o/(C)ancel"
+msgstr "(J)a/(N)ein/(A)bbrechen"
+
+#: hardening/io/ConsoleWriter.py:94
+msgid "(Y)ES/(n)o/(c)ancel"
+msgstr "(J)A/(n)ein/(a)bbrechen"
+
+#: hardening/io/ConsoleWriter.py:96
+msgid "(yes)/(N)O/(c)ancel"
+msgstr "(ja)/(N)EIN/(a)bbrechen"
+
+#: hardening/io/ConsoleWriter.py:97 hardening/io/ConsoleWriter.py:115
+msgid "cancel"
+msgstr "abbrechen"
+
+#: hardening/io/ConsoleWriter.py:98
+msgid "(y)es/(n)o/(C)CANCEL"
+msgstr "(j)a/(n)ein/(A)BBRECHEN"
+
+#: hardening/io/ConsoleWriter.py:129
+msgid "Your input isn't valid"
+msgstr "Ihre Eingabe ist ungültig"
+
+#: hardening/io/ConsoleWriter.py:146
+msgid "Your value: "
+msgstr "Ihr Wert: "
+
+#: hardening/io/ConsoleWriter.py:167
+#, python-format
+msgid "Please insert value for property '%(property)s'"
+msgstr "Bitte geben Sie einen Wert für '%(property)s' ein"
+
+#: hardening/scheduler/__init__.py:81 hardening/scheduler/__init__.py:105
+#: hardening/scheduler/__init__.py:201
+msgid "aborting execution upon user request"
+msgstr "Abbruch durch den Benutzer"
+
+#: hardening/scheduler/__init__.py:128
+msgid "Backup location"
+msgstr "Ort der Backup-Dateien"
+
+#: hardening/scheduler/__init__.py:129
+#, python-format
+msgid "backups have been written to '%(backupdir)s'"
+msgstr "Backup wurde geschrieben nach '%(backupdir)s'"
+
+#: hardening/scheduler/__init__.py:137
+msgid "encountered an error, rolling back"
+msgstr "Ein Fehler ist aufgetreten, Änderungen werden rückgängig gemacht"
+
+#: hardening/scheduler/__init__.py:211
+msgid "Please select the CMS you wish to harden"
+msgstr "Bitte wählen Sie das CMS aus, das Sie härten möchten. Hierdurch werden CMS-spezifische Einstellungen für die Komponenten vorausgewählt. Bitte beachten Sie, dass für die PHP-basierten CMSe zusätzlich die Ausführung des zweiten Skriptteils erforderlich ist."
+
+#: hardening/scheduler/__init__.py:212
+msgid "none of them"
+msgstr "keins davon"
+
+#: hardening/scheduler/__init__.py:242
+msgid "Select modules to be run"
+msgstr "Bitte wählen Sie die zu startenden Module"
+
+#: hardening/scheduler/__init__.py:243
+msgid "number to toggle or Return to continue; C to cancel"
+msgstr "Nummer zum Auswählen, Enter zum Fortfahren und C zum Abbrechen"
+
+#: hardening/scheduler/__init__.py:262
+#, python-format
+msgid "missing %(runutils)s entry in module %(module)s and section %(section)s"
+msgstr ""
+"Fehlende %(runutils)s Einträge im Modul %(module)s und Sektion %(section)s"
+
+#: hardening/scheduler/__init__.py:272
+#, python-format
+msgid "util '%(util)s' is already scheduled"
+msgstr "Util '%(util)s' ist bereits geplant"
+
+#: hardening/scheduler/__init__.py:275
+#, python-format
+msgid "util '%(util)s' is not enabled"
+msgstr "Util '%(util)s' ist nicht aktiviert"
+
+#: hardening/scheduler/__init__.py:336
+#, python-format
+msgid "imported %(module)s.%(class)s"
+msgstr "%(module)s.%(class)s importiert"
+
+#: hardening/scheduler/__init__.py:342
+msgid " is not a subclass of HardeningUtil"
+msgstr " ist keine Unterklasse von HardeningUtil"
+
+#: hardening/storage/DirectoryTransaction.py:48
+#, python-format
+msgid "Directory %(dirname)s does not exist and will therefore not be altered."
+msgstr ""
+"Das Verzeichnis %(dirname)s existiert nicht und konnte daher nicht geändert werden."
+
+#: hardening/storage/DirectoryTransaction.py:75
+#, python-format
+msgid "Writing backup for '%(dirname)s' to '%(backuppath)s'."
+msgstr "Backup für '%(dirname)s' wird nach '%(backuppath)s' geschrieben."
+
+#: hardening/storage/DirectoryTransaction.py:122
+#, python-format
+msgid "Do you want to delete '%(dirname)s'?"
+msgstr "Möchten Sie die Datei '%(dirname)s' löschen?"
+
+#: hardening/storage/DirectoryTransaction.py:160
+#, python-format
+msgid "unable to delete '%(dirname)s' because it has been modified"
+msgstr "'%(dirname)s' kann nicht gelöscht werden, da es vorher bearbeitet wurde"
+
+#: hardening/storage/FileAndDirectoryTransaction.py:66
+msgid "Ownership already set as expected."
+msgstr ""
+"Der Dateieigentümer entspricht bereits den Vorgaben der Härtungsmaßnahmen."
+
+#: hardening/storage/FileAndDirectoryTransaction.py:85
+#
+msgid "chown: no changes"
+msgstr "chown: keine Änderungen vorgenommen."
+
+#: hardening/storage/FileAndDirectoryTransaction.py:185
+msgid "(recursive)"
+msgstr "(rekursiv)"
+
+#: hardening/storage/FileAndDirectoryTransaction.py:120
+msgid "Permissions already set as expected."
+msgstr ""
+"Die Berechtigungen entsprechen bereits den Vorgaben der Härtungsmaßnahmen."
+
+#: hardening/storage/FileAndDirectoryTransaction.py:147
+#, python-format
+msgid "invalid mode specified: '%(mode)s'"
+msgstr "Ungültiger Modus angegeben: '%(mode)s'"
+
+#: hardening/storage/FileAndDirectoryTransaction.py:189
+#, python-format
+msgid ""
+"Do you want to give user %(user)s the ownership of '%(file)s' and its "
+"contents? %(info)s"
+msgstr ""
+"Möchten sie dem Nutzer %(user)s die Rechte für '%(file)s' und seine Inhalte geben? %(info)s"
+
+#: hardening/storage/FileAndDirectoryTransaction.py:198
+#, python-format
+msgid ""
+"Do you want to give group %(group)s the ownership of '%(file)s'and its "
+"contents? %(info)s"
+msgstr ""
+"Möchten sie der Gruppe %(group)s die Rechte für '%(file)s' und seine Inhalte geben? %(info)s"
+
+#: hardening/storage/FileAndDirectoryTransaction.py:212
+#, python-format
+msgid "Do you want to set permissions of '%(file)s' to '%(mode)s'? %(info)s"
+msgstr "Möchten Sie die Rechte von '%(file)s' zu '%(mode)s' ändern? %(info)s"
+
+#: hardening/storage/FileTransaction.py:117
+#, python-format
+msgid "Do you want to delete '%(filename)s'?"
+msgstr "Möchten Sie die Datei '%(filename)s' löschen?"
+
+#: hardening/storage/FileTransaction.py:126
+#, python-format
+msgid "The file %(filename)s does not exists and will therefore not be deleted"
+msgstr "Die Datei %(filename)s existiert nicht und kann daher nicht gelöscht werden."
+
+#: hardening/storage/FileTransaction.py:141
+#, python-format
+msgid "unable to modify '%(filename)s' because it has been deleted"
+msgstr "Ändern von '%(filename)s' nicht möglich, weil die Datei gelöscht wurde."
+
+#: hardening/storage/FileTransaction.py:164
+#, python-format
+msgid "storing to: %(tempname)s"
+msgstr "Speichern nach: %(tempname)s"
+
+#: hardening/storage/FileTransaction.py:172
+#, python-format
+msgid "invoking: %(command)s"
+msgstr "Aufruf von: %(command)s"
+
+#: hardening/storage/FileTransaction.py:195
+#, python-format
+msgid "deleting file '%(filename)s'"
+msgstr "Löschen der Datei '%(filename)s'"
+
+#: hardening/storage/FileTransaction.py:207
+#, python-format
+msgid "Writing backup for '%(filename)s' to '%(backuppath)s'."
+msgstr "Backup für '%(filename)s' wird nach '%(backuppath)s' geschrieben."
+
+#: hardening/storage/FileTransaction.py:227
+#, python-format
+msgid "unable to delete '%(filename)s' because it has been modified"
+msgstr "'%(filename)s' kann nicht gelöscht werden, da es vorher bearbeitet wurde"
+
+#: hardening/storage/NetworkInterfacesTransaction.py:97
+#, python-format
+msgid ""
+"Do you want to set '%(key)s' to '%(value)s' for interface %(interface)s?"
+msgstr "Möchten Sie '%(key)s' nach '%(value)s', für das Interface '%(interface)s', ändern?"
+
+#: hardening/storage/NoTransaction.py:32
+msgid "this transaction will not create any backups!!!"
+msgstr "Diese Transaktion erstellt keine Sicherungen!!!"
+
+#: hardening/storage/ServiceTransaction.py:54
+#: hardening/storage/ServiceTransaction.py:60
+msgid "conflicting service states"
+msgstr "Konflikte beim Service-Status"
+
+#: hardening/storage/TextFileTransaction.py:74
+#: hardening/storage/XmlTransaction.py:52
+#: hardening/storage/XmlTransaction.py:70
+#, python-format
+msgid "Do you want to apply the following changes to '%(filename)s'"
+msgstr "Möchten Sie die folgenden Änderungen annehmen: '%(filename)s'"
+
+#: hardening/storage/TextFileTransaction.py:94
+#, python-format
+msgid ""
+"Do you want to append the following line to '%(filename)s'?\n"
+"\n"
+"%(indent)s%(line)s\n"
+msgstr ""
+"Möchten Sie die folgende Zeile an '%(filename)s' anhängen?\n"
+"\n"
+"%(indent)s%(line)s\n"
+
+#: hardening/storage/TextFileTransaction.py:131
+#, python-format
+msgid ""
+"Do you want to delete the following line from '%(filename)s'?\n"
+"\n"
+"%(indent)s%(line)s\n"
+msgstr ""
+"Möchten Sie die folgenden Zeile aus '%(filename)s' löschen?\n"
+"\n"
+"%(indent)s%(line)s\n"
+
+#: hardening/storage/TextFileTransaction.py:143
+#, python-format
+msgid ""
+"Do you want to insert the following line to '%(filename)s'?\n"
+"\n"
+"%(indent)s%(line)s\n"
+msgstr ""
+"Möchten Sie die folgenden Zeile in '%(filename)s' einfügen?\n"
+"\n"
+"%(indent)s%(line)s\n"
+
+#: hardening/storage/TextFileTransaction.py:155
+#, python-format
+msgid ""
+"Do you want to replace the following line\n"
+"\n"
+"%(indent)s%(oldline)s\n"
+"\n"
+"by\n"
+"\n"
+"%(indent)s%(newline)s\n"
+"in '%(filename)s'?"
+msgstr ""
+"Möchten Sie die folgende Zeile ersetzen\n"
+"\n"
+"%(indent)s%(oldline)s\n"
+"\n"
+"durch\n"
+"\n"
+"%(indent)s%(newline)s\n"
+"in '%(filename)s'?"
+
+#: hardening/storage/TextFileTransaction.py:173
+#, python-format
+msgid "Do you want to append the following lines to '%(filename)s'?\n"
+msgstr "Möchten Sie die folgende(n) Zeile(n) an '%(filename)s' anhängen? \n"
+
+#: hardening/storage/Transaction.py:133
+#, python-format
+msgid "invalid transaction state change: %(status)s --(%(function)s)-> ??"
+msgstr "Unzulässiger Wechsel des Transaktionsstatus: %(status)s --(%(function)s)-> ??"
+
+#: hardening/storage/__init__.py:70 hardening/storage/__init__.py:98
+#, python-format
+msgid "invalid schema for transaction: %(schema)s"
+msgstr "Unzulässiges Schema für Transaktion: %(schema)s"
+
+#: hardening/storage/__init__.py:91
+#, python-format
+msgid "invalid url syntax: %(url)s"
+msgstr "Ungültige URL-Syntax: %(url)s"
+
+#: hardening/utils/CommandUtil.py:31
+#
+msgid "Do you want to run the following command"
+msgstr "Möchten Sie das folgende Kommando ausführen?"
+
+#: hardening/utils/DisabledSection.py:30
+#, python-format
+msgid "The section  %(section)s is disabled due to the precondition%(cause)s."
+msgstr "Der Abschnitt %(section)s ist aufgrund der Vorbedingung %(cause)s deaktiviert."
+
+#: hardening/utils/DisabledUtil.py:31
+#, python-format
+msgid "The util %(util)s is disabled due to the precondition%(cause)s."
+msgstr "Der Abschnitt %(util)s ist aufgrund der Vorbedingung %(cause)s deaktiviert."
+
+#: hardening/utils/HardeningUtil.py:49
+#, python-format
+msgid "missing argument '%(option)s' for module %(class)s"
+msgstr "Fehlendes Argument '%(option)s' für Modul %(class)s"
+
+#: hardening/utils/HardeningUtil.py:57
+#, python-format
+msgid "this module requires a transaction of type %(transaction)s"
+msgstr "Dieses Modul benötigt eine Transaktion des Typs %(transaction)s"
+
+#: hardening/utils/HardeningUtil.py:67
+#, python-format
+msgid "the following package is required, but not installed: '%(package)s'"
+msgstr "Das folgende Paket ist nicht installiert, wird aber benötigt: '%(package)s'"
+
+#: hardening/utils/HardeningUtil.py:70
+#, python-format
+msgid "the following packages are required, but not installed: %(package)s"
+msgstr ""
+"Die folgenden Pakete sind nicht installiert, werden aber benötigt: '%(package)s'"
+
+#: hardening/utils/HardeningUtil.py:104
+#, python-format
+msgid "invalid datatype for key '%(key)s'"
+msgstr "Ungültiger Datentyp für '%(key)s'"
+
+#: hardening/utils/HardeningUtil.py:157
+#, python-format
+msgid "running %(transaction)s.begin()"
+msgstr ""
+
+#: hardening/utils/HardeningUtil.py:166
+#, python-format
+msgid "running %(transaction)s.finish()"
+msgstr ""
+
+#: hardening/utils/HardeningUtil.py:179
+#, python-format
+msgid "running %(transaction)s.run()"
+msgstr ""
+
+#: hardening/utils/__init__.py:56
+msgid "contains information about that specific hardening step"
+msgstr "Enthält Informationen über den Härtungsschritt"
+
+#: hardening/utils/__init__.py:58
+msgid "contains runtime information about this hardening step"
+msgstr "Enthält runtime Informationen über den Härtungsschritt"
+
+#: hardening/utils/__init__.py:60
+msgid "specifies under which condition this util will be run"
+msgstr "legt fest unter welchen Bedingungen dieser util laufen wird"
+
+#: hardening/utils/configfile/ApacheConfigEntry.py:132
+#, python-format
+msgid "requested section '%(name)s %(param)s' not found. Creating section."
+msgstr ""
+"Der angeforderter Abschnitt '%(name)s %(param)s' wurde nicht gefunden. Abschnitt wird "
+"erstellt."
+
+#: hardening/utils/configfile/ConfigFileEntry.py:70
+#, python-format
+msgid "invalid value for 'multiple': '%s'"
+msgstr "ungültiger Wert für 'multiple': '%s'"
+
+#: hardening/utils/configfile/ConfigFileEntry.py:171
+#, python-format
+msgid "value of '%(key)s' in '%(filename)s' is already up to date"
+msgstr ""
+"Werte von '%(key)s' in '%(filename)s' entsprechen bereits den Vorgaben der "
+"Härtungsmaßnahmen."
+
+#: hardening/utils/configfile/ConfigFileEntry.py:187
+#, python-format
+msgid ""
+"configuration setting has occured multiple times: '%(key)s' in %(filename)s"
+msgstr "Konfigurationseinstellung ist mehrfach aufgetreten: '%(key)s' in %(filename)s"
+
+#: hardening/utils/configfile/ConfigFileEntry.py:199
+#, python-format
+msgid "%(key)s in %(filename)s: calling insert_line()"
+msgstr "%(key)s in %(filename)s: ruft insert_line() auf"
+
+#: hardening/utils/configfile/ConfigFileEntry.py:208
+#, python-format
+msgid "%(key)s in %(filename)s: calling set_line()"
+msgstr "%(key)s in %(filename)s: ruft set_line() auf"
+
+#: hardening/utils/configfile/ConfigFileEntry.py:215
+#, python-format
+msgid "values of '%(key)s' in '%(filename)s' are already up to date"
+msgstr ""
+"Werte von '%(key)s' in '%(filename)s' entsprechen bereits den Vorgaben der "
+"Härtungsmaßnahmen."
+
+#: hardening/utils/configfile/ConfigFileEntry.py:220
+#, python-format
+msgid ""
+"value '%(key)s%(separator)s%(value)s' in '%(filename)s' is already up to date"
+msgstr ""
+"Wert '%(key)s%(separator)s%(value)s' in '%(filename)s' entspricht bereits den Vorgaben der Härtungsmaßnahmen."
+
+#: hardening/utils/configfile/ConfigLine.py:155
+msgid "missing list separator"
+msgstr "Fehlender List-Separator"
+
+#: hardening/utils/filesystem/ChangeOwner.py:50
+#, python-format
+msgid "invalid user name: '%(user)s'"
+msgstr "ungülter Nutzername: '%(user)s'"
+
+#: hardening/utils/filesystem/ChangeOwner.py:56
+#, python-format
+msgid "invalid group name: '%(group)s'"
+msgstr "ungültiger Gruppennname: '%(group)s'"
+
+#: hardening/utils/module/EnterModule.py:30
+#, python-format
+msgid "Collecting information required for module %(module)s"
+msgstr "Sammeln von benötigten Informationen für das Modul %(module)s"
+
+#: hardening/utils/module/EnterModule.py:38
+#, python-format
+msgid "Running module %(module)s"
+msgstr "Starte Modul %(module)s"
+
+#: hardening/utils/module/LeaveModule.py:25
+#, python-format
+msgid "Leaving module %(module)s"
+msgstr "Schliesse Modul %(module)s"
+
+#: hardening/utils/net/Firewall.py:81
+msgid "invalid ip address in firewall rule"
+msgstr "Ungültige IP-Adresse in Firewall-Regel"
+
+#: hardening/utils/net/Firewall.py:99
+#, python-format
+msgid "invalid protocol specified: '%(protocol)s'"
+msgstr "Ungültiges Protokoll angegeben: '%(protocol)s'"
+
+#: hardening/utils/os/CheckVersion.py:63
+#, python-format
+msgid "invalid version comparison operator: '%(operation)s'"
+msgstr "Ungültiger Vergleichsoperator: '%(operation)s'"
+
+#: hardening/utils/os/CheckVersion.py:70
+#, python-format
+msgid "invalid key for version check: '%(key)s'"
+msgstr "Ungültiger Schlüssel für Versionsprüfung: '%(key)s'"
+
+#: hardening/utils/os/CheckVersion.py:81
+#, python-format
+msgid ""
+"It does seems like %(key)s is not installed on your system. This isn't a "
+"problem if you don't need it but you should consider removingthe hardening "
+"module for %(key)s in the global config.yml."
+msgstr ""
+"%(key)s konnte nicht gefunden werden. Das ist kein Problem, wenn Sie das "
+"Härtungsmodul nicht benötigen. Sie sollten jedoch %(key)s deaktivieren."
+
+#: hardening/utils/os/CheckVersion.py:93
+#, python-format
+msgid ""
+"Your %(key)s version is older then '%(version)s'.You should consider "
+"updating it."
+msgstr "Ihre Version von %(key)s ist älter als '%(version)s'. Sie sollten die Version updaten."
+
+#: hardening/utils/os/CheckVersion.py:101
+#: hardening/utils/os/CheckVersion.py:106
+#, python-format
+msgid "Your %(key)s version is up to date."
+msgstr "Die %(key)s Version ist aktuell."
+
+#: hardening/utils/os/ConfigureService.py:50
+#, python-format
+msgid "invalid service action: '%(action)s'"
+msgstr "Ungültige Aktion: '%(action)s'"
+
+#~ msgid "values of '%s' in '%s' are set as expected."
+#~ msgstr ""
+#~ "Werte von '%s' in '%s' entsprechen bereits den Vorgaben der "
+#~ "Härtungsmaßnahmen."

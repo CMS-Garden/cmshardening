@@ -1,0 +1,10 @@
+# php-i18n
+lang/langcache/*
+!lang/langcache/README.md
+
+# log files
+logs/*.log
+
+# backup files
+backups/*
+!backups/readme.txt

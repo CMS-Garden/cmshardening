@@ -1,0 +1,73 @@
+RunSections: [
+  LiferayPortalDeveloperProperties,
+  LiferayPortalExtProperties
+]
+
+#define which hardening modules are to be selected per default if this cms is choosen to be hardend
+ModulesSelectedPerDefault: [
+    debian,
+    network,
+    java,
+    tomcat7,
+    mysql,
+    sshd
+]
+
+#meta information about the liferay module in english and german
+#the description of the utils and their parameters can be found in the hardening-scripts/python/README.md
+meta: [
+    {language: "en", caption: "This section configures the content management system Liferay"},
+    {language: "de", caption: "Dieser Abschnitt konfiguriert das Content-Management-System Liferay"},
+    {language: "en", description: "The following hardening steps were verified for the liferay version 6.2 CE GA5. The results of the hardening steps for other versions may differ."},
+    {language: "de", description: "Die nachfolgenden Härtungsmaßnahmen wurden für die Version 6.2 CE GA5 des CMS Liferay getestet und hinsichtlich ihrer Funktionalität geprüft. Für abweichende Versionen kann keine Aussage zur Funktionalität getroffen werden."}
+]
+
+LiferayPortalDeveloperProperties:
+    Options: {
+        transaction: "file:{info:liferay:home}/WEB-INF/classes/portal-developer.properties",
+        separator:   "=",
+        run-if: "info:condition:hardening_for_liferay"
+    }
+      
+    RunUtils: [
+        configfile.ConfigFileEntry: { key: "log.sanitizer.enabled",              value: "true", meta: [
+            {language: "en", caption: "Enabling log sanitizer"},
+            {language: "de", caption: "Aktivieren der Log Sanitizer"},
+            {language: "en", description: "This action restricts scripts in Liferay-Logs."},
+            {language: "de", description: "Diese Maßnahme schränkt Skript-Inhalte in Liferay-Logs ein."}
+        ]}
+    ]
+
+LiferayPortalExtProperties:
+    Options: {
+        transaction: "file:{info:liferay:home}/WEB-INF/classes/portal-ext.properties",
+        separator:   "=",
+        run-if: "info:condition:hardening_for_liferay"
+    }
+      
+    RunUtils: [
+        configfile.ConfigFileEntry: { key: "session.enable.phishing.protection",  value: "true", meta: [
+            {language: "en", caption: "Enabling phishing protection"},
+            {language: "de", caption: "Aktivieren des Phishing-Schutzes"},
+            {language: "en", description: "This action activates the protection against phishing attacks."},
+            {language: "de", description: "Diese Maßnahme aktiviert den Schutz gegen Phishing-Attacken."}
+        ]},
+        configfile.ConfigFileEntry: { key: "session.store.password",              value: "false", meta: [
+            {language: "en", caption: "Disabling password storage in session data"},
+            {language: "de", caption: "Deaktivieren der Speicherung von Passwörtern in Session-Dateien"},
+            {language: "en", description: "This action deactivates the storage of user passwords in liferays session data."},
+            {language: "de", description: "Diese Maßnahme deaktiviert die Speicherung von Benutzerpasswörtern in den Sitzungsdaten."}
+        ]},
+        configfile.ConfigFileEntry: { key: "ldap.import.user.password.enabled",   value: "true", meta: [
+            {language: "en", caption: "Enabling password import for LDAP users"},
+            {language: "de", caption: "Aktivieren des automatischen Passwort-Importes für LDAP Benutzer"},
+            {language: "en", description: "This action enables the import from LDAP user passwords into the liferay database. Only needed if LDAP is used."},
+            {language: "de", description: "Dieser Schritt aktiviert den Import von LDAP Benutzerpasswörtern in die Liferay Datenbank. Diese Maßnahme wird nur benötigt, wenn LDAP verwendet wird."}
+        ]},
+        configfile.ConfigFileEntry: { key: "ldap.auth.required",                  value: "true", meta: [
+            {language: "en", caption: "Force Authentication for LDAP"},
+            {language: "de", caption: "Erzwingen der Authentifizierung bei Verwendung von LDAP"},
+            {language: "en", description: "This action ensures you can't log into the application via LDAP without a valid user and password. Only needed if LDAP is used."},
+            {language: "de", description: "Mit Hilfe dieser Maßnahme wird sichergestellt, dass die Anmeldung per LDAP nur mit validem Benutzer und Passwort erfolgen darf. Diese Maßnahme wird nur benötigt, wenn LDAP verwendet wird."}
+        ]}
+    ]

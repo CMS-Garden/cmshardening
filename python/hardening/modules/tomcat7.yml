@@ -1,0 +1,222 @@
+RunSections: [
+  TomcatCheckInstallation,
+  TomcatGlobalWebXml,
+  TomcatGlobalServerXml,
+  TomcatLoggingProperties
+]
+
+#meta information about the tomcat module in english and german
+#the description of the utils and their parameters can be found in the hardening-scripts/python/README.md
+meta: [
+    {language: "en", caption: "This section configures the tomcat application server"},
+    {language: "de", caption: "Dieser Abschnitt konfiguriert den Ausführungsserver Tomcat"},
+    {language: "en", description: "The following hardening steps were verified for the Tomvat version 7.0.56. The results of the hardening steps for other versions may differ."},
+    {language: "de", description: "Die nachfolgenden Härtungsmaßnahmen wurden für die Version 7.0.56 des Ausführungsservers Tomcat getestet und hinsichtlich ihrer Funktionalität geprüft. Für abweichende Versionen kann keine Aussage zur Funktionalität getroffen werden."}
+]
+
+tomcat-disable-listings-preconditions: &tomcat-disable-listings-preconditions |
+  <xsl:template match="t:web-app[count(t:servlet)=0]">
+    <xsl:copy>
+      <xsl:apply-templates />
+      <xsl:element name="servlet" namespace="{$xmlns}">
+        <xsl:comment> Dummy comment to prevent xlst from self enclosing servlet
+        </xsl:comment>
+      </xsl:element>
+    </xsl:copy>
+  </xsl:template>
+
+tomcat-disable-listings: &tomcat-disable-listings |
+    <xsl:template match="t:servlet">
+        <xsl:copy>
+        <xsl:apply-templates />
+            <xsl:element name="init-param" namespace="{$xmlns}">
+                <xsl:element name="param-name" namespace="{$xmlns}">
+                    <xsl:text>listings</xsl:text>
+                </xsl:element>
+                <xsl:element name="param-value" namespace="{$xmlns}">
+                    <xsl:text>false</xsl:text>
+                </xsl:element>
+            </xsl:element>
+        </xsl:copy>
+    </xsl:template>
+    <xsl:template match="t:servlet/t:init-param[t:param-name='listings']">
+        <!-- do nothing -->
+    </xsl:template>
+
+
+tomcat-disable-http-methods: &tomcat-disable-http-methods |
+    <xsl:template match="t:web-app">
+     <xsl:copy>
+     <xsl:apply-templates />
+      <xsl:element name="security-constraint" namespace="{$xmlns}">
+        <xsl:element name="web-resource-collection" namespace="{$xmlns}">
+          <xsl:element name="web-resource-name" namespace="{$xmlns}"><xsl:text>restricted methods</xsl:text>
+          </xsl:element>
+          <xsl:element name="url-pattern" namespace="{$xmlns}"><xsl:text>/*</xsl:text>
+          </xsl:element>
+          <xsl:element name="http-method" namespace="{$xmlns}"><xsl:text>TRACE</xsl:text>
+          </xsl:element>
+          <xsl:element name="http-method" namespace="{$xmlns}"><xsl:text>PUT</xsl:text>
+          </xsl:element>
+          <xsl:element name="http-method" namespace="{$xmlns}"><xsl:text>OPTIONS</xsl:text>
+          </xsl:element>
+          <xsl:element name="http-method" namespace="{$xmlns}"><xsl:text>DELETE</xsl:text>
+          </xsl:element>
+        </xsl:element>
+        <xsl:element name="auth-constraint" namespace="{$xmlns}">
+        </xsl:element>
+      </xsl:element>
+     </xsl:copy>
+    </xsl:template>
+    <xsl:template match="t:security-constraint[//t:url-pattern='/*']">
+      <!-- do nothing -->
+    </xsl:template>
+
+tomcat-secure-connector: &tomcat-secure-connector |
+    <xsl:template match="Connector">
+        <xsl:copy>
+            <xsl:for-each select="@*" >
+                <xsl:choose>
+                    <xsl:when test="name()='xpoweredBy'">
+                        <xsl:attribute name="xpoweredBy">false</xsl:attribute>
+                    </xsl:when>
+                    <xsl:when test="name()='server'">
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:copy-of select="." />
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:for-each>
+            <xsl:attribute name="Server">Apache</xsl:attribute>
+            <xsl:apply-templates />
+        </xsl:copy>
+    </xsl:template>
+
+tomcat-disable-auto-deploy: &tomcat-disable-auto-deploy |
+    <xsl:template match="Host">
+        <xsl:copy>
+            <xsl:for-each select="@*" >
+                <xsl:choose>
+                    <xsl:when test="name()='autoDeploy'">
+                        <xsl:attribute name="autoDeploy">false</xsl:attribute>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:copy-of select="." />
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:for-each>
+          <xsl:apply-templates />
+        </xsl:copy>
+    </xsl:template>
+
+tomcat-disable-shutdown: &tomcat-disable-shutdown |
+    <xsl:template match="Server">
+        <xsl:copy>
+            <xsl:for-each select="@*" >
+                <xsl:choose>
+                    <xsl:when test="name()='port'">
+                        <xsl:attribute name="port">-1</xsl:attribute>
+                    </xsl:when>
+                    <xsl:when test="name()='shutdown'">
+                        <xsl:attribute name="shutdown"><xsl:value-of select="generate-id(.)" /></xsl:attribute>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:copy-of select="." />
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:for-each>
+          <xsl:apply-templates />
+        </xsl:copy>
+    </xsl:template>
+
+TomcatCheckInstallation:
+    Options: {
+        run-if: "info:condition:not:has_package_installed:tomcat7",
+    }
+    RunUtils: [
+        misc.DisplayMessage: {meta: [
+            {language: "en", caption: "Tomcat 7 is not installed"},
+            {language: "de", caption: "Tomcat 7 ist nicht installiert"},
+            {language: "en", description: "No hardening steps will be performed for tomcat7, because it is not installed"},
+            {language: "de", description: "Da das Paket tomcat7 nicht installiert ist, werden dafür keine Härtungsmaßnahmen durchgeführt"}
+        ]}
+    ]
+
+TomcatGlobalWebXml:
+    Options: {
+        transaction: "xml:/etc/tomcat7/web.xml",
+        run-if: "info:condition:has_package_installed:tomcat7",
+        xmlns: "http://java.sun.com/xml/ns/javaee",
+        namespace-prefix: "t"
+    }
+      
+    RunUtils: [
+        configfile.XmlFileEntry: { xslt: *tomcat-disable-listings-preconditions, meta: [
+            {language: "en", caption: "Preconditions needed to disable directory browsing"},
+            {language: "de", caption: "Voraussetzungen zum Deaktivieren der Verzeichnis Indexierung"},
+            {language: "en", description: "This action sets preconditions that are needed to deactivate directory indexing."},
+            {language: "de", description: "Dieser Schritt stellt Voraussetzungen, welche für die Deaktivierung von Verzeichnis-Listen benötigt werden, bereit."}
+        ]},
+        configfile.XmlFileEntry: { xslt: *tomcat-disable-listings, meta: [
+            {language: "en", caption: "Disabling directory browsing"},
+            {language: "de", caption: "Deaktivieren der Verzeichnis Indexierung"},
+            {language: "en", description: "This action deactivates the indexing of directories."},
+            {language: "de", description: "Diese Maßnahme deaktiviert die Indexierung von Verzeichnisse, sodass diese nicht per HTTP(s) aufrufbar sind."}
+        ]},
+        configfile.XmlFileEntry: { xslt: *tomcat-disable-http-methods, meta: [
+            {language: "en", caption: "Deactivating unnecessary HTTP methods" },
+            {language: "de", caption: "Deaktivieren nicht benötigter HTTP-Methoden" },
+            {language: "en", description: "This action ensures that only such HTTP methods, that are meant to be evaluated, are evaluated by the server. If HTTP-Methods besides GET and POST are needed, they have to be manually removed from this list." },
+            {language: "de", description: "Diese Maßnahme stellt sicher, dass nur HTTP-Methoden verarbeitet werden, welche für die Funktionalität der Anwendung benötigt werden. Sollten neben GET und POST weitere HTTP-Methoden benötigt werden, müssen diese manuell von der Liste entfernt werden." }
+        ]}
+    ]
+
+
+TomcatGlobalServerXml:
+    Options: {
+        transaction: "xml:/etc/tomcat7/server.xml",
+        run-if: "info:condition:has_package_installed:tomcat7",
+    }
+      
+    RunUtils: [
+        configfile.XmlFileEntry: { xslt: *tomcat-secure-connector , meta: [
+            {language: "en", caption: "Reducing information about the software in HTTP-Header data"},
+            {language: "de", caption: "Beschränken der Informationen über die Software in HTTP-Headern"},
+            {language: "en", description: "This action removes the default information about the tomcat server in the HTTP-Header data and replaces it with Apacher Webserver information. So that attackers and automated programs may think they are accessing an apache web-server."},
+            {language: "de", description: "Diese Maßnahme entfernt die Ausgabe des Tomcat Ausführungsservers in den HTTP-Header Daten und ersetzt diese mit Informationen vom Apache Webserver. Angeifer und automatisierte Scanner können dadurch in dem Glauben gelassen werden, sie kommunizierten mit einem Apache Web-Server."}
+        ]},
+        configfile.XmlFileEntry: { xslt: *tomcat-disable-auto-deploy , meta: [
+            {language: "en", caption: "Disabling automatic deployment"},
+            {language: "de", caption: "Deaktivieren des automatischen Deployments"},
+            {language: "en", description: "This action disables the automatic deployment of the web-application."},
+            {language: "de", description: "Diese Maßnahme deaktiviert das automatische Deployment der Webanwendung."}
+        ]},
+        configfile.XmlFileEntry: { xslt: *tomcat-disable-shutdown , meta: [
+            {language: "en", caption: "Disabling shutdown port"},
+            {language: "de", caption: "Sperren des Shutdown-Ports"},
+            {language: "en", description: "This action disables the shutdown port, which is used to easily shutdown the tomcat server. If the shutdown port is needed it needs to be secured with a strong passphrase."},
+            {language: "de", description: "Diese Maßnahme deaktiviert den Shutdown-Port. Dieser wird verwendet um den Tomcat per URL-Aufruf zu beenden. Wenn der Shutdown-Port benötigt wird, sollte dieser mit einem starken Passwort gesichert werden.."}
+        ]}
+    ]
+
+TomcatLoggingProperties:
+    Options: {
+        transaction: "file:/etc/tomcat7/logging.properties",
+        separator: "=",
+        run-if: "info:condition:has_package_installed:tomcat7"
+    }
+
+    RunUtils: [
+        configfile.ConfigFileEntry: { key: "java.util.logging.FileHandler.limit", value: "10000", meta: [
+                {language: "en", caption: "Limiting logfile size" },
+                {language: "de", caption: "Begrenzen der Log-Dateien-Größe" },
+                {language: "en", description: "This action ensures that the log file is not filling up to much disk space, which could result in server malfunctions." },
+                {language: "de", description: "Diese Maßnahme stellt sicher, die Tomcat-Log-Dateien nicht sämtlichen Speicherplatz einnehmen können." }
+            ]},
+        configfile.ConfigFileEntry: { key: "1catalina.org.apache.juli.FileHandler.level", value: "WARNING" , meta: [
+            {language: "en", caption: "Setting log level"},
+            {language: "de", caption: "Setzten des Log-Level"},
+            {language: "en", description: "The log level will be set to 'WARNING', which provides a reasonable amount of output for errors and information, without taking up too much disk space." },
+            {language: "de", description: "Das Log-Level wird auf 'WARNING' gesetzt, was eine ausreichende Menge Informationen über Fehler und Serververhalten bereitstellt, ohne zu viel Speicher zu belegen." }
+        ]}
+    ]

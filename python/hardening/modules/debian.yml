@@ -1,0 +1,236 @@
+RunSections: [
+  DebianSysctlConfiguration,
+  DebianEtcHostConfiguration,
+  DebianRsyslogConfiguration,
+  DebianProfileConfiguration,
+
+## this section requires a special parser for PAM configuration files.
+## I suggest that the original parser from libpam should be used. One way
+## to do this was to use the package python-pam
+## (https://github.com/FirefighterBlu3/python-pam)
+##
+#  DebianCommonPassword,
+  DebianPermission
+]
+
+#meta information about the debian module in english and german
+#the description of the utils and their parameters can be found in the hardening-scripts/python/README.md
+meta: [
+    {language: "en", caption: "This section configures the debian operating system"},
+    {language: "de", caption: "Dieser Abschnitt konfiguriert das Debian Betriebssystem"},
+    {language: "en", description: "The following hardening steps were verified for debian 8.2. The results of the hardening steps for other versions may differ."},
+    {language: "de", description: "Die nachfolgenden Härtungsmaßnahmen wurden für die Debian Version 8.2 getestet und hinsichtlich ihrer Funktionalität geprüft. Für abweichende Versionen kann keine Aussage zur Funktionalität getroffen werden."}
+]
+
+DebianSysctlConfiguration:
+
+    Options: {
+        transaction: "info:resolve_key:sysctl_hardened_conf",
+        separator:   "="
+    }
+      
+    RunUtils: [
+        configfile.ConfigFileEntry: { key: "kernel.randomize_va_space",                  value: "2", meta: [
+                {language: "en", caption: "Activating buffer overflow protection" },
+                {language: "de", caption: "Aktivieren des Puffer-Überlauf Schutzes " },
+                {language: "en", description: "This action activates the kernel buffer overflow protection of the operating system." },
+                {language: "de", description: "Diese Maßnahme aktiviert den Linux Kernel Puffer-Überlauf Schutz." }
+            ]},
+        configfile.ConfigFileEntry: { key: "net.ipv4.conf.all.rp_filter",                value: "1", meta: [
+                {language: "en", caption: "Activating reverse path filter" },
+                {language: "de", caption: "Aktivieren des Reverse-Path Filters" },
+                {language: "en", description: "This action makes sure that only such network packets are processed for which a valid back route is know." },
+                {language: "de", description: "Diese Einstellung bewirkt, dass eingehende Netzwerk-Pakete gefiltert werden für deren Quell-Adresse keine Rückroute bekannt ist." }
+            ]},
+        configfile.ConfigFileEntry: { key: "net.ipv4.conf.all.arp_filter",               value: "1", meta: [
+                {language: "en", caption: "Activating ARP filter (Step 1 of 2)" },
+                {language: "de", caption: "Aktivieren des ARP Filters (Schritt 1 von 2)" },
+                {language: "en", description: "Enabling the ARP-Filter to allow ARP-packet processing only from the correct network interface." },
+                {language: "de", description: "Aktivieren des ARP-Filters, damit ARP-Pakete nur von den Interfaces mit der korrekten Adresse beantwortet werden." }
+            ]},
+        configfile.ConfigFileEntry: { key: "net.ipv4.conf.default.arp_filter",           value: "1", meta: [
+                {language: "en", caption: "Activating ARP filter (Step 2 of 2)" },
+                {language: "de", caption: "Aktivieren des ARP Filters (Schritt 2 von 2)" },
+                {language: "en", description: "Enabling the ARP-Filter, to allow ARP-packet processing only from the correct network interface." },
+                {language: "de", description: "Aktivieren des ARP-Filters, damit ARP-Pakete nur von den Interfaces mit der korrekten Adresse beantwortet werden." }
+            ]},
+        configfile.ConfigFileEntry: { key: "net.ipv4.conf.all.arp_ignore",               value: "1", meta: [
+                {language: "en", caption: "Configuring ARP filter (Step 1 of 4)" },
+                {language: "de", caption: "Konfigurieren des ARP Filters (Schritt 1 von 4)" },
+                {language: "en", description: "Configuring the ARP-Filter to allow ARP-packet processing only from the correct network interface." },
+                {language: "de", description: "Konfigurieren des ARP-Filters, damit ARP-Pakete nur von den Interfaces mit der korrekten Adresse beantwortet werden." }
+            ]},
+        configfile.ConfigFileEntry: { key: "net.ipv4.conf.default.arp_ignore",           value: "1", meta: [
+                {language: "en", caption: "Configuring ARP filter (Step 2 of 4)" },
+                {language: "de", caption: "Konfigurieren des ARP Filters (Schritt 2 von 4)" },
+                {language: "en", description: "Configuring the ARP-Filter to allow ARP-packet processing only from the correct network interface." },
+                {language: "de", description: "Konfigurieren des ARP-Filters, damit ARP-Pakete nur von den Interfaces mit der korrekten Adresse beantwortet werden." }
+            ]},
+        configfile.ConfigFileEntry: { key: "net.ipv4.conf.all.arp_announce",             value: "2", meta: [
+                {language: "en", caption: "Configuring ARP filter (Step 3 of 4)" },
+                {language: "de", caption: "Konfigurieren des ARP Filters (Schritt 3 von 4)" },
+                {language: "en", description: "Configuring the ARP-Filter to allow ARP-packet processing only from the correct network interface." },
+                {language: "de", description: "Konfigurieren des ARP-Filters, damit ARP-Pakete nur von den Interfaces mit der korrekten Adresse beantwortet werden." }
+            ]},
+        configfile.ConfigFileEntry: { key: "net.ipv4.conf.default.arp_announce",         value: "2", meta: [
+                {language: "en", caption: "Configuring ARP filter (Step 4 of 4)" },
+                {language: "de", caption: "Konfigurieren des ARP Filters (Schritt 4 von 4)" },
+                {language: "en", description: "Configuring the ARP-Filter to allow ARP-packet processing only from the correct network interface." },
+                {language: "de", description: "Konfigurieren des ARP-Filters, damit ARP-Pakete nur von den Interfaces mit der korrekten Adresse beantwortet werden." }
+            ]},
+        configfile.ConfigFileEntry: { key: "net.ipv4.icmp_echo_ignore_broadcasts",       value: "1", meta: [
+                {language: "en", caption: "Ignoring icmp broadcast messages" },
+                {language: "de", caption: "Deaktivieren der Verarbeitung von ICMP Broadcast-Nachrichten" },
+                {language: "en", description: "This action disables the processing of icmp broadcast messages." },
+                {language: "de", description: "Diese Maßnahme deaktiviert die Verarbeitung von ICMP Error Nachrichten." }
+            ]},
+        configfile.ConfigFileEntry: { key: "net.ipv4.icmp_ignore_bogus_error_responses", value: "1", meta: [
+                {language: "en", caption: "Ignoring icmp error responses" },
+                {language: "de", caption: "Deaktivieren der Verarbeitung von ICMP Error Nachrichten" },
+                {language: "en", description: "This action disables the processing of icmp error messages." },
+                {language: "de", description: "Diese Maßnahme deaktiviert die Verarbeitung von ICMP Error Nachrichten." }
+            ]},
+        configfile.ConfigFileEntry: { key: "net.ipv4.tcp_syncookies",                    value: "1", meta: [
+                {language: "en", caption: "Setting syn flood protection flag" },
+                {language: "de", caption: "Setzen der SYN-Flood-Protection Einstellung" },
+                {language: "en", description: "Activating the syn flood attack protection." },
+                {language: "de", description: "Aktivieren des Schutzes vor SYN-Flood Attacken." }
+            ]}
+    ]
+
+DebianEtcHostConfiguration:
+    
+    Options: {
+        transaction: "info:resolve_key:etc_host_conf",
+        separator:   " "
+    }
+
+    RunUtils: [
+        configfile.ConfigFileEntry: { key: "order",      value: [
+            "hosts",
+            "bind"
+        ], listseparator: ",", meta: [
+                {language: "en", caption: "Setting order of domain resolution" },
+                {language: "de", caption: "Festlegen der Reihenfolge der Domainauflösung" },
+                {language: "en", description: "This action sets the order for the domain resolution, preferring local hosts over DNS." },
+                {language: "de", description: "Diese Maßnahme legt die Reihenfolge der Domainauflösung fest, damit lokale Hosts-Einträge gegenüber DNS-Einträgen bevorzugt werden." }
+            ]},
+        configfile.ConfigFileEntry: { key: "multi",      value: "on", meta: [
+                {language: "en", caption: "Enabling support for systems with multiple IPs" },
+                {language: "de", caption: "Aktivieren der Unterstützung für Systeme mit mehreren IP-Adressen" },
+                {language: "en", description: "This action support usage of multiple ip-addresses for one host." },
+                {language: "de", description: "Diese Maßnahme aktiviert die Unterstützung für mehrere IP-Adressen pro Host." }
+            ]},
+        configfile.ConfigFileEntry: { key: "nospoof",    value: "on", meta: [
+                {language: "en", caption: "Activating hostname spoof protection" },
+                {language: "de", caption: "Aktivieren des Hostname-Spoofing Schutzes" },
+                {language: "en", description: "This action activates the validation of hostnames to protect from hostname spoofing." },
+                {language: "de", description: "Diese Maßnahme aktiviert die Validierung des Hostnamens um Hostname-Spoofing zu blockieren." }
+            ]},
+        configfile.ConfigFileEntry: { key: "spoofalert", value: "on", meta: [
+                {language: "en", caption: "Activating spoofalert" },
+                {language: "de", caption: "Aktivieren der spoofalert Funktion" },
+                {language: "en", description: "This action enables logging for hostname validation errors." },
+                {language: "de", description: "Diese Einstellung aktiviert das Protokollieren von Hostname-Validierungsfehlern." }
+            ]}
+    ]
+
+
+DebianRsyslogConfiguration:
+    Options: {
+        transaction: "file:/etc/rsyslog.conf",
+        separator: " "
+    }
+
+    RunUtils: [
+        configfile.ConfigFileEntry: { key: "auth,authpriv.*",                 value: "/var/log/auth.log", meta: [
+                {language: "en", caption: "Enabling security relevant logging of events" },
+                {language: "de", caption: "Aktivieren des Loggings für sicherheitsrelevante Ereignisse" },
+                {language: "en", description: "This action makes sure that security incidents are persisted in log files." },
+                {language: "de", description: "Diese Maßnahme stellt sicher, dass sicherheitsrelevante Ereignisse protokolliert werden." }
+            ]},
+        configfile.ConfigFileEntry: { key: "$ActionFileDefaultTemplate",      value: "RSYSLOG_SyslogProtocol23Format", meta: [
+                {language: "en", caption: "Enabling security relevant logging of events" },
+                {language: "de", caption: "Aktivieren des Loggings für sicherheitsrelevante Ereignisse" },
+                {language: "en", description: "This action sets the format for security relevant logging data." },
+                {language: "de", description: "Diese Maßnahme setzt das Format für die Logausgaben." }
+            ]}
+    ]
+
+
+DebianProfileConfiguration:
+
+    Options: {
+        transaction: "file:/etc/profile.d/99-hardening.sh"
+    }
+
+    RunUtils: [
+        configfile.ConfigFileEntry: { key: "umask",     value: "0022", separator: " ", meta: [
+                {language: "en", caption: "Setting umask" },
+                {language: "de", caption: "Setzen der umask-Einstellung" },
+                {language: "en", description: "Dis measure achieves that newly created files are only editable for the creator." },
+                {language: "de", description: "Diese Maßnahme bewirkt, dass neu erstellte Dateien nur vom Ersteller der Datei verändert werden können." }
+            ]},
+        configfile.ConfigFileEntry: { key: "PATH",      value: "$(echo -n ${PATH} | awk 'BEGIN{ORS=RS=\":\"} $0!=\".\"{print $0}')", separator: "=", meta: [
+                {language: "en", caption: "Removing '.' from PATH environment variable" },
+                {language: "de", caption: "Entfernen von '.' aus der PATH Umgebungsvariable" },
+                {language: "en", description: "The environment variables of all users must not contain '.' as path." },
+                {language: "de", description: "Die PATH-Umgebungsvariable aller Accounts darf nicht den Pfad '.' enthalten." }
+            ]},
+        configfile.ConfigFileEntry: { key: "export", value: "PATH", separator: " ", meta: [
+                {language: "en", caption: "Exporting PATH environment variable" },
+                {language: "de", caption: "Exportieren der PATH-Umgebungsvariablen" },
+                {language: "en", description: "The environment variable must be exported to be functional" },
+                {language: "de", description: "Die PATH-Umgebungsvariable muss exportiert werden, damit sie einen Effekt hat" }
+            ]}
+    ]
+
+
+DebianCommonPassword:
+
+    Options: {
+        transaction: "file:/etc/pam.d/common-password"
+    }
+
+    RunUtils: [
+        configfile.ConfigFileEntry: { key: "password",     value: [
+            "[success=1 default=ignore]",
+            "pam_unix.so",
+            "obscure",
+            "use_authtok",
+            "try_first_pass",
+            "sha512"
+        ], multiple: "true", separator: " ", listseparator: " ", meta: [
+                {language: "en", caption: "Enabling obscuration of passwords" },
+                {language: "de", caption: "Deaktivieren der Klartext-Darstellung von Passwörtern" },
+                {language: "en", description: "This action makes sure that the representation of password is obfuscated." },
+                {language: "de", description: "Aktiviert das Verschleiern von Passwörtern, sodass diese nicht im Klartext angezeigt werden." }
+            ] }
+    ]
+
+DebianPermission:
+
+    RunUtils: [
+         # restrict access to files
+        filesystem.ChangeOwner: {
+            transaction:  "file:/etc/shadow",
+            user:  root,
+            meta: [
+                {language: "en", caption: "Setting owner of /etc/shadow" },
+                {language: "de", caption: "Ändern des Besitzers der /etc/shadow" },
+                {language: "en", description: "The owner of the /etc/shadow file is set to root, so that a other compromised user can't access it." },
+                {language: "de", description: "Der Besitzer der Datei /etc/shadow wird auf root gesetzt, damit ein anderer kompromittierter Benutzer nicht auf diese zugreifen kann." }
+            ]
+        },
+
+        filesystem.ChangePermissions: {
+            transaction:  "file:/etc/shadow",
+            mode:  "640",
+            meta: [
+                {language: "en", caption: "Setting permission of /etc/shadow" },
+                {language: "de", caption: "Ändern der Berechtigungen der /etc/shadow" },
+                {language: "en", description: "The permissions of the /etc/shadow file will be changed to mode 640, allowing only the owner to edit the file." },
+                {language: "de", description: "Die Berechtigungen der Datei /etc/shadow werden auf den Modus 640 gesetzt, so dass nur der Besitzer diese bearbeiten kann." }
+            ]
+        }
+    ]

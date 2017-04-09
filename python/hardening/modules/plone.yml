@@ -1,0 +1,66 @@
+RunSections: [
+    PloneDirectories
+]
+
+#define which hardening modules are to be selected per default if this cms is choosen to be hardend
+ModulesSelectedPerDefault: [
+    debian,
+    network,
+    python,
+    sshd
+]
+
+#meta information about the plone module in english and german
+#the description of the utils and their parameters can be found in the hardening-scripts/python/README.md
+meta: [
+    {language: "en", caption: "This section configures the content management system Plone"},
+    {language: "de", caption: "Dieser Abschnitt konfiguriert das Content-Management-System Plone"},
+    {language: "en", description: "The following hardening steps were verified for the Plone version 5.0. The results of the hardening steps for other versions may differ."},
+    {language: "de", description: "Die nachfolgenden Härtungsmaßnahmen wurden für die Version 5.0 des CMS Plone getestet und hinsichtlich ihrer Funktionalität geprüft. Für abweichende Versionen kann keine Aussage zur Funktionalität getroffen werden."}
+]
+
+PloneDirectories:
+    Options: {
+        run-if: "info:condition:hardening_for_plone"
+    }
+    RunUtils: [
+        os.UserItem: {
+            transaction: "passwd:{info:property:get:HardeningSettings.plone-daemon-user}",
+            home: "/var/empty2",
+            shell: "/bin/false",
+            meta: [
+                {language: "en", caption: "Creating owner of the plone buildout directory" },
+                {language: "de", caption: "Erstellen des Besitzers von Plone Buildout Verzeichnis" },
+                {language: "en", description: "The owner of the plone buildout directory needs to be created if it does not exist already. The default name for the user is 'plone_daemon'." },
+                {language: "de", description: "Der Besitzer des Plone Buidlout Verzeichnisses wird erstellt, wenn dieser nicht bereits existiert. Der vordefinierte Name für den Benutzer ist 'plone_daemon'." }
+            ]
+        },
+        
+        filesystem.ChangeOwner: {
+            transaction: "{info:plone:buildout}/var",
+            user:  "info:property:get:HardeningSettings.plone-daemon-user",
+            recursive: True,
+            apply-to-files: True,
+            apply-to-directories: True,
+            meta: [
+                {language: "en", caption: "Changing owner of the plone buildout directory" },
+                {language: "de", caption: "Ändern des Besitzers des Plone Buildout Verzeichnisses" },
+                {language: "en", description: "The owner of the plone buildout directory is set to the plone_daemon created earlier." },
+                {language: "de", description: "Der Besitzer des Plone Buildout Verzeichnisses wird auf den in einem vorhergegangenen Schritt erstellten Benutzer 'plone_daemon' gesetzt." }
+            ]
+        },
+        
+        filesystem.ChangePermissions: {
+            transaction: "{info:plone:buildout}/var",
+            mode: "g-w",
+            recursive: True,
+            apply-to-files: True,
+            apply-to-directories: True,
+            meta: [
+                {language: "en", caption: "Changing permissions of the plone buildout directory" },
+                {language: "de", caption: "Ändern der Berechtigungen des Plone Buildout Verzeichnisses" },
+                {language: "en", description: "The permissions of the plone buildout directory will be changed by g-w, recursive for all directories and files, so that they are no longer writeable by the group." },
+                {language: "de", description: "Die Berechtigungen des Plone Buildout Verzeichnisses werden rekursiv, für alle Verzeichnisse und Dateien, mit g-w geändert. Somit wird der Gruppe das Recht zu Schreiben entzogen." }
+            ]
+        }
+    ]

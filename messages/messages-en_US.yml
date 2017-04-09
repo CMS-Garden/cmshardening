@@ -1,0 +1,30 @@
+# configuration file for hardening scripts
+
+Logging:
+    LogLevel: DEBUG
+    LogHandler: StreamHandler
+
+RunModules: [sshd, apache, wordpress, php]
+
+Backup:
+  BaseDir: "$HOME/hardening-backup"
+
+HardeningSettings:   {
+
+    ssh-runtime-user: &ssh-runtime-user         "sshd",
+    ssh-runtime-group: &ssh-runtime-group       "ssh",
+    ssh-listening-port: &ssh-listening-port     "22",
+    ssh-protocol-version: &ssh-protocol-version "2",
+
+    ssh-allow-user: &ssh-allow-user             "",
+    ssh-allow-groups: &ssh-allow-groups         "",
+    ssh-usepam: &ssh-usepam                     "no",
+    ssh-address-family: &ssh-address-family     "inet",
+
+    management-ip-address: &management-ip-address "192.168.1.2",
+    management-subnet: &management-subnet       "255.255.255.0",
+    management-gateway: &management-gateway     "192.168.1.1",
+
+    php-file-upload: &php-file-upload           "On"
+}
+

@@ -1,0 +1,214 @@
+RunSections: [
+    NetworkAddress,
+    DNSConfiguration,
+    DNSFirewall,
+    ICMPInputSettings,
+    ICMPOutputSettings,
+    OutboundHttpsTraffic
+]
+
+#meta information about the network module in english and german
+#the description of the utils and their parameters can be found in the hardening-scripts/python/README.md
+meta: [
+    {language: "en", caption: "This section runs network specific hardening"},
+    {language: "de", caption: "Dieser Abschnitt beinhaltet netzwerk-spezifische Härtungsschritte"},
+    {language: "en", description: "The following hardening steps were verified for Debian 8.2. The results of the hardening steps for other versions may differ."},
+    {language: "de", description: "Die nachfolgenden Härtungsmaßnahmen wurden für die Debian Version 8.2 getestet und hinsichtlich ihrer Funktionalität geprüft. Für abweichende Versionen kann keine Aussage zur Funktionalität getroffen werden."}
+]
+
+NetworkAddress:
+    Options: {
+        transaction: "networkconfig:/etc/network/interfaces"
+    }
+    RunUtils: [
+        net.StaticIP: {
+            run-if: "info:condition:has_network_interface:0",
+            interface: "info:net:interface:0",
+            inet-address: "info:net:inet_address:0",
+            netmask: "info:net:netmask:0",
+            gateway: "info:net:gateway:0",
+            meta: [
+                {language: "en", caption: "Configuring the first networking interface"},
+                {language: "de", caption: "Konfigurieren der ersten Netzwerkschnittstelle"},
+                {language: "en", description: "This action ensures that the addresses of all network interfaces is be configured statically to mitigate DHCP-based attacks."},
+                {language: "de", description: "Diese Maßnahme stellt sicher, dass die Netzwerkadresse statisch konfiguriert wird, um DHCP basierten Attacken entgegen zu wirken."}
+            ]
+        },
+
+        net.StaticIP: {
+            run-if: "info:condition:has_network_interface:1",
+            interface: "info:net:interface:1",
+            inet-address: "info:net:inet_address:1",
+            netmask: "info:net:netmask:1",
+            gateway: "info:net:gateway:1",
+            meta: [
+                {language: "en", caption: "Configuring the second networking interface"},
+                {language: "de", caption: "Konfigurieren der zweiten Netzwerkschnittstelle"},
+                {language: "en", description: "The addresses of all network interfaces should be configured statically to mitigate DHCP-based attacks."},
+                {language: "de", description: "Diese Maßnahme stellt sicher, dass die Netzwerkadresse statisch konfiguriert wird um DHCP basierte Attacken entgegen zu wirken."}
+            ]
+        }
+    ]
+
+DNSConfiguration:
+    Options: {
+        transaction: "file:/etc/resolv.conf"
+    }
+    RunUtils: [
+        configfile.ConfigFileEntry: {
+            key: "nameserver",
+            value: "info:net:nameservers",
+            multiple: "true",
+            meta: [
+                {language: "en", caption: "Configuring IP addresses of DNS nameservers"},
+                {language: "de", caption: "Konfigurieren der IP-Adressen der DNS-Server"},
+                {language: "en", description: "This measure configures the IP addresses of available DNS nameservers."},
+                {language: "de", description: "Dieser Härtungsschritt konfiguriert die IP-Adressen der verfügbaren DNS-Server."}
+            ]
+        },
+
+        filesystem.ChangePermissions: {
+            mode: "644",
+            apply-to-files: True,
+            meta: [
+                {language: "en", caption: "Configuring file permissions of /etc/resolv.conf"},
+                {language: "de", caption: "Konfigurieren der Dateiberechtigungen der /etc/resolv.conf"},
+                {language: "en", description: "This action makes sure that all users can read /etc/resolv.conf but only root can change it."},
+                {language: "de", description: "Diese Maßnahme stellt sicher, dass alle Benutzer die Datei /etc/resolv.conf lesen können, aber nur 'root' Rechte zum Ändern der Datei besitzt."}
+            ]
+        }
+    ]
+
+DNSFirewall:
+    Options: {
+        transaction: "info:resolve_key:iptables_v4",
+        protocol: "udp"
+    }
+    RunUtils: [
+        net.Firewall: {
+            protocol: "udp",
+            dst: "info:net:nameservers",
+            dstport: 53,
+            chain: "OUTPUT",
+            meta: [
+                {language: "en", caption: "Opening TCP-Port 53 in iptables" },
+                {language: "de", caption: "Öffne TCP-Port 53 in iptables" },
+                {language: "en", description: "To explicitly enable access to the DNS service the proper port is opened in the firewall." },
+                {language: "de", description: "Um explizit den Zugang zum DNS Dienst zu ermöglichen, wird der entsprechende Port in der Firewall geöffnet." }
+            ]
+        },
+        net.Firewall: {
+            protocol: "udp",
+            src: "info:net:nameservers",
+            srcport: 53,
+            chain: "INPUT",
+            meta: [
+                {language: "en", caption: "Opening TCP-Port 53 in iptables (for response packets)" },
+                {language: "de", caption: "Öffne TCP-Port 53 in iptables (für Antwortpakete)" },
+                {language: "en", description: "To explicitly enable access to the DNS service the proper port is opened in the firewall." },
+                {language: "de", description: "Um explizit den Zugang zum DNS Dienst zu ermöglichen, wird der entsprechende Port in der Firewall geöffnet." }
+            ]
+        }
+    ]
+
+ICMPInputSettings:
+    Options: {
+        transaction: "info:resolve_key:iptables_v4",
+        chain: "INPUT",
+        protocol: "icmp"
+    }
+    RunUtils: [
+        net.Firewall: { icmp-type: "echo-reply", 
+            meta: [
+                {language: "en", caption: "Enabling icmp-type 'echo-reply' in the iptables INPUT chain"},
+                {language: "de", caption: "Aktivieren des icmp-types 'echo-reply' als iptables INPUT chain"},
+                {language: "en", description: "This action enables incoming echo replies (Ping)."},
+                {language: "de", description: "Diese Härtungsmaßnahme aktiviert die Verarbeitung eintreffender Echo-Antworten (Ping)."}
+            ]
+        },
+        net.Firewall: { icmp-type: "destination-unreachable",
+            meta: [
+                {language: "en", caption: "Enabling icmp-type 'destination-unreachable' in the iptables INPUT chain"},
+                {language: "de", caption: "Aktivieren des icmp-types 'destination-unreachable' als iptables INPUT chain"},
+                {language: "en", description: "This action enables incoming 'destination-unreachable' error messages."},
+                {language: "de", description: "Diese Härtungsmaßnahme aktiviert die Verarbeitung eintreffender 'destination-unreachable' Fehlermeldungen."}
+            ]
+        },
+        net.Firewall: { icmp-type: "source-quench",
+            meta: [
+                {language: "en", caption: "Enabling icmp-type 'source-quench' in the iptables INPUT chain"},
+                {language: "de", caption: "Aktivieren des icmp-types 'source-quench' als iptables INPUT chain"},
+                {language: "en", description: "This action enables incoming flow control messages."},
+                {language: "de", description: "Diese Härtungsmaßnahme aktiviert die Verarbeitung eintreffender Flusskontrolle-Fehlermeldungen."}
+            ]
+        },
+        net.Firewall: { icmp-type: "time-exceeded",
+            meta: [
+                {language: "en", caption: "Enabling icmp-type 'time-exceeded' in the iptables INPUT chain"},
+                {language: "de", caption: "Aktivieren des icmp-types 'time-exceeded' als iptables INPUT chain"},
+                {language: "en", description: "This action enables incoming routing error messages."},
+                {language: "de", description: "Diese Härtungsmaßnahme aktiviert die Verarbeitung eintreffender Routing-Fehlermeldungen."}
+            ]
+        },
+        net.Firewall: { icmp-type: "parameter-problem",
+            meta: [
+                {language: "en", caption: "Enabling icmp-type 'parameter-problem' in the iptables INPUT chain"},
+                {language: "de", caption: "Aktivieren des icmp-types 'parameter-problem' als iptables INPUT chain"},
+                {language: "en", description: "This measure enables incoming 'parameter-problem' error messages."},
+                {language: "de", description: "Diese Härtungsmaßnahme aktiviert die Verarbeitung eintreffender 'parameter-problem' Fehlermeldungen."}
+            ]
+        }
+    ]
+
+ICMPOutputSettings:
+    Options: {
+        transaction: "info:resolve_key:iptables_v4",
+        chain: "OUTPUT",
+        protocol: "icmp"
+    }
+    RunUtils: [
+        net.Firewall: { icmp-type: "echo-request",
+            meta: [
+                {language: "en", caption: "Enabling icmp-type 'echo-request' in the iptables OUTPUT chain"},
+                {language: "de", caption: "Aktivieren des icmp-types 'echo-request' als iptables OUTPUT chain"},
+                {language: "en", description: "This action enables incoming echo requests (Ping)."},
+                {language: "de", description: "Diese Härtungsmaßnahme aktiviert die Weiterleitung ausgehender Echo-Anfragen (Ping)."}
+            ]
+        },
+        net.Firewall: { icmp-type: "destination-unreachable",
+            meta: [
+                {language: "en", caption: "Enabling icmp-type 'destination-unreachable' in the iptables OUTPUT chain"},
+                {language: "de", caption: "Aktivieren des icmp-types 'destination-unreachable' als iptables OUTPUT chain"},
+                {language: "en", description: "This action enables outgoing 'destination-unreachable' error messages."},
+                {language: "de", description: "Diese Härtungsmaßnahme aktiviert die Weiterleitung ausgehender 'destination-unreachable' Fehlermeldungen."}
+            ]
+        },
+        net.Firewall: { icmp-type: "parameter-problem",
+            meta: [
+                {language: "en", caption: "Enabling icmp-type 'parameter-problem' in the iptables OUTPUT chain"},
+                {language: "de", caption: "Aktivieren des icmp-types 'parameter-problem' als iptables OUTPUT chain"},
+                {language: "en", description: "This measure enables outgoing 'parameter-problem' error messages."},
+                {language: "de", description: "Diese Härtungsmaßnahme aktiviert die Weiterleitung ausgehender 'parameter-problem' Fehlermeldungen."}
+            ]
+        }
+    ]
+
+OutboundHttpsTraffic:
+    Options: {
+        transaction: "info:resolve_key:iptables_v4",
+        protocol: "tcp"
+    }
+    RunUtils: [
+        net.Firewall: {
+            protocol: "tcp",
+            src: "info:net:public_address",
+            dstport: 443,
+            chain: "OUTPUT",
+            meta: [
+                {language: "en", caption: "Opening TCP-Port 443 in iptables" },
+                {language: "de", caption: "Öffne TCP-Port 443 in iptables" },
+                {language: "en", description: "To explicitly enable HTTP clients to create outbound connections, e.g. to download updates" },
+                {language: "de", description: "Der Port 443 wird geöffnet, damit Programme HTTPS-Verbindungen nach außen aufbauen können, bspw. um Updates zu laden" }
+            ]
+        }
+    ]

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="14.1.1">
+  <zoom_level>10</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>260</x>
+      <y>260</y>
+      <w>230</w>
+      <h>170</h>
+    </coordinates>
+    <panel_attributes>/Logging::Logger/
+--
+-logLevel: int
+-source: String
+--
++createLogger(): Logger
+/+log(s:String): void/
++getLogLevel(): int
++getSource(): int
+#setLogLevel(level:int): void
+#setSource(source:string): void
+bg=#ccffaa
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>400</x>
+      <y>520</y>
+      <w>230</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>Logging::FileLoggerImpl
+--
+--
++log(s:String): void
+bg=#ccffaa
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>380</x>
+      <y>420</y>
+      <w>150</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;130.0;100.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>150</x>
+      <y>520</y>
+      <w>230</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>Logging::StreamLoggerImpl
+--
+--
++log(s:String): void
+bg=#ccffaa
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>250</x>
+      <y>420</y>
+      <w>160</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>140.0;10.0;10.0;100.0</additional_attributes>
+  </element>
+</diagram>

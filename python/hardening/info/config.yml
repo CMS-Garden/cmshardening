@@ -1,0 +1,32 @@
+#iptable path for debian and any other os
+#Default file:/etc/iptables/rules.v4
+iptables_v4:
+    "Debian": "file:/etc/iptables/rules.v4"
+    ".":      "file:/etc/iptables/rules.v4"
+
+#path to sshd_config for debian and any other os
+#Default file:/etc/ssh/sshd_config
+sshd_config:
+    "Darwin": "file:/etc/sshd_config"
+    ".":      "file:/etc/ssh/sshd_config"
+
+#path to the hardend sysctl file for debian and any other os
+#Default file:/etc/sysctl.d/99-hardened.conf
+sysctl_hardened_conf:
+    "Debian": "file:/etc/sysctl.d/99-hardened.conf"
+    ".":      "file:/etc/sysctl.d/99-hardened.conf"
+
+#path to the host.conf for debian and any other os
+#Default file:/etc/host.conf
+etc_host_conf:
+    "Debian": "file:/etc/host.conf"
+    ".":      "file:/etc/host.conf"
+
+#path to the wordpress base dir
+#Default /var/www/wordpress
+wordpress_base_dir:
+    ".":    "/var/www/wordpress"
+#path to the typo3 base dir
+#Default /var/www/typo3
+typo3_base_dir:
+    ".":    "/var/www/typo3"

@@ -1,0 +1,665 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="14.1.1">
+  <zoom_level>8</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>488</x>
+      <y>392</y>
+      <w>272</w>
+      <h>144</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Singleton&gt;&gt;
+Main
+--
+-instance: Main
+-modules: List&lt;HardeningModul&gt;
++logger: Logger
++config: Configuration
++transactionManager: TransactionManager
+--
++getInstance(): Main
++run(): int
+bg=magenta</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1312</x>
+      <y>480</y>
+      <w>184</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>Logging::FileLoggerImpl
+--
+--
++log(s:String): void
+bg=#ccffaa
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1128</x>
+      <y>280</y>
+      <w>184</w>
+      <h>136</h>
+    </coordinates>
+    <panel_attributes>/Logging::Logger/
+--
+-logLevel: int
+-source: String
+--
++createLogger(): Logger
+/+log(s:String): void/
++getLogLevel(): int
++getSource(): int
+#setLogLevel(level:int): void
+#setSource(source:string): void
+bg=#ccffaa
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>144</x>
+      <y>520</y>
+      <w>128</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>ConsoleWriterImpl
+--
+--
++write(s: String): void
++newLine(): void
++Highlight(s: String): void
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>216</x>
+      <y>392</y>
+      <w>128</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>/Writer/
+{Interface}
+--
+--
++write(s: String): void
++newLine(): void
++Highlight(s: String): void
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>288</x>
+      <y>520</y>
+      <w>128</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>HTMLWriterImpl
+--
+--
++write(s: String): void
++newLine(): void
++Highlight(s: String): void
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>336</x>
+      <y>408</y>
+      <w>168</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+m1=1</panel_attributes>
+    <additional_attributes>10.0;10.0;190.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>200</x>
+      <y>464</y>
+      <w>88</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.
+[implements]</panel_attributes>
+    <additional_attributes>90.0;10.0;10.0;70.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>272</x>
+      <y>464</y>
+      <w>96</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.
+[implements]</panel_attributes>
+    <additional_attributes>10.0;10.0;100.0;70.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>496</x>
+      <y>544</y>
+      <w>256</w>
+      <h>176</h>
+    </coordinates>
+    <panel_attributes>/HardeningModule/
+{interface}
+--
+-items: List&lt;id:int, Array[check,hardening]
+--
++setUp(): List&lt;Transaction&gt;
++run(): Boolean
++provides():Set&lt;String&gt;
++requires():Set&lt;String&gt;
++preCommitCallback(t:Transaction): void
++postCommitCallback(t:Transaction): void
+bg=orange
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>496</x>
+      <y>296</y>
+      <w>248</w>
+      <h>64</h>
+    </coordinates>
+    <panel_attributes>TransactionManager
+--
+-transactions: List&lt;Transaction&gt;
+--
++CreateTransaction(): Transaction</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>424</x>
+      <y>792</y>
+      <w>160</w>
+      <h>104</h>
+    </coordinates>
+    <panel_attributes>HardeningSet
+{abstract}
+--
+--
++setUp(): List&lt;Transaction&gt;
++run(); Boolean
++preCommitCallback(t:Transaction): void
++postCommitCallback(t:Transaction): void
+bg=orange</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>600</x>
+      <y>792</y>
+      <w>208</w>
+      <h>104</h>
+    </coordinates>
+    <panel_attributes>HardeningItem
+{Abstract}
+--
+--
++setUp(): List&lt;Transaction&gt;
+
++preCommitCallback(t:Transaction): void
++postCommitCallback(t:Transaction): void
+bg=orange</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>600</x>
+      <y>712</y>
+      <w>120</w>
+      <h>96</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;50.0;130.0;50.0;130.0;100.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>496</x>
+      <y>712</y>
+      <w>128</w>
+      <h>96</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>140.0;10.0;140.0;50.0;10.0;50.0;10.0;100.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>448</x>
+      <y>664</y>
+      <w>64</w>
+      <h>144</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;160.0;10.0;10.0;60.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>736</x>
+      <y>320</y>
+      <w>112</w>
+      <h>88</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+m1=1</panel_attributes>
+    <additional_attributes>10.0;10.0;120.0;90.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>504</x>
+      <y>112</y>
+      <w>240</w>
+      <h>128</h>
+    </coordinates>
+    <panel_attributes>/Transaction/
+--
+-url
+--
++beginTransaction(url:string): Transaction
++commitTransaction(): void
++rollbackTransaction(): void
++getUrl():String()</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>760</x>
+      <y>152</y>
+      <w>112</w>
+      <h>56</h>
+    </coordinates>
+    <panel_attributes>BeginTransaction:
+- create intermediate file
+- lock original
+
+fg=gray</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>736</x>
+      <y>176</y>
+      <w>40</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>lt=.</panel_attributes>
+    <additional_attributes>30.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>384</x>
+      <y>328</y>
+      <w>128</w>
+      <h>520</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.</panel_attributes>
+    <additional_attributes>140.0;10.0;10.0;10.0;10.0;630.0;50.0;630.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>848</x>
+      <y>792</y>
+      <w>176</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>/Configuration::ConfigParser/
+{Interface}
+--
+--
++getProperty
++setProperty
+
+bg=#ccccff
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1064</x>
+      <y>792</y>
+      <w>232</w>
+      <h>56</h>
+    </coordinates>
+    <panel_attributes>Configuration::WordpressConfigParser
+--
+--
++getProperty
++setProperty
+bg=#ccccff</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1064</x>
+      <y>856</y>
+      <w>232</w>
+      <h>56</h>
+    </coordinates>
+    <panel_attributes>Configuration::Typo3ConfigParser
+--
+--
++getProperty
++setProperty
+bg=#ccccff</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1016</x>
+      <y>792</y>
+      <w>64</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>10.0;40.0;40.0;40.0;40.0;10.0;60.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1016</x>
+      <y>816</y>
+      <w>64</w>
+      <h>64</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>10.0;10.0;40.0;10.0;40.0;60.0;60.0;40.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1064</x>
+      <y>920</y>
+      <w>232</w>
+      <h>56</h>
+    </coordinates>
+    <panel_attributes>Configuration::JoomlaConfigParser
+--
+--
++getProperty
++setProperty
+bg=#ccccff</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1064</x>
+      <y>984</y>
+      <w>232</w>
+      <h>56</h>
+    </coordinates>
+    <panel_attributes>Configuration::PHPConfigParser
+--
+--
++getProperty
++setProperty() // throwsException
+bg=#ccccff</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1016</x>
+      <y>816</y>
+      <w>64</w>
+      <h>128</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>10.0;10.0;40.0;10.0;40.0;140.0;60.0;140.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1016</x>
+      <y>816</y>
+      <w>64</w>
+      <h>192</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>10.0;10.0;40.0;10.0;40.0;220.0;60.0;220.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>440</x>
+      <y>0</y>
+      <w>160</w>
+      <h>56</h>
+    </coordinates>
+    <panel_attributes>FileTransactionImpl
+--
+original: File
+intermediate: File
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>616</x>
+      <y>232</y>
+      <w>24</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;80.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>648</x>
+      <y>0</y>
+      <w>160</w>
+      <h>56</h>
+    </coordinates>
+    <panel_attributes>MySQLTransactionImpl
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>200</x>
+      <y>816</y>
+      <w>144</w>
+      <h>104</h>
+    </coordinates>
+    <panel_attributes>SetUp:
+- Preconditions
+ * Check File-Permission
+ * Necessary Information
+ * Credentials
+- Begin Transaction
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>336</x>
+      <y>840</y>
+      <w>104</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.</panel_attributes>
+    <additional_attributes>110.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1256</x>
+      <y>408</y>
+      <w>128</w>
+      <h>88</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;140.0;90.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1064</x>
+      <y>584</y>
+      <w>224</w>
+      <h>112</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Singleton&gt;&gt;
+Configuration::Configuration
+--
+-instance: Configuration
+--
++getInstance(): Configuration
++getProperty(k:String):String
++setProperty(k:String,v:String):void
++getLogger(name:String)
+bg=#ccccff</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>928</x>
+      <y>656</y>
+      <w>160</w>
+      <h>152</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-
+m1=1
+m2=0..n
+-parsers:Set&lt;ConfigParser&gt;</panel_attributes>
+    <additional_attributes>170.0;20.0;20.0;20.0;20.0;170.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1224</x>
+      <y>408</y>
+      <w>24</w>
+      <h>192</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.</panel_attributes>
+    <additional_attributes>10.0;220.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>752</x>
+      <y>616</y>
+      <w>328</w>
+      <h>192</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.</panel_attributes>
+    <additional_attributes>390.0;10.0;10.0;10.0;10.0;220.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>824</x>
+      <y>392</y>
+      <w>272</w>
+      <h>104</h>
+    </coordinates>
+    <panel_attributes>Scheduler
+bg=magenta
+--
+--
++runHardeningModules():void
+-getExecutionOrder():List&lt;HardeningModule&gt;
+-findHardeningModules():Set&lt;HardeningModule&gt;</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1056</x>
+      <y>488</y>
+      <w>112</w>
+      <h>112</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.</panel_attributes>
+    <additional_attributes>120.0;120.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>752</x>
+      <y>424</y>
+      <w>88</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;90.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>744</x>
+      <y>488</y>
+      <w>104</w>
+      <h>104</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>110.0;10.0;10.0;110.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>512</x>
+      <y>48</y>
+      <w>128</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>140.0;80.0;140.0;40.0;10.0;40.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>616</x>
+      <y>48</y>
+      <w>128</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;80.0;10.0;40.0;140.0;40.0;140.0;10.0</additional_attributes>
+  </element>
+</diagram>

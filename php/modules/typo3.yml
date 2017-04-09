@@ -1,0 +1,245 @@
+# TYPO3 Hardening Configuration
+
+Options:
+  ModulePrefix: typo3
+  # absolute path to the folder of the Typo3 installation (with trailing /)
+  RootPath: {
+    description: Typo3_RootPath
+    type: directory
+    value:
+  }
+  # absolute path to the typo3conf folder (with trailing /)
+  ConfigurationFolder: {
+    description: Typo3_ConfigurationFolder
+    type: directory
+    value:
+  }
+  # relative path to the typo3 configuration file
+  ConfigurationFile: LocalConfiguration.php
+
+
+
+
+RunSections: [
+  T3Configuration, T3SSLConfiguration, T3Misc, PHPGeneralConfiguration, T2PHPTypo3Configuration
+]
+
+T3Configuration:
+    Options: {
+        transaction: "utils:initTransaction"
+    }
+
+    RunUtils:
+        - configfile.Typo3ConfigFileEntry:
+            name: Typo3_IPmaskList_name
+            key: BE/IPmaskList
+            description: Typo3_IPmaskList
+            value:
+        - configfile.Typo3ConfigFileEntry:
+            name: Typo3_feLockIp_name
+            key: FE/lockIP
+            description: Typo3_feLockIp
+            value: 2
+        - configfile.Typo3ConfigFileEntry:
+            name: Typo3_beLockIp_name
+            key: BE/lockIP
+            description: Typo3_beLockIp
+            value: 4
+        - configfile.Typo3ConfigFileEntry:
+            name: Typo3_noPHPscriptInclude_name
+            key: FE/noPHPscriptInclude
+            description: Typo3_noPHPscriptInclude
+            value: 1
+        - configfile.Typo3ConfigFileEntry:
+            name: Typo3_warning_email_addr_name
+            key: FE/warning_email_addr
+            description: Typo3_warning_email_addr
+            value:
+        - configfile.Typo3ConfigFileEntry:
+            name: Typo3_warning_mode_name
+            key: FE/warning_mode
+            description: Typo3_warning_mode
+            value: 3
+        - configfile.Typo3ConfigFileEntry:
+            name: Typo3_trustedHostsPattern_name
+            key: SYS/trustedHostsPattern
+            description: Typo3_trustedHostsPattern
+            value: "SERVER_NAME"
+            run-if:
+              value: .*
+              operation: eq
+        - configfile.Typo3ConfigFileEntry:
+            name: Typo3_displayErrors_name
+            key: SYS/displayErrors
+            description: Typo3_displayErrors
+            value: 0
+        - configfile.Typo3ConfigFileEntry:
+            name: Typo3_errorHandlerErrors_name
+            key: SYS/errorHandlerErrors
+            description: Typo3_errorHandlerErrors
+            value: 0
+        - configfile.Typo3ConfigFileEntry:
+            name: Typo3_exceptionalErrors_name
+            key: SYS/exceptionalErrors
+            description: Typo3_exceptionalErrors
+            value: 0
+        - configfile.Typo3ConfigFileEntry:
+            name: Typo3_sqlDebug_name
+            key: SYS/sqlDebug
+            description: Typo3_sqlDebug
+            value: 0
+
+T3SSLConfiguration:
+    Options: {
+        transaction: "utils:initTransaction"
+        run-if:
+          ssl: # see config.yml RunIf-Section.
+            operation: eq
+            value: true
+    }
+    RunUtils:
+          - configfile.Typo3ConfigFileEntry:
+              name: Typo3_lockSSL_name
+              key: BE/lockSSL
+              description: Typo3_lockSSL
+              value: 1
+          - configfile.Typo3ConfigFileEntry:
+              name: Typo3_cookieSecure_name
+              key: SYS/cookieSecure
+              description: Typo3_cookieSecure
+              value: 1
+          - meta.Description:
+              name: Typo3_transportSmtpEncrypt_name
+              description: Typo3_transportSmtpEncrypt
+
+T3Misc:
+
+    RunUtils:
+        - filesystem.DeleteTypo3ConfigFile:
+            name: Typo3_disableInstallTool_name
+            description: Typo3_disableInstallTool
+            value: ENABLE_INSTALL_TOOL
+        - meta.Description:
+            name: Typo3_deleteVendorDefaultFiles_name
+            description: Typo3_deleteVendorDefaultFiles
+        - meta.Description:
+            name: Typo3_deleteExtensionDefaultFiles_name
+            description: Typo3_deleteExtensionDefaultFiles
+        - meta.Description:
+            name: Typo3_activeApache2Modules_name
+            description: Typo3_activeApache2Modules
+        - meta.Description:
+            name: Typo3_deleteDefaultUsers_name
+            description: Typo3_deleteDefaultUsers
+        - meta.Description:
+            name: Typo3_userPermissions_name
+            description: Typo3_userPermissions
+        - meta.Description:
+            name: Typo3_addXFrameOption_name
+            description: Typo3_addXFrameOption
+        - meta.Description:
+            name: Typo3_disableRemoteAccessToLocalConf_name
+            description: Typo3_disableRemoteAccessToLocalConf
+
+PHPGeneralConfiguration:  # general PHP hardening - Identical to Joomla, Typo3, WordPress
+    Options: {
+        transaction: "utils:initTransaction"
+        run-if:
+          logicalOperator: OR # at least one of both conditions is needed to run this section
+          phpHtAccess: # see config.yml RunIf-Section.
+            operation: eq
+            value: true
+          phpUserIni: # see config.yml RunIf-Section.
+            operation: eq
+            value: true
+    }
+    RunUtils:
+      - configfile.LocalPHPConfigFileEntry:
+            name: PHP_assert_active_name
+            key: assert.active
+            description: PHP_assert_active
+            value: 'off'
+      - configfile.LocalPHPConfigFileEntry:
+            name: PHP_display_errors_name
+            key: display_errors
+            description: PHP_display_errors
+            value: 0
+      - configfile.LocalPHPConfigFileEntry:
+            name: PHP_log_errors_name
+            key: log_errors
+            description: PHP_log_errors
+            value: 'on'
+      - configfile.LocalPHPConfigFileEntry:
+            name: PHP_register_globals_name
+            key: register_globals
+            description: PHP_register_globals
+            value: 'off'
+      - configfile.LocalPHPConfigFileEntry:
+            name: PHP_session_cookie_httponly_name
+            key: session.cookie_httponly
+            description: PHP_session_cookie_httponly
+            value: 'on'
+      - configfile.LocalPHPConfigFileEntry:
+            name: PHP_session_entropy_length_name
+            key: session.entropy_length
+            description: PHP_session_entropy_length
+            value: 64
+      - configfile.LocalPHPConfigFileEntry:
+            name: PHP_session_hash_bits_per_character_name
+            key: session.hash_bits_per_character
+            description: PHP_session_hash_bits_per_character
+            value: 6
+      - configfile.LocalPHPConfigFileEntry:
+            name: PHP_session_hash_function_name
+            key: session.hash_function
+            description: PHP_session_hash_function
+            value: 'sha512'
+      - configfile.LocalPHPConfigFileEntry:
+            name: PHP_allow_url_include_name
+            key: allow_url_include
+            description: PHP_allow_url_include
+            value: 'off'
+      - configfile.LocalPHPConfigFileEntry:
+            name: PHP_post_max_size_name
+            key: post_max_size
+            description: PHP_post_max_size
+            value: "12M"
+      - configfile.LocalPHPConfigFileEntry:
+            name: PHP_upload_max_filesize_name
+            key: upload_max_filesize
+            description: PHP_upload_max_filesize
+            value: "10M"
+
+T2PHPTypo3Configuration:  # The following Utils are CMS specific
+    Options: {
+        transaction: "utils:initTransaction"
+        run-if:
+          logicalOperator: OR # at least one of both conditions is needed to run this section
+          phpHtAccess: # see config.yml RunIf-Section.
+            operation: eq
+            value: true
+          phpUserIni: # see config.yml RunIf-Section.
+            operation: eq
+            value: true
+    }
+    RunUtils:
+    #  - configfile.LocalPHPConfigFileEntry:        # Typo3 needs allow_url_fopen = on -> this would be no hardening
+    #        name: "PHP: allow_url_fopen"
+    #        key: allow_url_fopen
+    #        description: PHP_allow_url_fopen
+    #        value: 'on'
+      - configfile.LocalPHPConfigFileEntry:
+            name: PHP_max_execution_time_name
+            key: max_execution_time
+            description: PHP_max_execution_time
+            value: 240
+      - configfile.LocalPHPConfigFileEntry:
+            name: PHP_max_input_vars_name
+            key: max_input_vars
+            description: PHP_max_input_vars
+            value: 1500
+      - configfile.LocalPHPConfigFileEntry:
+            name: PHP_always_populate_raw_post_data_name
+            key: always_populate_raw_post_data
+            description: PHP_always_populate_raw_post_data
+            value: -1

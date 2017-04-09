@@ -1,0 +1,16 @@
+<phpunit bootstrap="core/bootstrap.php">
+    <testsuites>
+        <testsuite name="configuration">
+            <directory>tests/configuration</directory>
+        </testsuite>
+        <testsuite name="parser">
+            <directory>tests/parser</directory>
+        </testsuite>
+        <testsuite name="transaction">
+            <directory>tests/transaction</directory>
+        </testsuite>
+        <testsuite name="utils">
+            <directory>tests/utils</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>

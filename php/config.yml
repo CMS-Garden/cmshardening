@@ -1,0 +1,38 @@
+# configuration file for hardening script php
+
+Logging:
+    LogLocation: logs/
+
+Dialog:
+  Language: de        # supported languages are german (de) and english (en)
+  Silent: false       # If true the user will not be asked if certain changes should actually be made. Thus it is not possible to cancel single hardening steps
+  SelectionMode: single  # single or multi-module-selection
+  forceCLI: false      # In case it was not possible to automatically detect if the script runs in CLI SAPI
+
+Hardening:
+    IncludeModules: [typo3, wordpress, joomla]
+    # modules/ -> typo3.yml, wordpress.yml, joomla.yml
+
+Backup:
+    BackupLocation: backups/  # The location where backups are stored (default: backups/).
+    BackupFileNameSchema: backup_%%date%%_%%filename%%   # Placeholders are encapsulated in %%
+
+HardeningSettings:
+    CheckOnly: "true"  # Argument: --dry-run or -d or --checkonly or -c
+
+RunIf:
+  ssl:
+    description: RunIf_SSLActivated   # The user has to enter whether the System supports SSL/TLS to properly choose hardeningsettings regarding encryption, empty value means the user has to enter/choose
+    value:
+    default: "false"
+    type: boolean
+  phpHtAccess:
+    description: RunIf_localConfigViaHtAccess # The user has to enter whether he wants to harden the PHP configuration with the help of a .htaccess file.
+    value:
+    default: "false"
+    type: boolean
+  phpUserIni:
+    description: RunIf_localConfigViaUserIni # The user has to enter whether he wants to harden the PHP configuration with the help of a .user.ini file.
+    value:
+    default: "false"
+    type: boolean

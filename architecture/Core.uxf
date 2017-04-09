@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="14.1.1">
+  <zoom_level>10</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>390</x>
+      <y>360</y>
+      <w>340</w>
+      <h>180</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Singleton&gt;&gt;
+Main
+--
+-instance: Main
+-modules: List&lt;HardeningModul&gt;
++logger: Logger
++config: Configuration
++transactionManager: TransactionManager
+--
++getInstance(): Main
++run(): int
+bg=magenta</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>800</x>
+      <y>390</y>
+      <w>340</w>
+      <h>130</h>
+    </coordinates>
+    <panel_attributes>Scheduler
+bg=magenta
+--
+--
++runHardeningModules():void
+-getExecutionOrder():List&lt;HardeningModule&gt;
+-findHardeningModules():Set&lt;HardeningModule&gt;</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>720</x>
+      <y>430</y>
+      <w>100</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;80.0;10.0</additional_attributes>
+  </element>
+</diagram>

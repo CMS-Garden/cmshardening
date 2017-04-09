@@ -1,0 +1,282 @@
+RunSections: [
+    GlobalPHPConfiguration,
+    PHPVersionCheck,
+    WordpressPHPConfiguration,
+    JoomlaPHPConfiguration,
+    Typo3PHPConfiguration
+]
+
+#meta information about the php module in english and german
+#the description of the utils and their parameters can be found in the hardening-scripts/python/README.md
+meta: [
+    {language: "en", caption: "This section contains PHP specific hardening steps and checks"},
+    {language: "de", caption: "Dieser Abschnitt enthält PHP-spezifische Härtungsschritte"},
+    {language: "en", description: "The following hardening steps were verified for PHP-FPM version 5.6. The results of the hardening steps for other versions may differ. CMS specific PHP hardening steps are included as well."},
+    {language: "de", description: "Die nachfolgenden Härtungsmaßnahmen wurden für die PHP-FPM-Version 5.6 getestet und hinsichtlich ihrer Funktionalität geprüft. Für abweichende Versionen kann keine Aussage zur Funktionalität getroffen werden. CMS-spezifische PHP-Härtungsschritte sind ebenfalls enthalten."}
+]
+
+GlobalPHPConfiguration:
+    Options: {
+        transaction: "info:php:php_ini",
+        separator: "=",
+        run-if: "info:condition:has_php_installed"
+    }
+
+    RunUtils: [ 
+        configfile.IniFileEntry: { key: "register_globals",                  value: "Off", section:{name: "PHP"}, meta: [
+              {language: "en", caption: "Disabling Register Globals" },
+              {language: "de", caption: "Deaktivierung von Register Globals" },
+              {language: "en", description: "register_globals tells whether or not to register the EGPCS (Environment, GET, POST, Cookie, Server) variables as global variables. This may allow overwriting internal variables via request parameters. As of PHP 4.2.0 this is off by default and as of PHP 5.4.0 it is removed. This should be deactivated in general." },
+              {language: "de", description: "register_globals gibt an ob EGPCS (Environment, GET, POST, Cookie, Server) Variablen als globale Variablen definiert werden sollten. Dadurch kann es möglich sein interne Variablen durch Request-Parameter zu überschreiben. Ab PHP 4.2.0 ist dies standardmäßig deaktiviert und seit PHP 5.4.0 wurde die Option generell entfernt." }
+        ]},
+        configfile.IniFileEntry: { key: "display_errors",                    value: "Off", section:{name: "PHP"}, meta: [
+              {language: "en", caption: "Disabling Display Errors" },
+              {language: "de", caption: "Deaktivierung von Display Errors" },
+              {language: "en", description: "The option display_errors tells whether php errors should be printed as error messages to the user. In productive systems this should be deactivated." },
+              {language: "de", description: "Die Option display_errors beschreibt, ob PHP-Fehlermeldungen angezeigt werden sollen. Dies sollte in produktiven Systemen nicht eingestellt sein." }
+        ]},
+        configfile.IniFileEntry: { key: "log_errors",                        value: "On", section:{name: "PHP"}, meta: [
+              {language: "en", caption: "Enabling Log Errors" },
+              {language: "de", caption: "Aktivierung von Log Errors" },
+              {language: "en", description: "log_errors tells whether script error messages should be logged to the server's error log or error_log. In general this should be active." },
+              {language: "de", description: "Die Option log_errors gibt an, ob PHP-Fehlermeldungen im Error-Log des Servers geloggt werden sollen. Dies sollte stets aktiv sein." }
+        ]},
+        configfile.IniFileEntry: { key: "assert.active",                     value: "Off",section:{name: "Assertion"}, meta: [
+              {language: "en", caption: "Disabling Assert" },
+              {language: "de", caption: "Deaktivierung von Assert" },
+              {language: "en", description: "In PHP code assertions be used to define situations that never occur. In productive systems the assert() command should not be evaluated." },
+              {language: "de", description: "In PHP Code können Assertions verwendet werden, um zu definieren, welcher Fall niemals eintreten sollte. In produktiven Systemen sollte der assert()-Befehl nicht interpretiert werden." }
+        ]},
+        configfile.IniFileEntry: { key: "session.cookie_httponly",           value: "1", section:{name: "Session"}, meta: [
+              {language: "en", caption: "Setting the httpOnly flag for PHP's session cookie" },
+              {language: "de", caption: "Setzen des httpOnly Attributs für PHP's Session-Cookie" },
+              {language: "en", description: "With session.cookie_httponly active it is no longer possible to access the PHP session cookie by means of client-side scripting, as it is done often in Cross-Site Scripting attacks." },
+              {language: "de", description: "Wird session.cookie_httponly aktiviert, so kann nicht länger client-seitig auf das PHP-Session-Cookie zugegriffen werden, wie es oftmals bei Cross-Site Scripting-Angriffen getan wird." }
+        ]},
+        configfile.IniFileEntry: { key: "expose_php",                        value: "Off", section:{name: "PHP"}, meta: [
+              {language: "en", caption: "Disabling Exposure of PHP" },
+              {language: "de", caption: "Deaktivierung von Expose PHP" },
+              {language: "en", description: "By disabling the setting expose_php PHP does not attach the http response header X-Powered-By containing the PHP version in use." },
+              {language: "de", description: "Wird die Option expose_php deaktiviert, so wird PHP nicht mehr den HTTP Antwort-Header X-Powered-By anhängen, in dem die PHP-Version preisgegeben wird." }
+        ]},
+        configfile.IniFileEntry: { key: "cgi.force_redirect",                value: "On", section:{name: "PHP"}, meta: [
+              {language: "en", caption: "Enabling Forcing Redirect for CGI" },
+              {language: "de", caption: "Aktivierung der Weiterleitung bei Verwendung mit CGI" },
+              {language: "en", description: "cgi.force_redirect is necessary to provide security running PHP as a CGI under most web servers. When using IIS (Windows) this option must be turned off." },
+              {language: "de", description: "cgi.force_redirect wird benötigt, um Sicherheit zu garantieren, wenn PHP als CGI-Version unter Linux läuft." }
+        ]},
+        configfile.IniFileEntry: { key: "session.hash_function",             value: "sha512", section:{name: "Session"}, meta: [
+              {language: "en", caption: "Increasing the session entropy with stronger hash function" },
+              {language: "de", caption: "Erhöhung der Session-Entropy durch stärkere Hashfunktion" },
+              {language: "en", description: "session.hash_function allows you to specify the hash algorithm used to generate the session IDs. Since PHP 5.3.0 it is also possible to specify any of the algorithms provided by the hash extension (if it is available), like sha512 or whirlpool. A complete list of supported algorithms can be obtained with the hash_algos() function." },
+              {language: "de", description: "Die session.hash_function erlaubt es zu definieren, welche kryptografische Hash-Funktion verwendet werden soll, um den PHP-Session-Wert zu generieren. Ab PHP 5.3.0 ist es möglich alle Algorithmen, welche die hash extension (falls vorhanden) anbietet, zu verwenden. Eine vollständige Liste der unterstützten Algorithmen kann mit der hash_algos()-Funktion generiert werden." }
+        ]},
+        configfile.IniFileEntry: { key: "session.hash_bits_per_character",   value: "6", section:{name: "Session"}, meta: [
+              {language: "en", caption: "Shorten the session cookie value" },
+              {language: "de", caption: "Verkürzung des Session-Cookie-Werts" },
+              {language: "en", description: "To shorten the session cookie value, the ratio of entropy bits to character can be increased." },
+              {language: "de", description: "Um die Darstellung des Session-Cookies kurzer zu fassen, kann das Verhältnis von Entropie-Bit zu Zeichen erhöht werden." }
+        ]},
+        configfile.IniFileEntry: { key: "session.entropy_length",            value: "64", section:{name: "Session"}, meta: [
+              {language: "en", caption: "Increasing the session entropy" },
+              {language: "de", caption: "Erhöhung der Session-Entropie" },
+              {language: "en", description: "The entropy of PHP's session cookie can be increased to prevent guessing the session key" },
+              {language: "de", description: "Die Entropie des Session-Cookies, welches PHP generiert, kann stark erhöht werden, so dass dieser Wert nicht leicht zu erraten ist. Nicht jedes CMS nutzt PHP-Sessions." }
+        ]},
+        configfile.IniFileEntry: { key: "allow_url_include",                 value: "Off", section:{name: "PHP"}, meta: [
+              {language: "en", caption: "Disabling inclusion of PHP code from other servers" },
+              {language: "de", caption: "Deaktivierung des Nachladens von PHP-Code von anderen Servern" },
+              {language: "en", description: "This option allows the use of URL-aware fopen wrappers with the following functions: include, include_once, require, require_once. This could enable an attacker to load php code from a remote server." },
+              {language: "de", description: "Die Option allow_url_include ermöglicht die URL-spezifische Verwendung der Funktionen: include, include_once, require, require_once. Dadurch ist es möglich, dass PHP Code von anderen Servern nachgeladen werden kann." }
+        ]},
+        configfile.IniFileEntry: { key: "post_max_size",                     value: "12M", section:{name: "PHP"}, meta: [
+              {language: "en", caption: "Limiting the size of POST requests" },
+              {language: "de", caption: "Beschränkung der Größe von POST-Anfragen" },
+              {language: "en", description: "This option tells how big a POST-Request (as well as upload requests) can be at most. Limiting this option can limit denial of service attacks." },
+              {language: "de", description: "Die Option post_max_size gibt die Maximal-Größe von POST-Requests und damit auch von Upload-Requests an. Begrenzung der Größe kann Denial-of-Service-Angriffe einschränken." }
+        ]},
+        configfile.IniFileEntry: { key: "upload_max_filesize",               value: "10M", section:{name: "PHP"}, meta: [
+              {language: "en", caption: "Limiting the size of uploaded files" },
+              {language: "de", caption: "Beschränkung der Uploadgröße von Dateien" },
+              {language: "en", description: "Additionally to post_max_size this option limits the size of uploaded files per request. It might be necessary to increase this value depending on your and your user's needs." },
+              {language: "de", description: "Zusätzlich zu der Option post_max_size begrenzt diese Option die Größe von Dateien welche je Request hochgeladen werden können. Es kann nötig sein, dass dieser Wert abhängig von Ihren Anforderungen erhöht werden muss." }
+        ]},
+        configfile.IniFileEntry: { key: "disable_functions",                 value: [
+                "dl",
+                "fsocket_open",
+                "ini_alter",
+                "parse_ini_file",
+                "passthru",
+                "pcntl_alarm", "pcntl_exec", "pcntl_fork", "pcntl_get_last_error",
+                "pcntl_getpriority", "pcntl_setpriority", "pcntl_signal",
+                "pcntl_signal_dispatch", "pcntl_sigprocmask", "pcntl_sigtimedwait",
+                "pcntl_sigwaitinfo", "pcntl_strerror", "pcntl_wait",
+                "pcntl_waitpid", "pcntl_wexitstatus", "pcntl_wifexited",
+                "pcntl_wifsignaled", "pcntl_wifstopped", "pcntl_wstopsig",
+                "pcntl_wtermsig",
+                "phpinfo",
+                "popen",
+                "set_time_limit",
+                "show_source"],
+            listseparator: ",",
+            section:{name: "PHP"}, meta: [
+              {language: "en", caption: "Disabling certain critical PHP functions" },
+              {language: "de", caption: "Deaktivierung einzelner kritischer PHP-Funktionen" },
+              {language: "en", description: "Certain PHP functions are often abused to compromise the system. Thus it is advised to disable these critical functions. Nevertheless some of these functions might be needed by additional components or plugins. So it might be necessary to manually adapt this configuration depending on the needs of the used php code." },
+              {language: "de", description: "Einige PHP-Funktionen werden oft genutzt, um Systeme zu kompromittieren. Deshalb sollten diese kritischen Funktionen deaktiviert werden. Jedoch kann es sein, das manche dieser Funktionen von zusätzlichen Komponenten oder Plugins benötigt werden. In diesem Fall muss die Konfiguration händisch angepasst werden." }
+        ]}
+    ]
+
+PHPVersionCheck:
+    Options: {
+        run-if: "info:condition:has_php_installed"
+    }
+
+    RunUtils: [
+        os.CheckVersion: { key: "php5", version: "info:php:current_version", meta: [
+            {language: "en", caption: "Checking PHP version"},
+            {language: "de", caption: "Überprüfen der installierten PHP-Version"},
+            {language: "en", description: "This action will check if the installed PHP version is still up to date. Unsupported versions of the software should not be used, because they pose a security risk."},
+            {language: "de", description: "Die PHP-Version wird auf ihre Aktualität geprüft. Alte Version der Software können bekannte Schwachstellen enthalten, welche von Angreifern ausgenutzt werden können."}
+        ] }
+
+    ]
+
+
+WordpressPHPConfiguration:
+    Options: {
+        transaction: "info:php:php_ini",
+        separator: "=",
+        run-if: [
+            "info:condition:hardening_for_wordpress",
+            "info:condition:has_php_installed"
+        ]
+    }
+    
+    RunUtils: [
+        configfile.IniFileEntry: { key: "allow_url_fopen",   value: "Off", section:{name: "PHP"}, meta: [
+            {language: "en", caption: "Disabling of file access via URL schema" },
+            {language: "de", caption: "Deaktivierung von Dateizugriffen mittels URL-Schema" },
+            {language: "en", description: "This option enables the URL-aware fopen wrappers that enable accessing URL object like files. This could enable an attacker to request information from a foreign or internal server. Thus it should be deactivated if possible." },
+            {language: "de", description: "Die Option allow_url_fopen ermöglicht die URL-spezifische Verwendung der fopen-Funktionen, so dass Dateien auch über URL-Protokolle wie http und ftp geladen werden können. Dadurch könnten Angreifer Daten von anderen Servern laden, weshalb diese Funktion nach Möglichkeit deaktiviert werden sollte." }
+        ]},
+        configfile.IniFileEntry: { key: "max_execution_time",value: "30", section:{name: "PHP"}, meta: [
+            {language: "en", caption: "Limiting the execution time of PHP scripts" },
+            {language: "de", caption: "Begrenzung der Ausführungszeit für PHP-Skripte" },
+            {language: "en", description: "The execution time of a php script should be limited to prevent misusing long-running script for denial of service attacks." },
+            {language: "de", description: "Die Laufzeit eines PHP-Requests sollte begrenzt werden, so dass langlaufende Skripte nicht für Denial-of-Service-Angriffe genutzt werden können." }
+        ]},
+        configfile.IniFileEntry: { key: "max_input_vars",    value: "1000", section:{name: "PHP"}, meta: [
+            {language: "en", caption: "Limiting the number of parameters" },
+            {language: "de", caption: "Begrenzung der Anzahl der Parameter" },
+            {language: "en", description: "How many input variables may be accepted (limit is applied to $_GET, $_POST and $_COOKIE superglobal separately). Use of this directive mitigates the possibility of denial of service attacks which use hash collisions." },
+            {language: "de", description: "Die Anzahl der Parameter eines Requests ($_GET, $_POST und $_COOKIE) sollte beschränkt werden, um einen Denial-of-Service-Angriff durch Hash-Kollision zu unterbinden." }
+        ]},
+        configfile.IniFileEntry: { key: "always_populate_raw_post_data", value: "0", section:{name: "PHP"}, meta: [
+            {language: "en", caption: "Disabling the generally population of $HTTP_RAW_POST_DATA" },
+            {language: "de", caption: "Deaktivierung der generellen Bereitstellung von rohen POST-Daten" },
+            {language: "en", description: "If set to TRUE, PHP will always populate the $HTTP_RAW_POST_DATA containing the raw POST data. Otherwise, the variable is populated only when the MIME type of the data is unrecognized." },
+            {language: "de", description: "Über die Option always_populate_raw_post_data kann gesteuert werden, ob die POST-Daten als Roh-Daten weiterverwendet werden sollen. Die Interpretation von rohen POST-Daten sollte nicht generell stattfinden." }
+        ]},
+        configfile.IniFileEntry: { key: "disable_functions", value: [ 
+            "curl_multi_exec",
+            "curl_exec", 
+            "escapeshellarg", 
+            "escapeshellcmd", 
+            "exec", 
+            "ini_set", 
+            "pack", 
+            "proc_close", 
+            "proc_open", 
+            "shell_exec", 
+            "system"
+        ],listseparator: ",",section:{name: "PHP"}, meta: [
+            {language: "en", caption: "Disabling certain critical PHP functions for the cms Wordpress" },
+            {language: "de", caption: "Deaktivierung einzelner kritischer PHP-Funktionen für das CMS Wordpress" },
+            {language: "en", description: "Certain PHP functions are often abused to compromise the system. Thus it is advised to disable these critical functions. The functions to be disabled here are chosen considering to serve the needs of the CMS 'Wordpress'. Nevertheless some of these functions might be needed by additional components or plugins. So it might be necessary to manually adapt this configuration depending on the needs of the used php code." },
+            {language: "de", description: "Einige PHP-Funktionen werden oft genutzt, um Systeme zu kompromittieren. Deshalb sollten diese kritischen Funktionen deaktiviert werden. Die hier deaktivierten Funktionen sind zugeschnitten auf das CMS 'Wordpress'. Jedoch kann es sein, das manche dieser Funktionen von zusätzlichen Komponenten oder Plugins benötigt werden. In diesem Fall muss die Konfiguration händisch angepasst werden." }
+        ]}
+    ]
+        
+JoomlaPHPConfiguration:
+    Options: {
+        transaction: "info:php:php_ini",
+        separator: "=",
+        run-if: [
+            "info:condition:hardening_for_joomla",
+            "info:condition:has_php_installed"
+        ]
+    }
+            
+    RunUtils: [
+        configfile.IniFileEntry: { key: "allow_url_fopen",   value: "Off", section:{name: "PHP"}, meta: [
+            {language: "en", caption: "Disabling of file access via URL schema" },
+            {language: "de", caption: "Deaktivierung von Dateizugriffen mittels URL-Schema" },
+            {language: "en", description: "This option enables the URL-aware fopen wrappers that enable accessing URL object like files. This could enable an attacker to request information from a foreign or internal server. Thus it should be deactivated if possible." },
+            {language: "de", description: "Die Option allow_url_fopen ermöglicht die URL-spezifische Verwendung der fopen-Funktionen, so dass Dateien auch über URL-Protokolle wie http und ftp geladen werden können. Dadurch könnten Angreifer Daten von anderen und auch internen Servern laden, weshalb diese Funktion nach Möglichkeit deaktiviert werden sollte." }
+        ]},
+        configfile.IniFileEntry: { key: "max_execution_time",value: "30", section:{name: "PHP"}, meta: [
+            {language: "en", caption: "Limiting the execution time of PHP scripts" },
+            {language: "de", caption: "Begrenzung der Ausführungszeit für PHP-Skripte" },
+            {language: "en", description: "The execution time of a php script should be limited to prevent misusing long-running script for denial of service attacks." },
+            {language: "de", description: "Die Laufzeit eines PHP-Requests sollte begrenzt werden, so dass langlaufende Skripte nicht für Denial-of-Service-Angriffe genutzt werden können." }
+        ]},
+        configfile.IniFileEntry: { key: "max_input_vars",    value: "1000", section:{name: "PHP"}, meta: [
+            {language: "en", caption: "Limiting the number of parameters" },
+            {language: "de", caption: "Begrenzung der Anzahl der Parameter" },
+            {language: "en", description: "How many input variables may be accepted (limit is applied to $_GET, $_POST and $_COOKIE superglobal separately). Use of this directive mitigates the possibility of denial of service attacks which use hash collisions." },
+            {language: "de", description: "Die Anzahl der Parameter eines Requests ($_GET, $_POST und $_COOKIE) sollten beschränkt werden, um einem Denial-of-Service-Angriff durch Hash-Kollosion zu unterbinden." }
+        ]},
+        configfile.IniFileEntry: { key: "always_populate_raw_post_data", value: "0", section:{name: "PHP"}, meta: [
+            {language: "en", caption: "Disabling the generally population of $HTTP_RAW_POST_DATA" },
+            {language: "de", caption: "Deaktivierung der generellen Bereitstellung von rohen POST-Daten" },
+            {language: "en", description: "If set to TRUE, PHP will always populate the $HTTP_RAW_POST_DATA containing the raw POST data. Otherwise, the variable is populated only when the MIME type of the data is unrecognized." },
+            {language: "de", description: "Über die Option always_populate_raw_post_data kann gesteuert werden, ob die POST-Daten als Roh-Daten weiterverwendet werden soll. Die Interpretation von rohen POST-Daten sollte nicht generell stattfinden." }
+        ]},
+        configfile.IniFileEntry: { key: "disable_functions", value: [ 
+        "escapeshellarg", "escapeshellcmd", "exec", "ini_set", "pack", "proc_close", "proc_open", "shell_exec", "system"
+        ],
+        listseparator: ",", section:{name: "PHP"}, meta: [
+               {language: "en", caption: "Disabling certain critical PHP functions for the cms Joomla" },
+               {language: "de", caption: "Deaktivierung einzelner kritischer PHP-Funktionen für das CMS Joomla" },
+               {language: "en", description: "Certain PHP functions are often abused to compromise the system. Thus it is advised to disable these critical functions. The functions to be disabled here are chosen considering to serve the needs of the CMS 'Joomla'. Nevertheless some of these functions might be needed by additional components or plugins. So it might be necessary to manually adapt this configuration depending on the needs of the used php code." },
+               {language: "de", description: "Einige PHP-Funktionen werden oft genutzt, um Systeme zu kompromittieren. Deshalb sollten diese kritischen Funktionen deaktiviert werden. Die hier deaktivierten Funktionen sind zugeschnitten auf das CMS 'Joomla'. Jedoch kann es sein, das manche dieser Funktionen von zusätzlichen Komponenten oder Plugins benötigt werden. In diesem Fall muss die Konfiguration händisch angepasst werden." }
+        ]}
+    ]
+                
+Typo3PHPConfiguration:
+    Options: {
+        transaction: "info:php:php_ini",
+        separator: "=",
+        run-if: [
+            "info:condition:hardening_for_typo3",
+            "info:condition:has_php_installed"
+        ]
+    }
+                
+    RunUtils: [
+        configfile.IniFileEntry: { key: "allow_url_fopen",   value: "On", section:{name: "PHP"}, meta: [
+            {language: "en", caption: "Disabling of file access via URL schema" },
+            {language: "de", caption: "Deaktivierung von Dateizugriffen mittels URL-Schema" },
+            {language: "en", description: "This option enables the URL-aware fopen wrappers that enable accessing URL object like files. This could enable an attacker to request information from a foreign or internal server. Thus it should be deactivated if possible." },
+            {language: "de", description: "Die Option allow_url_fopen ermöglicht die URL-spezifische Verwendung der fopen-Funktionen, so dass Dateien auch über URL-Protokolle wie http und ftp geladen werden können. Dadurch könnten Angreifer Daten von anderen und auch internen Servern laden, weshalb diese Funktion nach Möglichkeit deaktiviert werden sollte." }
+        ]},
+        configfile.IniFileEntry: { key: "max_execution_time",value: "240", section:{name: "PHP"}, meta: [
+            {language: "en", caption: "Limiting the execution time of PHP scripts" },
+            {language: "de", caption: "Begrenzung der Ausführungszeit für PHP-Skripte" },
+            {language: "en", description: "The execution time of a php script should be limited to prevent misusing long-running script for denial of service attacks." },
+            {language: "de", description: "Die Laufzeit eines PHP-Requests sollte begrenzt werden, so dass langlaufende Skripte nicht für Denial-of-Service-Angriffe genutzt werden können." }
+        ]},
+        configfile.IniFileEntry: { key: "max_input_vars",    value: "1500", section:{name: "PHP"}, meta: [
+            {language: "en", caption: "Limiting the number of parameters" },
+            {language: "de", caption: "Begrenzung der Anzahl der Parameter" },
+            {language: "en", description: "How many input variables may be accepted (limit is applied to $_GET, $_POST and $_COOKIE superglobal separately). Use of this directive mitigates the possibility of denial of service attacks which use hash collisions." },
+            {language: "de", description: "Die Anzahl der Parameter eines Requests ($_GET, $_POST und $_COOKIE) sollten beschränkt werden, um einem Denial-of-Service-Angriff durch Hash-Kollision zu unterbinden." }
+        ]},
+        configfile.IniFileEntry: { key: "always_populate_raw_post_data", value: "-1", section:{name: "PHP"}, meta: [
+            {language: "en", caption: "Disabling the generally population of $HTTP_RAW_POST_DATA" },
+            {language: "de", caption: "Deaktivierung der generellen Bereitstellung von rohen POST-Daten" },
+            {language: "en", description: "If set to TRUE, PHP will always populate the $HTTP_RAW_POST_DATA containing the raw POST data. Otherwise, the variable is populated only when the MIME type of the data is unrecognized." },
+            {language: "de", description: "Über die Option always_populate_raw_post_data kann gesteuert werden, ob die POST-Daten als Roh-Daten weiterverwendet werden soll. Die Interpretation von rohen POST-Daten sollte nicht generell stattfinden." }
+        ]},
+    ]

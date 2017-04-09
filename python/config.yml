@@ -1,0 +1,57 @@
+
+#specify the logging
+Logging:
+#what log messages should be output filtered by the given log level: DEBUG | INFO | WARNING (default) | ERROR | CRITICAL
+    LogLevel: WARNING 
+#where should the logging output streams send to: currently only support StreamHandler (default)
+    LogHandler: StreamHandler
+
+#The hardening modules to run, this only defines the preselection in interactive and diff mode. In silent mode only the here specified modules are run.
+#RunModules: [network, sshd, php, debian, java, python, typo3]
+RunModules: []
+
+#Which cms should be hardend [wordpress, typo3, joomla, liferay, plone] Default: []
+#Only used in silent mode
+CMSModules: [wordpress, typo3, joomla, liferay, plone]
+
+UserInterface:
+#writer for the user interface.So far only the ConsoleWriter is supported. Default ConsoleWriter
+    Writer: ConsoleWriter
+
+
+Backup:
+#Where to save backups to. Default: "info:env:HOME/hardening-backup" 
+    BaseDir: "info:env:HOME/hardening-backup"
+
+TextFiles:
+#Default indent for text file. Default value: "    "
+    DefaultIndent: "    "
+
+HardeningSettings:   {
+
+#the user for the ssh service to run with. Default sshd.
+    ssh-runtime-user: &ssh-runtime-user         "sshd",
+#the group for the ssh service to run with. Default ssh.
+    ssh-runtime-group: &ssh-runtime-group       "ssh",
+#the port on which the ssh service is running- Default 22
+    ssh-listening-port: &ssh-listening-port     "22",
+#the ssh service protocol version to use. Default 2
+    ssh-protocol-version: &ssh-protocol-version "2",
+
+#the users who are allowed to connect via ssh. Default ["info:user:logname"] (the currently login user)
+    ssh-allow-users: &ssh-allow-users           ["info:user:logname"],
+#the user-groups who are allowed to connect via ssh. Default ""
+    ssh-allow-groups: &ssh-allow-groups         "",
+#whether or not the ssh usepam parameter should be set. Default no
+    ssh-usepam: &ssh-usepam                     "no",
+#the ssh address family (IPv4, IPv6) to use. Default inet (IPv4)
+    ssh-address-family: &ssh-address-family     "inet",
+
+#the user for the mysql services to run with. Default mysql
+    mysql-runtime-user: &mysql-runtime-user     "mysql",
+
+#the user of the plone deamon. Default plone_deamon
+    plone-daemon-user: &plone-daemon-user       "plone_daemon",
+#the group of the plone deamon. Default plone
+    plone-daemon-group: &plone-daemon-group     "plone"
+}

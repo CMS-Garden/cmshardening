@@ -1,0 +1,22 @@
+RunSections: [
+    JavaVersionCheck
+]
+
+#meta information about the java module in english and german
+#the description of the utils and their parameters can be found in the hardening-scripts/python/README.md
+meta: [
+    {language: "en", caption: "This section contains java specific hardening steps and checks"},
+    {language: "de", caption: "Dieser Abschnitt enthält Java-spezifische Härtungsschritte"},
+    {language: "en", description: "The following hardening steps were verified for the Java Development Kit (JDK) with version 8u66. The results of the hardening steps for other versions may differ."},
+    {language: "de", description: "Die nachfolgenden Härtungsmaßnahmen wurden für die Version 8u66 des Java Development Kit (JDK) getestet und hinsichtlich ihrer Funktionalität geprüft. Für abweichende Versionen kann keine Aussage zur Funktionalität getroffen werden."}
+]
+
+JavaVersionCheck: 
+    RunUtils: [
+        os.CheckVersion: { key: "java", version: "info:java:current_version", meta: [
+            {language: "en", caption: "Checking java version"},
+            {language: "de", caption: "Überprüfen der installierten Java-Version"},
+            {language: "en", description: "This action will check if the installed java version is still up to date. Unsupported versions of the software should not be used, because they pose a security risk."},
+            {language: "de", description: "Die Java-Version wird auf ihre Aktualität geprüft. Alte Version der Software können bekannte Schwachstellen enthalten, welche von Angreifern ausgenutzt werden können."}
+        ] }
+    ]

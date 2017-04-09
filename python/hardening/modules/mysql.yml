@@ -1,0 +1,105 @@
+RunSections: [
+    MySQLConfiguration
+]
+
+#meta information about the mysql module in english and german
+#the description of the utils and their parameters can be found in the hardening-scripts/python/README.md
+meta: [
+    {language: "en", caption: "This section contains MySQL specific hardening steps and checks"},
+    {language: "de", caption: "Dieser Abschnitt enthält MySQL-spezifische Härtungsschritte"},
+    {language: "en", description: "The following hardening steps were verified for the MySQL Server with version 5.5.46. The results of the hardening steps for other versions may differ."},
+    {language: "de", description: "Die nachfolgenden Härtungsmaßnahmen wurden für die Version 5.5.46 des MySQL-Severs getestet und hinsichtlich ihrer Funktionalität geprüft. Für abweichende Versionen kann keine Aussage zur Funktionalität getroffen werden."}
+]
+
+MySQLConfiguration:
+    Options: {
+        transaction: "file:/etc/mysql/my.cnf",
+        separator: "=",
+    }
+            
+    RunUtils: [
+        configfile.IniFileEntry: { key: "log_error",             value: "/var/log/mysql/error.log", section: {name: "mysqld"}, meta: [
+                {language: "en", caption: "Setting error log path" },
+                {language: "de", caption: "Setzen des Pfades der Error-Log Datei" },
+                {language: "en", description: "This action sets the path for the MySQL error log file." },
+                {language: "de", description: "Diese Maßnahme setzt den Pfad für die Error-Log Datei des MySQL-Servers." }
+            ]},
+        configfile.IniFileEntry: { key: "slow_query_log",        value: "1", section: {name: "mysqld"}, meta: [
+                {language: "en", caption: "Activating logging of slow SQL queries" },
+                {language: "de", caption: "Aktivieren der Dokumentation von langsamen SQL-Queries" },
+                {language: "en", description: "SQL queries that take an unusual long execution time are logged in a separate log file." },
+                {language: "de", description: "SQL-Abfragen, die ungewöhnlich lange in der Ausführung brauchen, werden in einer separaten Log-Datei gespeichert." }
+            ]},
+        configfile.IniFileEntry: { key: "log-warnings",          value: "2", section: {name: "mysqld"}, meta: [
+                {language: "en", caption: "Activating the logging of warnings" },
+                {language: "de", caption: "Aktivieren des Loggings für Warnungen" },
+                {language: "en", description: "This action enables the logging of MySQL server warnings." },
+                {language: "de", description: "Diese Maßnahme aktiviert die Protokollierung von Warnungen des MySQL Servers in einer Log-Datei." }
+            ]},
+        configfile.IniFileEntry: { key: "slow_query_log_file",   value: "/var/log/mysql/slow-query.log", section: {name: "mysqld"}, meta: [
+                {language: "en", caption: "Setting slow query log path" },
+                {language: "de", caption: "Setzen des Pfades für die 'slow_quer_log' Datei" },
+                {language: "en", description: "SQL queries that take an unusual amount of execution time are written to this file." },
+                {language: "de", description: "SQL-Abfragen, die ungewöhnlich lange Ausführungszeiten haben, werden in diese Datei geschrieben." }
+            ]},
+        #configfile.IniFileEntry: { key: "log-raw",              value: "OFF", section: {name: ""}, meta: [
+        #        {language: "en", caption: "" },
+        #        {language: "de", caption: "" },
+        #        {language: "en", description: "" },
+        #        {language: "de", description: "" }
+        #    ]},
+        configfile.IniFileEntry: { key: "safe-user-create",      value: "1", section: {name: "mysqld"}, meta: [
+                {language: "en", caption: "Enable safe user create mode" },
+                {language: "de", caption: "Aktivieren des sicheren Benutzer-Erstellungsmodus" },
+                {language: "en", description: "To create a new user the current user needs not only GRANT but also INSERT privileges for the MySQL user table" },
+                {language: "de", description: "Zum Erstellen eines neuen Benutzers wird mit dieser Einstellung sowohl das GRANT- als auch das INSERT-Recht auf die MySQL Benutzer Tabelle vom ausführenden Benutzer benötigt." }
+            ]},
+        configfile.IniFileEntry: { key: "old-passwords",         value: "0", section: {name: "mysqld"}, meta: [
+                {language: "en", caption: "Disable login for users with 'old passwords' (Step 1 of 2)" },
+                {language: "de", caption: "Deaktivieren des Logins für Benutzer mit 'alten Passwörtern' (Schritt 1 von 2)" },
+                {language: "en", description: "Don't allow login for users with old password hashing mechanism." },
+                {language: "de", description: "Benutzer, deren Passwort mit veralteten Hashing-Mechanismen gesichert wurde, dürfen sich nicht anmelden." }
+            ]},
+        configfile.IniFileEntry: { key: "secure_auth",           value: "ON", section: {name: "mysqld"}, meta: [
+                {language: "en", caption: "Disable login for users with 'old passwords' (Step 2 of 2)" },
+                {language: "de", caption: "Deaktivieren des Logins für Benutzer mit 'alten Passwörtern' (Schritt 2 von 2)" },
+                {language: "en", description: "Don't allow login for users with old password hashing mechanism." },
+                {language: "de", description: "Benutzer, deren Passwort mit veralteten Hashing-Mechanismen gesichert wurde, dürfen sich nicht anmelden." }
+            ]},
+        configfile.IniFileEntry: { key: "skip_symbolic_links",   value: "yes", section: {name: "mysqld"}, meta: [
+                {language: "en", caption: "Disable support for symbolic links" },
+                {language: "de", caption: "Deaktivieren von symbolischen Links für MySQL" },
+                {language: "en", description: "This action deactivates the support for SymLinks to MySQL files under Unix-system." },
+                {language: "de", description: "Die Unterstützung für symbolische Links, wie sie unter Unix-Systemen üblich sind, sollte für MySQL Daten ausgeschaltet werden." }
+            ]},
+        configfile.IniFileEntry: { key: "local-infile",         value: "0", section: {name: "mysqld"}, meta: [
+                {language: "en", caption: "Disable the import from local data files" },
+                {language: "de", caption: "Deaktivieren des Imports von lokalen Datendateien" },
+                {language: "en", description: "The support for importing local data files should not be activated." },
+                {language: "de", description: "Die Möglichkeit des Imports von lokalen Datendateiein sollte nicht aktiviert sein." }
+            ]},
+        configfile.IniFileEntry: { key: "allow-suspicious-udfs", value: "false", section: {name: "mysqld"}, meta: [
+                {language: "en", caption: "Disable non legitimate user defined functions (UDF)" },
+                {language: "de", caption: "Deaktivieren der Möglichkeit sämtliche User-Defined-Functions zu laden" },
+                {language: "en", description: "This setting is set to false, so that only user defined functions that are legitimated will be loaded by the MySQL server." },
+                {language: "de", description: "Diese Einstellung bewirkt, dass nur legitimierte User-Defined-Functions geladen und interpretiert werden." }
+            ]},
+        configfile.IniFileEntry: { key: "skip-grant-tables",     value: "false", section: {name: "mysqld"}, meta: [
+                {language: "en", caption: "Deactivating authorization skipping" },
+                {language: "de", caption: "Deaktivieren der Möglichkeit die Autorisierung zu überspringen" },
+                {language: "en", description: "The option 'skip-grant-tables' is used to allow user-login wihtout password check. This will be deactivated." },
+                {language: "de", description: "Die Option 'skip-grant-tables' ermöglicht die Anmeldung sämtlicher Benutzer ohne Eingabe von Authentisierungsmerkmalen. Dies wird deaktiviert." }
+            ]},
+        configfile.IniFileEntry: { key: "bind-address",          value: "127.0.0.1", section: {name: "mysqld"}, meta: [
+                {language: "en", caption: "The network interfaces to connect the mysql daemon to" },
+                {language: "de", caption: "Setzen des Netzwerkinterfaces für den MySQL-daemon" },
+                {language: "en", description: "The network interfaces for the MySQL server should be localhost, so that only local sql request are evaluated." },
+                {language: "de", description: "Die Netzwerkadresse, auf welcher der MySQL-Server auf Anfragen wartet, sollte möglichst localhost(127.0.0.1) sein, um SQL-Anfragen von fremden Quellen zu blockieren." }
+            ]},
+        configfile.IniFileEntry: { key: "user",                  value: *mysql-runtime-user, section: {name: "mysqld"}, meta: [
+                {language: "en", caption: "Setting the mysql runtime user" },
+                {language: "de", caption: "Setzen des MySQL Benutzers" },
+                {language: "en", description: "This action sets the user for the MySQL process. This user should only be used for the MySQL process." },
+                {language: "de", description: "Diese Maßnahme setzt den Benutzer unter dem der MySQL Prozess läuft. Dieser sollte dediziert nur dafür verwendet werden." }
+            ]},
+    ]

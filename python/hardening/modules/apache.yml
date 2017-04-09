@@ -1,0 +1,629 @@
+RunSections: [
+    ApacheModules,
+    ApacheFirewall,
+    ApacheConf,
+    ApacheDefaultVhost,
+    ApacheSslConfig,
+    ApacheSecurityConfig,
+    ApachePermissions
+]
+#meta information about the apache module in english and german
+#the description of the utils and their parameters can be found in the hardening-scripts/python/README.md
+meta: [
+    {language: "en", caption: "This section configures the apache webserver"},
+    {language: "de", caption: "Dieser Abschnitt konfiguriert den Webserver 'apache'"},
+    {language: "en", description: "The following hardening steps were verified for the apache 2 web server in the version 2.4.10. The results of the hardening steps for other versions of the apache 2 webserver may differ."},
+    {language: "de", description: "Die nachfolgenden Härtungsmaßnahmen wurden für die Version 2.4.10 des Apache 2 Web Servers getestet und hinsichtlich ihrer Funktionalität geprüft. Für abweichende Versionen des Apache 2 Web Server kann keine Aussage zur Funktionalität getroffen werden."}
+]
+
+ApacheModules:
+    Options: {
+        run-if: "info:condition:has_apache_installed"
+    }
+    RunUtils: [
+        apache.ApacheDismod: { modname: "*", meta: [
+                {language: "en", caption: "Deactivating apache modules" },
+                {language: "de", caption: "Deaktivieren der Apache Module" },
+                {language: "en", description: "In the course of the hardening only needed apache modules will be activcated. Therefore all apache modules have to be deactivated first." },
+                {language: "de", description: "Im Zuge der Härtung werden nur die benötigten Apache Module aktiviert, dafür müssen vorher alle aktiven Apache Module deaktiviert werden." }
+            ] },
+        apache.ApacheEnmod:  { modname: "headers", meta: [
+                {language: "en", caption: "Activating apache module 'headers'" },
+                {language: "de", caption: "Aktivieren des Apache Modul 'headers'" },
+                {language: "en", description: "This module enables the support for modifying HTTP-Requests and responses. It is needed for other hardening measures." },
+                {language: "de", description: "Dieses Modul wird für das Anpassen der HTTP-Requests und Responses und damit auch für spätere Härtungsmaßnahmen benötigt." }
+            ] },
+        apache.ApacheEnmod:  { modname: "allowmethods", meta: [
+                {language: "en", caption: "Activating apache module 'allowmethods'" },
+                {language: "de", caption: "Aktivieren des Apache Modul 'allowmethods'" },
+                {language: "en", description: "This module allows for restriction of HTTP-methods that are interpreted by the apache web server and is needed for other hardening measures." },
+                {language: "de", description: "Dieses Modul erlaubt das Beschränken der verwendbaren HTTP-Methoden und wird für spätere Härtungsmaßnahmen benötigt." }
+            ] },
+        apache.ApacheEnmod:  { modname: "alias", meta: [
+                {language: "en", caption: "Activating apache module 'alias'" },
+                {language: "de", caption: "Aktivieren des Apache Modul 'alias'" },
+                {language: "en", description: "This module provides URL redirection and mapping of different parts of the filesystem to any URL. This module is needed for any of the supported cms." },
+                {language: "de", description: "Das 'alias' Modul ermöglicht URL-Weiterleitungen und die Zuordnung von Dateisystempfaden zu beliebigen URLs. Dieses Modul wird für die Funktionalität der unterstützten CMS benötigt." }
+            ] },
+        apache.ApacheEnmod:  { modname: "authz_core", meta: [
+                {language: "en", caption: "Activating apache module 'authz_core'" },
+                {language: "de", caption: "Aktivieren des Apache Modul 'authz_core'" },
+                {language: "en", description: "This module provides core functionality for authorization. It is needed for any of the supported cms." },
+                {language: "de", description: "Dieses Modul stellt Kern-Funktionalitäten zur Authentifizierung zur Verfügung. Dieses Modul wird für die Funktionalität der unterstützten CMS benötigt." }
+            ] },
+        apache.ApacheEnmod:  { modname: "authz_host", meta: [
+                {language: "en", caption: "Activating apache module 'authz_host'" },
+                {language: "de", caption: "Aktivieren des Apache Modul 'authz_host'" },
+                {language: "en", description: "This module allows ip or hostname based authorization. This module is needed for any of the supported cms." },
+                {language: "de", description: "Ermöglicht die Authentifizierung anhand der IP-Adresse oder des Hostnamens. Dieses Modul wird für die Funktionalität der unterstützten CMS benötigt." }
+            ] },
+        apache.ApacheEnmod:  { modname: "authz_user", meta: [
+                {language: "en", caption: "Activating apache module 'authz_user'" },
+                {language: "de", caption: "Aktivieren des Apache Modul 'authz_user'" },
+                {language: "en", description: "This module allows user based authorization. This module is needed for any of the supported cms." },
+                {language: "de", description: "Ermöglicht die Authentifizierung anhand von Benutzern. Dieses Modul wird für die Funktionalität der unterstützten CMS benötigt." }
+            ] },
+        apache.ApacheEnmod:  { modname: "deflate", meta: [
+                {language: "en", caption: "Activating apache module 'deflate'" },
+                {language: "de", caption: "Aktivieren des Apache Modul 'deflate'" },
+                {language: "en", description: "The 'deflate' module compresses the requested ressources before they are delivered to the client. It is needed for any of the supported cms." },
+                {language: "de", description: "Dieses Modul komprimiert die angefragten Ressourcen bevor sie ausgeliefert werden. Dieses Modul wird für die Funktionalität der unterstützten CMS benötigt." }
+            ] },
+        apache.ApacheEnmod:  { modname: "dir", meta: [
+                {language: "en", caption: "Activating apache module 'dir'" },
+                {language: "de", caption: "Aktivieren des Apache Modul 'dir'" },
+                {language: "en", description: "This module provides directory redirects wihtout trailing slashes and support for directory index files. This module is needed for any of the supported cms." },
+                {language: "de", description: "Das Modul 'dir' ermöglicht das Ausliefern von Verzeichnis-Index Dateien und Auflösen von Verzeichnisnamen ohne beendenden Schrägstrich. Dieses Modul wird für die Funktionalität der unterstützten CMS benötigt." }
+            ] },
+        apache.ApacheEnmod:  { modname: "env", meta: [
+                {language: "en", caption: "Activating apache module 'env'" },
+                {language: "de", caption: "Aktivieren des Apache Modul 'env'" },
+                {language: "en", description: "This module allows modification and redirection of internal environment variables. It is needed for any of the supported cms." },
+                {language: "de", description: "Dieses Modul ermöglicht die Kontrolle und Weiterleitung von internen Umgebungsvariablen. Dieses Modul wird für die Funktionalität der unterstützten CMS benötigt." }
+            ] },
+        apache.ApacheEnmod:  { modname: "filter", meta: [
+                {language: "en", caption: "Activating apache module 'filter'" },
+                {language: "de", caption: "Aktivieren des Apache Modul 'filter'" },
+                {language: "en", description: "The 'filter' module extends the configuration of output-filter mechanisms. This module is needed for any of the supported cms." },
+                {language: "de", description: "Dieses Module erweitert die Konfiguration von Output-Filtern. Dieses Modul wird für die Funktionalität der unterstützten CMS benötigt." }
+            ] },
+        apache.ApacheEnmod:  { modname: "mime", meta: [
+                {language: "en", caption: "Activating apache module 'mime'" },
+                {language: "de", caption: "Aktivieren des Apache Modul 'mime'" },
+                {language: "en", description: "This module provides meta information for the requested ressources. This module is needed for any of the supported cms." },
+                {language: "de", description: "Das 'mime' Modul wird verwendet, um HTTP-Metadaten über die auszuliefernde Ressource anzugeben. (z.B.: mime-type, encoding...). Dieses Modul wird für die Funktionalität der unterstützten CMS benötigt." }
+            ] },
+        apache.ApacheEnmod:  { modname: "mpm_event", meta: [
+                {language: "en", caption: "Activating apache module 'mpm_event'" },
+                {language: "de", caption: "Aktivieren des Apache Modul 'mpm_event'" },
+                {language: "en", description: "The event multiprocessing module is used for load balancing and for speeding up websites with many keep-alive connections. It is needed for any of the supported cms." },
+                {language: "de", description: "Dieses Multiprozessmodul(MPM) ist besonders für Webseiten mit erheblichem Keep-Alive-Datenverkehr gedacht und wird häufig zur Lastverteilung verwendet. (siehe https://httpd.apache.org/docs/2.4/mod/event.html)  Dieses Modul wird für die Funktionalität der unterstützten CMS benötigt." }
+            ] },
+        apache.ApacheEnmod:  { modname: "proxy", meta: [
+                {language: "en", caption: "Activating apache module 'proxy'" },
+                {language: "de", caption: "Aktivieren des Apache Modul 'proxy'" },
+                {language: "en", description: "This module provides core proxy functionality. This module is needed for any of the supported cms." },
+                {language: "de", description: "Das 'proxy' Modul ermöglicht grundlegende Proxy-Funktionalitäten für den Apache HTTP Server. Dieses Modul wird für die Funktionalität der unterstützten CMS benötigt." }
+            ] },
+        apache.ApacheEnmod:  { modname: "rewrite", meta: [
+                {language: "en", caption: "Activating apache module 'rewrite'" },
+                {language: "de", caption: "Aktivieren des Apache Modul 'rewrite'" },
+                {language: "en", description: "The 'rewrite' module provides possibilities to rewrite requested URLs. It is needed for other hardening measures." },
+                {language: "de", description: "Dieses Modul bietet Funktionalitäten zum regelbasierten umleiten von URLs zu anderen URLs oder Dateisystempfaden. Das Modul wird für spätere Härtungsmaßnahmen benötigt." }
+            ] },
+        apache.ApacheEnmod:  { modname: "setenvif", meta: [
+                {language: "en", caption: "Activating apache module 'setenvif'" },
+                {language: "de", caption: "Aktivieren des Apache Modul 'setenvif'" },
+                {language: "en", description: "This module allows setting environment variables based on request data. This module is needed for any of the supported cms." },
+                {language: "de", description: "Das Modul ermöglicht das Setzen von Umgebungsvariablen anhand der Request-Daten. Dieses Modul wird für die Funktionalität der unterstützten CMS benötigt." }
+            ] },
+        apache.ApacheEnmod:  { modname: "ssl", meta: [
+                {language: "en", caption: "Activating apache module 'ssl'" },
+                {language: "de", caption: "Aktivieren des Apache Modul 'ssl'" },
+                {language: "en", description: "This modul provides SSL and TLS support. It is needed for any of the supported cms." },
+                {language: "de", description: "Dieses Modul aktiviert die Möglichkeit verschlüsselte HTTP-Verbindungen per SSL oder TLS zu verwenden. Dieses Modul wird für die Funktionalität der unterstützten CMS benötigt." }
+            ] },
+        apache.ApacheEnmod:  { modname: "socache_shmcb", meta: [
+                {language: "en", caption: "Activating apache module 'socache_shmcb'" },
+                {language: "de", caption: "Aktivieren des Apache Modul 'socache_shmcb'" },
+                {language: "en", description: "The module 'socache_shmcb' allows the caching of objects in shared memory segments. This module is needed for any of the supported cms." },
+                {language: "de", description: "Das Modul 'socache_shmcb' erlaubt das Cachen von Objekten in einem Shared Memory. Dieses Modul wird für die Funktionalität der unterstützten CMS benötigt." }
+            ] },
+
+        apache.ApacheEnmod:  { modname: "proxy_fcgi",           run-if: "info:condition:hardening_for_wordpress", meta: [
+                {language: "en", caption: "Activating apache module 'proxy_fcgi'" },
+                {language: "de", caption: "Aktivieren des Apache Modul 'proxy_fcgi'" },
+                {language: "en", description: "This module adds FastCGI support for the 'proxy' module. This module is needed for wordpress, joomla and typo3." },
+                {language: "de", description: "Dieses Modul erweitert das Modul 'proxy' um FastCGI Funktionen. Dieses Modul wird für die Funktionalität der unterstützten CMS WordPress, Joomla und Typo3 benötigt." }
+            ] },
+        apache.ApacheEnmod:  { modname: "status",               run-if: "info:condition:hardening_for_wordpress", meta: [
+                {language: "en", caption: "Activating apache module 'status'" },
+                {language: "de", caption: "Aktivieren des Apache Modul 'status'" },
+                {language: "en", description: "This module provides information about the server activity and performance. This module is needed for wordpress, joomla, typo3 and plone." },
+                {language: "de", description: "Das 'status' Modul bietet Informationen über Serveraktivität und Serverperformance. Dieses Modul wird für die Funktionalität der unterstützten CMS WordPress, Joomla, Typo3 und Plone benötigt." }
+            ] },
+
+        apache.ApacheEnmod:  { modname: "proxy_fcgi",           run-if: "info:condition:hardening_for_joomla", meta: [
+                {language: "en", caption: "Activating apache module 'proxy_fcgi'" },
+                {language: "de", caption: "Aktivieren des Apache Modul 'proxy_fcgi'" },
+                {language: "en", description: "This module adds FastCGI support for the 'proxy' module. This module is needed for wordpress, joomla and typo3." },
+                {language: "de", description: "Dieses Modul erweitert das Modul 'proxy' um FastCGI Funktionen. Dieses Modul wird für die Funktionalität der unterstützen CMS WordPress, Joomla und Typo3 benötigt." }
+            ] },
+        apache.ApacheEnmod:  { modname: "status",               run-if: "info:condition:hardening_for_joomla", meta: [
+                {language: "en", caption: "Activating apache module 'status'" },
+                {language: "de", caption: "Aktivieren des Apache Modul 'status'" },
+                {language: "en", description: "This module provides information about the server activity and performance. This module is needed for wordpress, joomla, typo3 and plone." },
+                {language: "de", description: "Das 'status' Modul bietet Informationen über Serveraktivität und Serverperformance. Dieses Modul wird für die Funktionalität der unterstützen CMS WordPress, Joomla, Typo3 und Plone benötigt." }
+            ] },
+
+        apache.ApacheEnmod:  { modname: "proxy_fcgi",           run-if: "info:condition:hardening_for_typo3", meta: [
+                {language: "en", caption: "Activating apache module 'proxy_fcgi'" },
+                {language: "de", caption: "Aktivieren des Apache Modul 'proxy_fcgi'" },
+                {language: "en", description: "This module adds FastCGI support for the 'proxy' module. This module is needed for wordpress, joomla and typo3." },
+                {language: "de", description: "Dieses Modul erweitert das Modul 'proxy' um FastCGI Funktionen. Dieses Modul wird für die Funktionalität der unterstützen CMS WordPress, Joomla und Typo3 benötigt." }
+            ] },
+        apache.ApacheEnmod:  { modname: "status",               run-if: "info:condition:hardening_for_typo3", meta: [
+                {language: "en", caption: "Activating apache module 'status'" },
+                {language: "de", caption: "Aktivieren des Apache Modul 'status'" },
+                {language: "en", description: "This module provides information about the server activity and performance. This module is needed for wordpress, joomla, typo3 and plone." },
+                {language: "de", description: "Das 'status' Modul bietet Informationen über Serveraktivität und Serverperformance. Dieses Modul wird für die Funktionalität der unterstützen CMS WordPress, Joomla, Typo3 und Plone benötigt." }
+            ] },
+
+        apache.ApacheEnmod:  { modname: "proxy_ajp",            run-if: "info:condition:hardening_for_liferay", meta: [
+                {language: "en", caption: "Activating apache module 'proxy_ajp'" },
+                {language: "de", caption: "Aktivieren des Apache Modul 'proxy_ajp'" },
+                {language: "en", description: "This module adds AJP support for the 'proxy' module. This module is needed for liferay." },
+                {language: "de", description: "Dieses Modul erweitert das Modul 'proxy' um AJP Funktionen. Dieses Modul wird für die Funktionalität des unterstützen CMS Liferay benötigt." }
+            ] },
+
+        apache.ApacheEnmod:  { modname: "status",               run-if: "info:condition:hardening_for_plone", meta: [
+                {language: "en", caption: "Activating apache module 'status'" },
+                {language: "de", caption: "Aktivieren des Apache Modul 'status'" },
+                {language: "en", description: "This module provides information about the server activity and performance. This module is needed for wordpress, joomla, typo3 and plone." },
+                {language: "de", description: "Das 'status' Modul bietet Informationen über Serveraktivität und Serverperformance. Dieses Modul wird für die Funktionalität der unterstützen CMS WordPress, Joomla, Typo3 und Plone benötigt." }
+            ] },
+        apache.ApacheEnmod:  { modname: "slotmem_shm",          run-if: "info:condition:hardening_for_plone", meta: [
+                {language: "en", caption: "Activating apache module 'slotmem_shm'" },
+                {language: "de", caption: "Aktivieren des Apache Modul 'slotmem_shm'" },
+                {language: "en", description: "'slotmem_shm' provides a controller for creation and access of a shared memory. This module is needed for plone." },
+                {language: "de", description: "'slotmem_shm' stellt eine Speicherverwaltung für die Erstellung und den Zugriff auf Shared-Speicher zur Verfügung. Dieses Modul wird für die Funktionalität des unterstützen CMS Plone benötigt." }
+            ] },
+        apache.ApacheEnmod:  { modname: "lbmethod_bybusyness",  run-if: "info:condition:hardening_for_plone", meta: [
+                {language: "en", caption: "Activating apache module 'lbmethod_bybusyness'" },
+                {language: "de", caption: "Aktivieren des Apache Modul 'lbmethod_bybusyness'" },
+                {language: "en", description: "ByBusyness allows and manages load balancing between different 'workers'. It is needed for plone." },
+                {language: "de", description: "ByBusyness erlaubt und verwaltet die Lastverteilung über verschiedene 'worker'. Dieses Modul wird für die Funktionalität des unterstützen CMS Plone benötigt." }
+            ] },
+        apache.ApacheEnmod:  { modname: "proxy_balancer",        run-if: "info:condition:hardening_for_plone", meta: [
+                {language: "en", caption: "Activating apache module 'proxy_balancer'" },
+                {language: "de", caption: "Aktivieren des Apache Modul 'proxy_balancer'" },
+                {language: "en", description: "This module adds load balancing support for the 'proxy' module. This module is needed for plone." },
+                {language: "de", description: "Dieses Modul erweitert das Modul 'proxy' um Lastverteilungs-Funktionen. Dieses Modul wird für die Funktionalität des unterstützen CMS Plone benötigt." }
+            ] },
+        apache.ApacheEnmod:  { modname: "proxy_http",           run-if: "info:condition:hardening_for_plone", meta: [
+                {language: "en", caption: "Activating apache module 'proxy_http'" },
+                {language: "de", caption: "Aktivieren des Apache Modul 'proxy_http'" },
+                {language: "en", description: "This module adds HTTP and HTTPS support for the 'proxy' module. This module is needed for plone." },
+                {language: "de", description: "Dieses Modul erlaubt das Verwenden des 'proxy' Modules mit HTTP- und HTTPS-Requests. Dieses Modul wird für die Funktionalität des unterstützen CMS Plone benötigt." }
+            ] }
+    ]
+
+ApacheFirewall:
+    Options: {
+        transaction: "info:resolve_key:iptables_v4",
+        protocol: tcp,
+        src: "0.0.0.0/0",
+        dst: "info:net:public_address"
+    }
+    RunUtils: [
+        net.Firewall: {
+            dstport: 80,
+            meta: [
+                {language: "en", caption: "Opening TCP-Port 80 in iptables" },
+                {language: "de", caption: "Öffnen des TCP-Ports 80 in iptables" },
+                {language: "en", description: "TCP-Port 80 is used for HTTP-Requests/Respones and must therefore be opened." },
+                {language: "de", description: "Der TCP Port 80 wird für ein- und ausgehende HTTP Verbindungen benötigt und muss deshalb in den IP-Tables geöffnet werden." }
+            ]
+        },
+        net.Firewall: {
+            dstport: 443,
+            meta: [
+                {language: "en", caption: "Opening TCP-Port 443 in iptables" },
+                {language: "de", caption: "Öffnen des TCP-Ports 443 in iptables" },
+                {language: "en", description: "TCP-Port 443 is used for HTTPs-Requests/Respones and must therefore be opened." },
+                {language: "de", description: "Der TCP Port 443 wird für ein- und ausgehende HTTPs Verbindungen benötigt und muss deshalb in den IP-Tables geöffnet werden." }
+            ]
+        }
+    ]
+
+ApacheSslConfig:
+    Options: {
+        run-if: "info:condition:has_apache_installed",
+        transaction: "info:apache:ssl_config",
+        section: { name: "IfModule", param: "mod_ssl.c" }
+    }
+    RunUtils: [
+        #all in one value because order matters and old value can be overwritten
+        configfile.ApacheConfigEntry: { key: "SSLProtocol", value: "ALL -SSLv2 -SSLv3 -TLSv1", meta: [
+                {language: "en", caption: "Activating secure SSL protocol-types" },
+                {language: "de", caption: "Aktivieren sicherer Protokolle für die Verschlüsselung mit HTTPS" },
+                {language: "en", description: "The SSL-protocols SSLv2, SSLv3 and TLSv1 are potentially insecure and will therefore be deactivated with this action." },
+                {language: "de", description: "Diese Maßnahme deaktiviert die als potenziell unsicher zu betrachtenden SSL-Protokolle SSLv2, SSLv3 und TLSv1." }
+            ]},
+        configfile.ApacheConfigEntry: { key: "SSLCipherSuite", listseparator: ":", value: [
+            "ECDHE-ECDSA-AES256-GCM-SHA384",
+            "ECDHE-RSA-AES256-GCM-SHA384",
+            "ECDHE-RSA-AES256-SHA384",
+            "DHE-RSA-AES256-SHA256",
+            "ECDHE-ECDSA-AES128-GCM-SHA256",
+            "ECDHE-RSA-AES128-GCM-SHA256",
+            "ECDHE-RSA-AES128-SHA256",
+            "DHE-RSA-AES128-SHA256"
+          ], meta: [
+                {language: "en", caption: "Using secure SSL Cipher-Suites" },
+                {language: "de", caption: "Verwenden von sicheren SSL Cipher-Suites" },
+                {language: "en", description: "This action enables the use of secure SSL Cipher-Suites for the SSL connection. Unsecure ciphers are not activated." },
+                {language: "de", description: "Für die SSL Verbindung sollten nur als sicher angesehene Cipher-Suites verwendet werden. Diese Maßnahme erlaubt daher nur solche Cipher-Suites." }
+            ]},
+        configfile.ApacheConfigEntry: { key: "SSLHonorCipherOrder", value: "on", meta: [
+                {language: "en", caption: "Activating SSL Honor Cipher Order" },
+                {language: "de", caption: "Aktivieren der SSL Honor Cipher Order" },
+                {language: "en", description: "This measure activates the SSL Cipher Order, allowing the most secure SSL Cipher-Suites to be picked first." },
+                {language: "de", description: "Diese Maßnahme aktiviert die SSL Cipher Order, sodass beim Verbindungsaufbau die als am sichersten einzustufenden Cipher-Suites mit oberster Priorität ausgewählt werden." }
+            ]},
+        configfile.ApacheConfigEntry: { key: "SSLCompression", value: "off", meta: [
+                {language: "en", caption: "Deactivating SSL Compression" },
+                {language: "de", caption: "Deaktivieren der SSL-Komprimierung" },
+                {language: "en", description: "SSL compression will be disabled, because it poses a security risk while active." },
+                {language: "de", description: "Die Komprimierung auf SSL-Ebene wird deaktiviert, da diese zu Schwachstellen führen kann." }
+            ]}
+    ]
+
+ApacheSecurityConfig:
+    Options: {
+        run-if: "info:condition:has_apache_installed",
+        transaction: "info:apache:security_config",
+        section: { name: "", param: "" }
+    }
+
+    RunUtils: [
+        configfile.ApacheConfigEntry: { key: "TraceEnable", value: "Off", meta: [
+                {language: "en", caption: "Deactivating TRACE HTTP Method" },
+                {language: "de", caption: "Deaktivieren der HTTP Methode TRACE" },
+                {language: "en", description: "The HTTP Method TRACE will be deactivated, since it should only be supported if explicitly needed." },
+                {language: "de", description: "Die HTTP-Methode TRACE wird deaktiviert, da diese nur unterstützt werden sollte, wenn sie ausdrücklich benötigt wird." }
+            ]},
+        configfile.ApacheConfigEntry: { key: "Header set X-Frame-Options", value: "\"SAMEORIGIN\"", separator: " ", multiple: "true", meta: [
+                {language: "en", caption: "Setting X-Frame-Options Header" },
+                {language: "de", caption: "Setzen des X-Frame-Options Headers" },
+                {language: "en", description: "This action secures the application against clickjaking attacks with the X-Frame-Options Header." },
+                {language: "de", description: "Diese Maßnahme sichert die Webanwendung gegen Clickjacking-Angriffe per X-FRAME-OPTIONS-Header ab." }
+            ]},
+        configfile.ApacheConfigEntry: { key: "ServerSignature", value: "Off", meta: [
+                {language: "en", caption: "Deactivating Server Signature" },
+                {language: "de", caption: "Deaktivieren der Server Signatur" },
+                {language: "en", description: "This action reduces nformation about the Webserver, in error pages, to a minimum." },
+                {language: "de", description: "Informationen über den Webserver in Fehlerseiten werden entfernt." }
+            ]},
+        configfile.ApacheConfigEntry: { key: "ServerTokens", value: "Prod", meta: [
+                {language: "en", caption: "Reducing ServerTokens" },
+                {language: "de", caption: "Einschränken der Server Token Ausgabe" },
+                {language: "en", description: "This action reduces information about the Webserver to a minimum." },
+                {language: "de", description: "Informationen über den Webserver in HTTP-Headern werden auf ein Mindestmaß beschränkt." }
+            ]},
+        configfile.ApacheConfigEntry: { key: "Header unset", value: "Liferay-Portal", multiple: "true", run-if: "info:condition:hardening_for_liferay", meta: [
+                {language: "en", caption: "Unset liferay specific header" },
+                {language: "de", caption: "Deaktivieren des Liferay-Headers" },
+                {language: "en", description: "This action disables application specific header information." },
+                {language: "de", description: "Angaben über die Anwendung durch spezielle Header-Felder werden deaktiviert." }
+            ]}
+    ]
+
+ApacheConf:
+    Options: {
+        run-if: "info:condition:has_apache_installed",
+        transaction: "info:apache:apache_config",
+        section: { name: "", param: "" }
+    }
+
+    RunUtils: [
+        configfile.ApacheConfigEntry: { key: "IncludeOptional", value: "conf-enabled/*.conf", multiple: "true", meta: [
+                {language: "en", caption: "Including additional config files" },
+                {language: "de", caption: "Laden zusätzlicher Konfigurationsdateien" },
+                {language: "en", description: "This action loads additional config files in the conf-enabled apache directory, since they can contain specific settings." },
+                {language: "de", description: "Diese Maßnahme lädt zusätzliche Konfigurationsdateien im Apache Verzeichnis 'conf-enabled' nach, da diese spezifische, weitere Einstellungen beinhalten können." }
+            ]},
+        configfile.ApacheConfigEntry: { key: "IncludeOptional", value: "sites-enabled/*.conf", multiple: "true", meta: [
+                {language: "en", caption: "Including additional config files" },
+                {language: "de", caption: "Laden zusätzlicher Konfigurationsdateien" },
+                {language: "en", description: "This action loads additional config files in the sites-enabled apache directory, since they can contain specific settings." },
+                {language: "de", description: "Diese Maßnahme lädt zusätzliche Konfigurationsdateien im Apache Verzeichnis 'sites-enabled' nach, da diese spezifische, weitere Einstellungen beinhalten können." }
+            ]},
+        configfile.ApacheConfigEntry: { key: "IncludeOptional", value: "mods-enabled/*.conf", multiple: "true", meta: [
+                {language: "en", caption: "Including additional config files" },
+                {language: "de", caption: "Laden zusätzlicher Konfigurationsdateien" },
+                {language: "en", description: "This action loads additional config files in the mods-enabled apache directory, since they can contain specific settings." },
+                {language: "de", description: "Diese Maßnahme lädt zusätzliche Konfigurationsdateien im Apache Verzeichnis 'mods-enabled' nach, da diese spezifische, weitere Einstellungen beinhalten können." }
+            ]},
+        configfile.ApacheConfigEntry: { key: "IncludeOptional", value: "mods-enabled/*.load", multiple: "true", meta: [
+                {language: "en", caption: "Loading enabled apache modules" },
+                {language: "de", caption: "Laden der aktivierten Apache Module" },
+                {language: "en", description: "This action loads the activated apache modules" },
+                {language: "de", description: "Lädt die mit 'a2enmod' oder per SymLink aktivierten Apache-Module." }
+            ]},
+        configfile.ApacheConfigEntry: { key: "LogLevel", value: "notice", meta: [
+                {language: "en", caption: "Setting log level" },
+                {language: "de", caption: "Setzen des Log-Level" },
+                {language: "en", description: "The log level will be set to 'notice', which provides a reasonable amount of output for errors and information." },
+                {language: "de", description: "Das Log-Level wird auf 'notice' gesetzt, was eine ausreichende Menge Informationen über Fehler und Serververhalten bereitstellt." }
+            ]},
+        configfile.ApacheConfigEntry: { key: "ErrorLog", value: "${APACHE_LOG_DIR}/error.log", meta: [
+                {language: "en", caption: "Setting ErrorLog path" },
+                {language: "de", caption: "Setzen des Error-Log-Pfades" },
+                {language: "en", description: "This action will set the path for the error log, where information about server errors is stored." },
+                {language: "de", description: "Diese Maßnahme setzt den Pfad für die Error-Log-Datei, welche die Server-Fehler protokolliert." }
+            ]},
+        configfile.ApacheConfigEntry: { key: "LogFormat", value: '"%v:%p %h %l %u %t \"%r\" %>s %O \"%{Referer}i\" \"%{User-Agent}i\"" vhost_combined' ,multiple: "true", meta: [
+                {language: "en", caption: "Defining custom log format 'vhost_combined'" },
+                {language: "de", caption: "Konfigurieren des Log-Formates 'vhost_combined'" },
+                {language: "en", description: "This action will define a custom log format for use with vhosts and support for logging the referer and user-agent." },
+                {language: "de", description: "Diese Maßnahme spezifiziert ein eigenes Log-Format für die Verwendung im Zusammenhang mit vHosts und erlaubt außerdem das protokollieren von Referer und User-Agent." }
+            ]},
+        configfile.ApacheConfigEntry: { key: "LogFormat", value: '"%h %l %u %t \"%r\" %>s %O \"%{Referer}i\" \"%{User-Agent}i\"" combined' ,multiple: "true", meta: [
+                {language: "en", caption: "Defining custom log format 'combined'" },
+                {language: "de", caption: "Konfigurieren des Log-Formates 'combined'" },
+                {language: "en", description: "This action will define a custom log format with support for logging logging the referer and user-agent." },
+                {language: "de", description: "Diese Maßnahme spezifiziert ein eigenes Log-Format mit Protokollierung von Referer und User-Agent." }
+            ]},
+        configfile.ApacheConfigEntry: { key: "LogFormat", value: '"%h %l %u %t \"%r\" %>s %O" common' ,multiple: "true", meta: [
+                {language: "en", caption: "Defining custom log format 'common'" },
+                {language: "de", caption: "Konfigurieren des Log-Formates 'common'" },
+                {language: "en", description: "This action will define a custom log format without tracking of referer or user-agent." },
+                {language: "de", description: "Diese Maßnahme spezifiziert ein eigenes Log-Format das Anfragen protokolliert, jedoch ohne die Angabe von Referer oder User-Agent." }
+            ]},
+        configfile.ApacheConfigEntry: { key: "LogFormat", value: '"%{Referer}i -> %U" referer' ,multiple: "true", meta: [
+                {language: "en", caption: "Defining custom log format 'referer'" },
+                {language: "de", caption: "Konfigurieren des Log-Formates 'referer'" },
+                {language: "en", description: "This action will define a custom log format logging the referer only." },
+                {language: "de", description: "Diese Maßnahme spezifiziert ein eigenes Log-Format, das ausschließlich den Referer protokolliert." }
+            ]},
+        configfile.ApacheConfigEntry: { key: "LogFormat", value: '"%{User-agent}i" agent' ,multiple: "true", meta: [
+                {language: "en", caption: "Defining custom log format 'agent'" },
+                {language: "de", caption: "Konfigurieren des Log-Formates 'agent'" },
+                {language: "en", description: "This action will define a custom log format logging the user-agent only." },
+                {language: "de", description: "Diese Maßnahme spezifiziert ein eigenes Log-Format, das ausschließlich den User-Agent protokolliert." }
+            ]},
+        configfile.ApacheConfigEntry: { key: "Require", value: "all denied", section: {name: "Directory", param: "/"}, meta: [
+                {language: "en", caption: "Disabling Access to directory /" },
+                {language: "de", caption: "Unterbinden der Auslieferung von Dateien aus dem Verzeichnis /" },
+                {language: "en", description: "This action ensures that only such files, that are meant to be returned, are delivered to the client." },
+                {language: "de", description: "Diese Maßnahme stellt sicher, dass nur Dateien ausgeliefert werden, die für die Auslieferung bestimmt sind." }
+            ]},
+        configfile.ApacheConfigEntry: { key: "AllowMethods", value: ["GET","POST"], listseparator: " ", section: {name: "Directory", param: "/"}, meta: [
+                {language: "en", caption: "Activating necessary HTTP Methods for directory /" },
+                {language: "de", caption: "Aktivieren benötigter HTTP-Methoden für das Verzeichnis /" },
+                {language: "en", description: "This action ensures that only such HTTP methods, that are meant to be evaluated, are evaluated by the server. If HTTP-Methods besides GET and POST are needed, they have to be manually added." },
+                {language: "de", description: "Diese Maßnahme stellt sicher, dass nur HTTP-Methoden verarbeitet werden, welche für die Funktionalität der Anwendung benötigt werden. Sollten neben GET und POST weitere HTTP-Methoden benötigt werden, müssen diese manuell hinzugefügt werden." }
+            ]},
+        configfile.ApacheConfigEntry: { key: "Options", value: "None", section: {name: "Directory", param: "/"}, meta: [
+                {language: "en", caption: "Deactivating custom options for directory /" },
+                {language: "de", caption: "Deaktivieren von Apache Options für das Verzeichnis /" },
+                {language: "en", description: "This action ensures that only such files, that are meant to be returned, are delivered to the client." },
+                {language: "de", description: "Diese Maßnahme stellt sicher, dass nur Dateien ausgeliefert werden, die für die Auslieferung bestimmt sind." }
+            ]},
+        configfile.ApacheConfigEntry: { key: "AllowOverride", value: "None", section: {name: "Directory", param: "/"}, meta: [
+                {language: "en", caption: "Deactivating AllowOverride functionality for directory /" },
+                {language: "de", caption: "Deaktivieren der Funktion 'AllowOverride' für das Verzeichnis /" },
+                {language: "en", description: "This action ensures that only such files, that are meant to be returned, are delivered to the client." },
+                {language: "de", description: "Diese Maßnahme stellt sicher, dass nur Dateien ausgeliefert werden, die für die Auslieferung bestimmt sind." }
+            ]},
+        configfile.ApacheConfigEntry: { key: "Require", value: "all granted", section: {name: "Directory", param: "/var/www/"}, meta: [
+                {language: "en", caption: "Enabling Access to directory /var/www/" },
+                {language: "de", caption: "Zulassen der Auslieferung von Dateien aus dem Verzeichnis /var/www/" },
+                {language: "en", description: "This action ensures that only such files, that are meant to be returned, are delivered to the client." },
+                {language: "de", description: "Diese Maßnahme stellt sicher, dass nur Dateien ausgeliefert werden, die für die Auslieferung bestimmt sind. Das Verzeichnis /var/www/ ist in Debian das Standard-Verzeichnis für den Apache-Webserver." }
+            ]},
+        configfile.ApacheConfigEntry: { key: "AllowMethods", value: ["GET","POST"], listseparator: " ", section: {name: "Directory", param: "/var/www/"}, meta: [
+                {language: "en", caption: "Activating necessary HTTP Methods for directory /var/www/"},
+                {language: "de", caption: "Aktivieren benötigter HTTP-Methoden für das Verzeichnis /var/www/" },
+                {language: "en", description: "This action ensures that only such HTTP methods, that are meant to be evaluated, are evaluated by the server. If HTTP-Methods besides GET and POST are needed, they have to be manually added." },
+                {language: "de", description: "Diese Maßnahme stellt sicher, dass nur HTTP-Methoden verarbeitet werden, welche für die Funktionalität der Anwendung benötigt werden. Sollten neben GET und POST weitere HTTP-Methoden benötigt werden, müssen diese manuell hinzugefügt werden." }
+            ]},
+        configfile.ApacheConfigEntry: { key: "Options", value: "SymLinksIfOwnerMatch", section: {name: "Directory", param: "/var/www/"}, meta: [
+                {language: "en", caption: "Deactivating custom options, except SymLinksIfOwnerMatch for directory /var/www/" },
+                {language: "de", caption: "Deaktivieren von Apache Options, außer SymLinksIfOwnerMatch, für das Verzeichnis /var/www/" },
+                {language: "en", description: "This action ensures that only such files, that are meant to be returned, are delivered to the client." },
+                {language: "de", description: "Diese Maßnahme stellt sicher, dass nur Dateien ausgeliefert werden, die für die Auslieferung bestimmt sind." }
+            ]},
+        configfile.ApacheConfigEntry: { key: "AllowOverride", value: "None", section: {name: "Directory", param: "/var/www/"}, run-if: "info:condition:hardening_for_plone", meta: [
+                {language: "en", caption: "Deactivating AllowOverride functionality for directory /var/www/" },
+                {language: "de", caption: "Deaktivieren der Funktion 'AllowOverride' für das Verzeichnis /var/www/" },
+                {language: "en", description: "This action ensures that only such files, that are meant to be returned, are delivered to the client." },
+                {language: "de", description: "Diese Maßnahme stellt sicher, dass nur Dateien ausgeliefert werden, die für die Auslieferung bestimmt sind." }
+            ]},
+        configfile.ApacheConfigEntry: { key: "AllowOverride", value: "None", section: {name: "Directory", param: "/var/www/"}, run-if: "info:condition:hardening_for_liferay", meta: [
+                {language: "en", caption: "Deactivating AllowOverride functionality for directory /var/www/" },
+                {language: "de", caption: "Deaktivieren der Funktion 'AllowOverride' für das Verzeichnis /var/www/" },
+                {language: "en", description: "This action ensures that only such files, that are meant to be returned, are delivered to the client." },
+                {language: "de", description: "Diese Maßnahme stellt sicher, dass nur Dateien ausgeliefert werden, die für die Auslieferung bestimmt sind." }
+            ]},
+
+        configfile.ApacheConfigEntry: { key: "Require", value: "all denied", section: {name: "FilesMatch", param: "[^.].*\\.(?!(css|html|js|pdf|txt|xml|xsl|gif|ico|jpe?g|png|mp4|mp3|mkv|svg|php))[0-9a-z]{2,4}$"}, meta: [
+                {language: "en", caption: "Enabling Access for specific files" },
+                {language: "de", caption: "Zulassen des Zugriffs für spezifizierte Dateien" },
+                {language: "en", description: "This action ensures that only such files, that are meant to be returned, are delivered to the client." },
+                {language: "de", description: "Diese Maßnahme stellt sicher, dass nur Dateien ausgeliefert werden, die für die Auslieferung bestimmt sind." }
+            ]},
+
+        configfile.ApacheConfigEntry: { key: "LimitRequestBody", value: "10485760", section: {name: "Directory", param: "/usr/local/apache2/uploads/"}, meta: [
+                {language: "en", caption: "Limiting request-body size for uploaded files for the directory /usr/local/apache2/uploads/" },
+                {language: "de", caption: "Begrenzen der Request-Body Größe von hochgeladenen Dateien für das Verzeichnis /usr/local/apache2/uploads/" },
+                {language: "en", description: "This action ensures that only such files, that are meant to be returned, are delivered to the client." },
+                {language: "de", description: "Diese Maßnahme stellt sicher, dass nur Dateien ausgeliefert werden, die für die Auslieferung bestimmt sind." }
+            ]}
+    ]
+
+ApacheDocumentRoot:
+    RunUtils: [
+        fs.Directory: {
+            path: "info:get_property:Wordpress.RootPath",
+            owner: "",
+            group: "",
+            mode: ""
+        }
+
+    ]
+
+ApacheDefaultVhost:
+    RunUtils: [
+        filesystem.DeleteFile: {transaction: "file:/etc/apache2/sites-available/999-default.conf", meta: [
+                {language: "en", caption: "Deleting default apache vhost config file" },
+                {language: "de", caption: "Löschen der Standard Apache VHost Konfigurationsdatei" },
+                {language: "en", description: "Deleting the default apache vhost config file: /etc/apache2/sites-available/999-default.conf" },
+                {language: "de", description: "Löschen der Standard Apache-VHost Konfigurationsdatei /etc/apache2/sites-available/999-default.conf" }
+            ] },
+        filesystem.DeleteFile: {transaction: "file:/etc/apache2/sites-enabled/999-default.conf", meta: [
+                {language: "en", caption: "Deleting default apache vhost config file" },
+                {language: "de", caption: "Löschen der Standard Apache VHost Konfigurationsdatei" },
+                {language: "en", description: "Deleting the default apache vhost config file: /etc/apache2/sites-enabled/999-default.conf" },
+                {language: "de", description: "Löschen der Standard Apache VHost Konfigurationsdatei /etc/apache2/sites-enabled/999-default.conf" }
+            ] }
+    ]
+
+ApachePermissions:
+    RunUtils: [
+        filesystem.ChangeOwner: {
+            transaction: "file:/etc/apache2/ports.conf",
+            user: "root",
+            group: "root",
+            meta: [
+                {language: "en", caption: "Changing owner of ports.conf" },
+                {language: "de", caption: "Ändern des Besitzers der ports.conf" },
+                {language: "en", description: "The owner of the ports.conf file is set to root, so that a compromised apache user can't access it." },
+                {language: "de", description: "Der Besitzer der Apache2 Konfigurationsdatei 'ports.conf' wird auf root gesetzt, damit ein kompromittierter Apache-Benutzer nicht auf diese zugreifen kann." }
+            ]
+        },
+
+        filesystem.ChangePermissions: {
+            transaction: "file:/etc/apache2/ports.conf",
+            mode: "644",
+            meta: [
+                {language: "en", caption: "Changing permissions of ports.conf" },
+                {language: "de", caption: "Ändern der Berechtigungen der ports.conf" },
+                {language: "en", description: "The permissions of the ports.conf file will be changed to mode 644, allowing only the owner to edit the file." },
+                {language: "de", description: "Die Berechtigungen der Apache2 Konfigurationsdatei 'ports.conf' werden auf den Modus 644 gesetzt, so dass nur der Besitzer diese bearbeiten kann." }
+            ]
+        },
+        
+        filesystem.ChangeOwner: {
+            transaction: "info:apache:apache_config",
+            user: "root",
+            group: "root",
+            meta: [
+                {language: "en", caption: "Changing owner of apache.conf" },
+                {language: "de", caption: "Ändern des Besitzers der apache.conf" },
+                {language: "en", description: "The owner of the apache.conf file is set to root, so that a compromised apache user can't access it." },
+                {language: "de", description: "Der Besitzer der Apache2 Konfigurationsdatei 'apache.conf' wird auf root gesetzt, damit ein kompromittierter Apache-Benutzer nicht auf diese zugreifen kann." }
+            ]
+        },
+
+        filesystem.ChangePermissions: {
+            transaction: "info:apache:apache_config",
+            mode: "644",
+            meta: [
+                {language: "en", caption: "Changing permissions of apache.conf" },
+                {language: "de", caption: "Ändern der Berechtigungen der apache.conf" },
+                {language: "en", description: "The permissions of the apache.conf file will be changed to mode 644, allowing only the owner to edit the file." },
+                {language: "de", description: "Die Berechtigungen der Apache2 Konfigurationsdatei 'apache.conf' werden auf den Modus 644 gesetzt, so dass nur der Besitzer diese bearbeiten kann." }
+            ]
+        },
+
+        filesystem.ChangeOwner: {
+            transaction: "info:apache:ssl_config",
+            user: "root",
+            group: "root",
+            meta: [
+                {language: "en", caption: "Changing owner of ssl.conf" },
+                {language: "de", caption: "Ändern des Besitzers der ssl.conf" },
+                {language: "en", description: "The owner of the ssl.conf file is set to root, so that a compromised apache user can't access it." },
+                {language: "de", description: "Der Besitzer der Apache2 Konfigurationsdatei 'ssl.conf' wird auf root gesetzt, damit ein kompromittierter Apache-Benutzer nicht auf diese zugreifen kann." }
+            ]
+        },
+
+        filesystem.ChangePermissions: {
+            transaction: "info:apache:ssl_config",
+            mode: "644",
+            meta: [
+                {language: "en", caption: "Changing permissions of ssl.conf" },
+                {language: "de", caption: "Ändern der Berechtigungen der ssl.conf" },
+                {language: "en", description: "The permissions of the ssl.conf file will be changed to mode 644, allowing only the owner to edit the file." },
+                {language: "de", description: "Die Berechtigungen der Apache2 Konfigurationsdatei 'ssl.conf' werden auf den Modus 644 gesetzt, so dass nur der Besitzer diese bearbeiten kann." }
+            ]
+        },
+
+        filesystem.ChangeOwner: {
+            transaction: "info:apache:security_config",
+            user: "root",
+            group: "root",
+            meta: [
+                {language: "en", caption: "Changing owner of security.conf" },
+                {language: "de", caption: "Ändern des Besitzers der security.conf" },
+                {language: "en", description: "The owner of the security.conf file is set to root, so that a compromised apache user can't access it." },
+                {language: "de", description: "Der Besitzer der Apache2 Konfigurationsdatei 'security.conf' wird auf root gesetzt, damit ein kompromittierter Apache-Benutzer nicht auf diese zugreifen kann." }
+            ]
+        },
+
+        filesystem.ChangePermissions: {
+            transaction: "info:apache:security_config",
+            mode: "644",
+            meta: [
+                {language: "en", caption: "Changing permissions of security.conf" },
+                {language: "de", caption: "Ändern der Berechtigungen der security.conf" },
+                {language: "en", description: "The permissions of the security.conf file will be changed to mode 644, allowing only the owner to edit the file." },
+                {language: "de", description: "Die Berechtigungen der Apache2 Konfigurationsdatei 'security.conf' werden auf den Modus 644 gesetzt, so dass nur der Besitzer diese bearbeiten kann." }
+            ]
+        },
+
+        filesystem.ChangeOwner: {
+            transaction: "dir:/var/log/apache2",
+            user: "root",
+            group: "root",
+            recursive: True,
+            apply-to-files: True,
+            apply-to-directories: True,
+            meta: [
+                {language: "en", caption: "Changing owner of apache log directory" },
+                {language: "de", caption: "Ändern des Besitzers des Apache Log Verzeichnisses" },
+                {language: "en", description: "The owner of the apache log directory is set to root, so that a compromised apache user can't access it." },
+                {language: "de", description: "Der Besitzer des Apache Log Verzeichnisses wird auf root gesetzt, damit ein kompromittierter Apache-Benutzer nicht auf diese zugreifen kann." }
+            ]
+        },
+
+        filesystem.ChangePermissions: {
+            transaction: "dir:/var/log/apache2",
+            mode: "640",
+            recursive: True,
+            apply-to-files: True,
+            apply-to-directories: False,
+            meta: [
+                {language: "en", caption: "Changing permissions of the apache log dir" },
+                {language: "de", caption: "Ändern der Berechtigungen des Apache Log Verzeichnisses" },
+                {language: "en", description: "The permissions of the apache log directory will be changed to mode 640, recursive for all files, so that they are only readable by the owner and the owning group." },
+                {language: "de", description: "Die Berechtigungen des Apache2 Log Verzeichnisses werden rekursiv für alle Dateien auf den Modus 640 gesetzt. Somit können nur der Besitzer und die besitzende Gruppe auf die Dateien zugreifen." }
+            ]
+        },
+
+        filesystem.ChangePermissions: {
+            transaction: "dir:/var/log/apache2",
+            mode: "750",
+            recursive: True,
+            apply-to-directories: True,
+            apply-to-files: False,
+            meta: [
+                {language: "en", caption: "Changing permissions of the apache log dir" },
+                {language: "de", caption: "Ändern der Berechtigungen des Apache Log Verzeichnisses" },
+                {language: "en", description: "The permissions of the apache log directory will be changed to mode 750, recursive for all directories, so that they are only read- and executable by the owner and the owning group." },
+                {language: "de", description: "Die Berechtigungen des Apache2 Log Verzeichnisses werden rekursiv für alle Verzeichnisse auf den Modus 750 gesetzt. Somit haben nur der Besitzer und die besitzende Gruppe Rechte zum Ausführen und Lesen." }
+            ]
+       }
+    ]

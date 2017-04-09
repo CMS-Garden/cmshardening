@@ -1,0 +1,22 @@
+RunSections: [
+    PythonVersionCheck
+]
+
+#meta information about the python module in english and german
+#the description of the utils and their parameters can be found in the hardening-scripts/python/README.md
+meta: [
+    {language: "en", caption: "This section contains python specific hardening steps and checks"},
+    {language: "de", caption: "Dieser Abschnitt enthält Python-spezifische Härtungsschritte"},
+    {language: "en", description: "The following hardening steps were verified for Python version 2.7.9. The results of the hardening steps for other versions may differ."},
+    {language: "de", description: "Die nachfolgenden Härtungsmaßnahmen wurden für die Python Version 2.7.9 getestet und hinsichtlich ihrer Funktionalität geprüft. Für abweichende Versionen kann keine Aussage zur Funktionalität getroffen werden."}
+]
+
+PythonVersionCheck: 
+    RunUtils: [
+        os.CheckVersion: { key: "python", version: "info:python:current_version", meta: [
+            {language: "en", caption: "Checking Python version"},
+            {language: "de", caption: "Überprüfen der installierten Python-Version"},
+            {language: "en", description: "This action will check if the installed Python version is still up to date. Unsupported versions of the software should not be used, because they pose a security risk."},
+            {language: "de", description: "Die Python-Version wird auf ihre Aktualität geprüft. Alte Version der Software können bekannte Schwachstellen enthalten, welche von Angreifern ausgenutzt werden können."}
+        ]}
+    ]

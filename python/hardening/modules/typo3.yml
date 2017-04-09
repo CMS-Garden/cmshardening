@@ -1,0 +1,71 @@
+RunSections: [
+    Typo3RemoveDefaultData
+]
+
+#define which hardening modules are to be selected per default if this cms is choosen to be hardend
+ModulesSelectedPerDefault: [
+    debian,
+    network,
+    php,
+    apache,
+    mysql,
+    sshd
+]
+
+#meta information about the typo3 module in english and german
+#the description of the utils and their parameters can be found in the hardening-scripts/python/README.md
+meta: [
+    {language: "en", caption: "This section configures the content management system Typo3"},
+    {language: "de", caption: "Dieser Abschnitt konfiguriert das Content-Management-System Typo3"},
+    {language: "en", description: "The following hardening steps were verified for the typo3 version 7.6.2. The results of the hardening steps for other versions may differ."},
+    {language: "de", description: "Die nachfolgenden Härtungsmaßnahmen wurden für die Version 7.6.2 des CMS Typo3 getestet und hinsichtlich ihrer Funktionalität geprüft. Für abweichende Versionen kann keine Aussage zur Funktionalität getroffen werden."}
+]
+
+Typo3RemoveDefaultData:
+    Options: {
+        run-if: "info:condition:hardening_for_typo3"
+    }
+    RunUtils: [
+        filesystem.DeleteFile: {transaction: "file:info:resolve_key:typo3_base_dir/vendor/phpwhois/idna-convert/example.php", meta: [
+              {language: "en", caption: "Deletion of unneeded files from Vendor folder" },
+              {language: "de", caption: "Löschen unnötiger Dateien aus dem Vendor-Verzeichnis" },
+              {language: "en", description: "Although the files in the vendor folder are usually not accessible from the internet, unneeded files should be deleted as they may contain vulnerabilities and are not needed" },
+              {language: "de", description: "Obwohl die Dateien im Vendor-Verzeichnis normalerweise nicht im Internet erreichbar sind, sollten unnötige Dateien gelöscht werden, da sie potentiell Schwachstellen enthalten können und nicht benötigt werden." }
+        ]},
+        filesystem.DeleteFile: {transaction: "dir:info:resolve_key:typo3_base_dir/vendor/pear/net_url2/docs", meta: [
+              {language: "en", caption: "Deletion of unneeded files from Vendor folder" },
+              {language: "de", caption: "Löschen unnötiger Dateien aus dem Vendor-Verzeichnis" },
+              {language: "en", description: "Although the files in the vendor folder are usually not accessible from the internet, unneeded files should be deleted as they may contain vulnerabilities and are not needed" },
+              {language: "de", description: "Obwohl die Dateien im Vendor-Verzeichnis normalerweise nicht im Internet erreichbar sind, sollten unnötige Dateien gelöscht werden, da sie potentiell Schwachstellen enthalten können und nicht benötigt werden." }
+        ]},
+        filesystem.DeleteFile: {transaction: "dir:info:resolve_key:typo3_base_dir/vendor/pear/http_request2/docs", meta: [
+              {language: "en", caption: "Deletion of unneeded files from Vendor folder" },
+              {language: "de", caption: "Löschen unnötiger Dateien aus dem Vendor-Verzeichnis" },
+              {language: "en", description: "Although the files in the vendor folder are usually not accessible from the internet, unneeded files should be deleted as they may contain vulnerabilities and are not needed" },
+              {language: "de", description: "Obwohl die Dateien im Vendor-Verzeichnis normalerweise nicht im Internet erreichbar sind, sollten unnötige Dateien gelöscht werden, da sie potentiell Schwachstellen enthalten können und nicht benötigt werden." }
+        ]},
+        filesystem.DeleteFile: {transaction: "dir:info:resolve_key:typo3_base_dir/vendor/psr/log/Psr/Log/Test", meta: [
+              {language: "en", caption: "Deletion of unneeded files from Vendor folder" },
+              {language: "de", caption: "Löschen unnötiger Dateien aus dem Vendor-Verzeichnis" },
+              {language: "en", description: "Although the files in the vendor folder are usually not accessible from the internet, unneeded files should be deleted as they may contain vulnerabilities and are not needed" },
+              {language: "de", description: "Obwohl die Dateien im Vendor-Verzeichnis normalerweise nicht im Internet erreichbar sind, sollten unnötige Dateien gelöscht werden, da sie potentiell Schwachstellen enthalten können und nicht benötigt werden." }
+        ]},
+        filesystem.DeleteFile: {transaction: "dir:info:resolve_key:typo3_base_dir/vendor/swiftmailer/swiftmailer/doc", meta: [
+              {language: "en", caption: "Deletion of unneeded files from Vendor folder" },
+              {language: "de", caption: "Löschen unnötiger Dateien aus dem Vendor-Verzeichnis" },
+              {language: "en", description: "Although the files in the vendor folder are usually not accessible from the internet, unneeded files should be deleted as they may contain vulnerabilities and are not needed" },
+              {language: "de", description: "Obwohl die Dateien im Vendor-Verzeichnis normalerweise nicht im Internet erreichbar sind, sollten unnötige Dateien gelöscht werden, da sie potentiell Schwachstellen enthalten können und nicht benötigt werden." }
+        ]},
+        filesystem.DeleteFile: {transaction: "dir:info:resolve_key:typo3_base_dir/vendor/symfony/console/Tests", meta: [
+              {language: "en", caption: "Deletion of unneeded files from Vendor folder" },
+              {language: "de", caption: "Löschen unnötiger Dateien aus dem Vendor-Verzeichnis" },
+              {language: "en", description: "Although the files in the vendor folder are usually not accessible from the internet, unneeded files should be deleted as they may contain vulnerabilities and are not needed" },
+              {language: "de", description: "Obwohl die Dateien im Vendor-Verzeichnis normalerweise nicht im Internet erreichbar sind, sollten unnötige Dateien gelöscht werden, da sie potentiell Schwachstellen enthalten können und nicht benötigt werden." }
+        ]},
+        filesystem.DeleteFile: {transaction: "dir:info:resolve_key:typo3_base_dir/vendor/symfony/finder/Tests", meta: [
+              {language: "en", caption: "Deletion of unneeded files from Vendor folder" },
+              {language: "de", caption: "Löschen unnötiger Dateien aus dem Vendor-Verzeichnis" },
+              {language: "en", description: "Although the files in the vendor folder are usually not accessible from the internet, unneded files should be deleted as they may contain vulnerabilities and are not needed" },
+              {language: "de", description: "Obwohl die Dateien im Vendor-Verzeichnis normalerweise nicht im Internet erreichbar sind, sollten unnötige Dateien gelöscht werden, da sie potentiell Schwachstellen enthalten können und nicht benötigt werden." }
+        ]}
+    ]

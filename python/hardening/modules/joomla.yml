@@ -1,0 +1,21 @@
+RunSections: [
+]
+
+#meta information about the joomla module in english and german
+#the description of the utils and their parameters can be found in the hardening-scripts/python/README.md
+meta: [
+    {language: "en", caption: "This section is a placeholder for the content management system Joomla"},
+    {language: "de", caption: "Dieser Abschnitt ist ein Platzhalter für das Content-Management-System Joomla"},
+    {language: "en", description: "No hardening steps do actually run in this module. Please run the PHP-part of this tool."},
+    {language: "de", description: "In diesem Modul laufen keine Härtungsmaßnahmen. Bitte führen Sie den PHP-Teil dieses Werkzeugs aus."}
+]
+
+#define which hardening modules are to be selected per default if this cms is choosen to be hardend
+ModulesSelectedPerDefault: [
+    debian,
+    network,
+    php,
+    apache,
+    mysql,
+    sshd
+]
