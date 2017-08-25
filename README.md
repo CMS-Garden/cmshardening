@@ -27,7 +27,7 @@ The scripts are actually two separate scripts:
 
 # User Handbook
 
-For a detailed manual (german only) please refer to: http://www.cms-garden.org/de/projekte/cmshardening-script
+For a detailed manual (english & german) please refer to: http://www.cms-garden.org/de/projekte/cmshardening-script
 
 ## Required packages
 
