@@ -60,7 +60,7 @@ The scripts are implemented in a way that they are executable without prior conf
 ```
 $ php index.php
 ```  
-For more details on this script see the [User Handbook for the PHP script](php\README.md)
+For more details on this script see the [User Handbook for the PHP script](php/README.md)
 
 ### Hardening of everything else
 
@@ -68,7 +68,7 @@ For more details on this script see the [User Handbook for the PHP script](php\R
 ```
 $ sudo ./hardening.sh
 ```
-For more details on this script see the [User Handbook for the Python script](python\README.md)
+For more details on this script see the [User Handbook for the Python script](python/README.md)
 
 # Licensing
 ## License of the hardening scripts
